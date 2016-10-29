@@ -795,7 +795,6 @@ def serial_ports():
 
 serial_ports = serial_ports()
 
-
 def set_serial(serial):
     global index
     index = serial
