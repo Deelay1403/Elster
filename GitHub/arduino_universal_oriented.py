@@ -717,7 +717,6 @@ class Mainwindow:
         if self.toggle_blackout.get_active() == False:
             forLedBlackOutAll(1, 0)
 
-
 # #support LINUX - Ubuntu
 # try:
 #     print("trying /dev/ttyACM0/")
