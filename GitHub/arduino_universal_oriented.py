@@ -824,7 +824,6 @@ def serialActivate(dial):
     global ser
     ser = serial.Serial(serial_ports[dial.getIndex()], 9600)
 
-
 def getSer():
     return ser
 
