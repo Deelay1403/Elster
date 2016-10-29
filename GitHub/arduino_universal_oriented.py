@@ -800,7 +800,6 @@ def set_serial(serial):
     index = serial
     print index
 
-
 for situation in serial_ports:
     print str(x) + ": " + situation
     x += 1
