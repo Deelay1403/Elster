@@ -503,7 +503,6 @@ class Mainwindow:
         for i in range(1, ConfigWindow.zmienna2 + 1):
             self.sb_adjustment[i] = gtk.Adjustment(i, 1, 100, 1, 5, 0)
             self.sb_address[i] = gtk.SpinButton(self.sb_adjustment[i], 0, 0)
-
             self.sb_address[i].show()
             self.btBlackout[i] = gtk.ToggleButton("Blackout")
             self.btBlackout[i].connect("clicked", self.blackoutclock, i, self.bt_id)
