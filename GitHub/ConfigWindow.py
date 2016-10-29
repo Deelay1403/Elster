@@ -1,9 +1,11 @@
 import gtk
-import arduino_universal
+import arduino_universal_oriented
 import time
+arduino_universal = arduino_universal_oriented
 class serialWindow:
 
     def __init__(self):
+
         self.cb_serial = gtk.ComboBox()
         self.liststore = gtk.ListStore(str)
         self.cell = gtk.CellRendererText()
