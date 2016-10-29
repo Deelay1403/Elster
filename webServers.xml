@@ -1,7 +1,7 @@
 <application>
   <component name="WebServers">
     <option name="servers">
-      <webServer id="53adab6a-edeb-4030-b600-6c67f403fb70" name="git@github.com:Deelay1403/Elster.git" url="drive.google.com">
+      <webServer id="53adab6a-edeb-4030-b600-6c67f403fb70" name="git@github.com:Deelay1403/Elster.git" url="http://localhost">
         <fileTransfer port="0" mountedRoot="/media/patryk/Google" accessType="MOUNT" />
       </webServer>
     </option>
