@@ -1,0 +1,9 @@
+<application>
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="53adab6a-edeb-4030-b600-6c67f403fb70" name="git@github.com:Deelay1403/Elster.git" url="http://localhost">
+        <fileTransfer port="0" mountedRoot="$APPLICATION_HOME_DIR$/bin/git@github.com:Deelay1403/Elster.git" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</application>
