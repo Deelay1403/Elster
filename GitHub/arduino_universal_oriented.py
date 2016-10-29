@@ -806,19 +806,15 @@ for situation in serial_ports:
     print str(x) + ": " + situation
     x += 1
 
-
 def keylisten(event):
     print(event.char)
-
 
 def keyrequest():
     root = tk.Tk()
     root.bind('<KeyPress>', keylisten)
     root.mainloop()
 
-
 time.sleep(2)
-
 
 def serialActivate(dial):
     global ser
@@ -827,13 +823,9 @@ def serialActivate(dial):
 def getSer():
     return ser
 
-
 def start():
     dial = ConfigWindow.serialWindow()
     serialActivate(dial)
-    # global ser
-    # ser = serial.Serial(serial_ports[index], 9600)
-    # ser.re
     app = Mainwindow()
     app2 = blinkInTime()
     gtk.main()
@@ -845,6 +837,5 @@ if __name__ == "__main__":
     # t = Thread(name="log", target=log("lel"))
     # t.setDaemon(True)
     t2 = Thread(name="main", target=start)
-
     # t.start()
     t2.start()
