@@ -6,7 +6,7 @@ import time
 import serial
 
 """
-sudo apt-get install libgtk-3-dev 
+sudo apt-get install libgtk-3-dev 2
 sudo apt-get install python python-tk idle python-pmw python-imaging
 sudo apt-get install python-gtk2
 """
