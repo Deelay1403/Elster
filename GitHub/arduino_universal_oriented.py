@@ -23,7 +23,7 @@ import gtk
 # import gtk.glade
 import glob
 from random import randint
-
+import StepWindow
 import ConfigWindow
 
 x = 1
