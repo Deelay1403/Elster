@@ -1,5 +1,11 @@
 import gtk
 
+
+# TODO: 1.Make changebutton responsible to call -> Throw it to the table
+# TODO: 2.Create method to read/write file and generate window
+# TODO: 3.Make it look better
+# TODO: 4.Drink coffee - You deserve :)
+# TODO: 5.Talk with Popcorator
 class generateScene():
     def __init__(self, colums_main, devices):
         horizontalValue = 5
