@@ -1,6 +1,8 @@
 import gtk
-
-
+'''
+Class created to generate/open file of scenes designed to work with elSter Light System\n
+In easy way, this class can open way to simple work with light
+'''
 # TODO: 1.Make changebutton responsible to call -> Throw it to the table
 # TODO: 2.Create method to read/write file and generate window
 # TODO: 3.Make it look better
@@ -140,5 +142,3 @@ class generateScene():
 if __name__ == "__main__":
     g = generateScene(5, 2)
     gtk.main()
-
-
