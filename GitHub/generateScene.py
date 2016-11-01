@@ -3,7 +3,8 @@ import gtk
 class generateScene():
     def __init__(self, colums_main, devices):
         horizontalValue = 5
-        self.microContainers = [[1 for x in range(self.checkInput(colums_main,horizontalValue))] for y in range(horizontalValue)]
+        self.microContainers = [[0 for x in range(self.checkInput(colums_main, horizontalValue))] for y in
+                                range(horizontalValue)]
         self.devices = devices
 
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -14,7 +15,7 @@ class generateScene():
         self.table = gtk.Table(self.checkInput(colums_main,horizontalValue), horizontalValue, True)
         self.main_window_col.pack_start(self.menuTool(),False,False,0)
 
-        self.napis = [[1 for x in range(self.checkInput(colums_main,horizontalValue))] for y in range(colums_main)]
+        self.napis = [[0 for x in range(self.checkInput(colums_main, horizontalValue))] for y in range(colums_main)]
         for x in range(0,colums_main):
             for y in range(0, self.checkInput(colums_main,horizontalValue)):
                 self.napis[x][y] = gtk.Button("Test")
@@ -27,7 +28,7 @@ class generateScene():
                     self.generateSingleContainer(y, x)
                     self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
                     colums_main-=1
-            elif(colums_main<5):
+            elif (colums_main <= 5):
                 for y in range(0, colums_main):
                     self.generateSingleContainer(y, x)
                     self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
@@ -69,6 +70,7 @@ class generateScene():
         self.microContainers[x][y] = gtk.VBox(gtk.FALSE,self.devices+1)
         self.chkbx = {}
         self.entry = gtk.Entry()
+        self.entry.set_text("LED " + str(x + 1) + "." + str(y + 1))
         self.entry.show()
         self.microContainers[x][y].show()
 
@@ -126,12 +128,11 @@ class generateScene():
         self.obj["leftbt"].set_size_request(40,-1)
         self.obj["rightbt"].set_size_request(40, -1)
 
-        self.container
         self.container.show()
         return self.container
 
 if __name__ == "__main__":
-    g = generateScene(12,2)
+    g = generateScene(5, 2)
     gtk.main()
 
 
