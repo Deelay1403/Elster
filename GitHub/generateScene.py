@@ -2,26 +2,41 @@ import gtk
 
 class generateScene():
     def __init__(self, colums_main, devices):
-
+        horizontalValue = 5
+        self.microContainers = [[1 for x in range(self.checkInput(colums_main,horizontalValue))] for y in range(horizontalValue)]
+        self.devices = devices
 
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("destroy",gtk.main_quit)
         self.main_window_col = gtk.VBox(gtk.FALSE,3)
         self.window.add(self.main_window_col)
         #self.line_window_bottom = gtk.HBox(gtk.FALSE,4)
-        self.table = gtk.Table(devices, colums_main, True)
+        self.table = gtk.Table(self.checkInput(colums_main,horizontalValue), horizontalValue, True)
+        self.main_window_col.pack_start(self.menuTool(),False,False,0)
 
-        self.main_window_col.pack_start(self.MenuTool(),False,False,0)
-
-        self.napis = [[1 for x in range(devices)] for y in range(colums_main)]
+        self.napis = [[1 for x in range(self.checkInput(colums_main,horizontalValue))] for y in range(colums_main)]
         for x in range(0,colums_main):
-            for y in range(0, devices):
+            for y in range(0, self.checkInput(colums_main,horizontalValue)):
                 self.napis[x][y] = gtk.Button("Test")
                 self.napis[x][y].show()
 
-        for x in range(0,colums_main):
-            for y in range(0, devices):
-                self.table.attach(self.napis[x][y],x,x+1,y,y+1)
+        for x in range(0,self.checkInput(colums_main,horizontalValue)):
+            print str(x) + " " + str(colums_main)
+            if(colums_main>5):
+                for y in range(0, horizontalValue):
+                    self.generateSingleContainer(y, x)
+                    self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
+                    colums_main-=1
+            elif(colums_main<5):
+                for y in range(0, colums_main):
+                    self.generateSingleContainer(y, x)
+                    self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
+
+
+        # for x in range(0,colums_main):
+        #     for y in range(0, self.checkInput(colums_main,horizontalValue)):
+        #         self.generateSingleContainer(x, y)
+        #         self.table.attach(self.microContainers[x][y],x,x+1,y,y+1)
         self.table.show()
         self.main_window_col.pack_start(self.table,True,True,0)
 
@@ -48,42 +63,25 @@ class generateScene():
             return (number/column)
         else:
             return ((number/column)+1)
-    # def checkInput(self,number):
-    #     tableXY = {}
-    #     tableXY['x'] = 0
-    #     tableXY['y'] = 0
-    #     while(number!=0):
-    #         if(number<5):
-    #             if(tableXY['y']==0&tableXY['x']==0):
-    #                 tableXY['x'] = 5
-    #                 tableXY['y'] = 1
-    #             return tableXY
-    #             number=0
-    #         elif(number>5):
-    #             number-=5
-    #             if(tableXY['y']!=2):
-    #                 ++tableXY['y']
-    #                 tableXY['x'] = number
-    #             else:
-    #                 tableXY['y']=2
-    #                 tableXY['x']=number
-    #         elif(number>20):
-    #             number-=20
-    #             if((tableXY['y']!=2)&(tableXY['x']==0)):
-    #                 tableXY['x']=10
-    #                 ++tableXY['y']
-    #             elif(tableXY['y']!=2&tableXY['x']>0):
-    #                 if((tableXY['x']+number)<10):
-    #                     tableXY['x']+=number
-    #                     ++tableXY['y']
-    #                 else:
-    #                     tableXY['x']=(10-(tableXY['x']+number))
-    #                     ++tableXY['y']
 
 
+    def generateSingleContainer(self,x,y):
+        self.microContainers[x][y] = gtk.VBox(gtk.FALSE,self.devices+1)
+        self.chkbx = {}
+        self.entry = gtk.Entry()
+        self.entry.show()
+        self.microContainers[x][y].show()
 
+        for i in range(0,self.devices):
+            self.chkbx[i] = gtk.CheckButton("LED"+str(i+1))
+            self.chkbx[i].show()
 
-    def MenuTool(self):
+        self.microContainers[x][y].pack_start(self.entry,False,False,0)
+
+        for i in range(0,self.devices):
+            self.microContainers[x][y].pack_start(self.chkbx[i],False,False,0)
+
+    def menuTool(self):
         self.menu = gtk.Menu()
         self.firstMenuitem = {}
         self.firstMenuitem[0] = gtk.MenuItem("Nowy")
@@ -94,7 +92,7 @@ class generateScene():
             self.menu.append(self.firstMenuitem[i])
             self.firstMenuitem[i].show()
 
-
+        self.firstMenuitem[3].connect("activate", gtk.main_quit)
         self.root = gtk.MenuItem("Plik")
 
         self.root.show()
@@ -133,8 +131,7 @@ class generateScene():
         return self.container
 
 if __name__ == "__main__":
-    g = generateScene(5,5)
-    print g.checkInput(6,5)
+    g = generateScene(12,2)
     gtk.main()
 
 
