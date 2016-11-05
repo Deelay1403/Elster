@@ -25,12 +25,13 @@ import glob
 from random import randint
 import StepWindow
 import ConfigWindow
+import generateScene
 
 x = 1
-gladeFileName = "./window.glade"
+#gladeFileName = "./window.glade"
 
 logo = """
-  ____       _              _      ____                      _                       _    _
+  ____       _               _      ____                      _                       _    _
  |  _ \ __ _| |_ _ __ _   _| | __ / ___|_______ _______   __| |_ __ _____      _____| | _(_)
  | |_) / _` | __| '__| | | | |/ / \___ |_  / __|_  / _ \ / _` | '__/ _ \ \ /\ / / __| |/ | |
  |  __| (_| | |_| |  | |_| |   <   ___) / | (__ / | (_) | (_| | | | (_) \ V  V /\__ |   <| |
