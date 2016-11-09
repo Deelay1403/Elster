@@ -3,6 +3,7 @@
 '''
 Author: Patryk Szczodrowski\n
 Date of last update: 03.11.16\n
+Values: int devices = 0, int LED's = 0 (Default values,named differend in constructor)
 Class created to generate/open file of scenes designed to work with elSter Light System
 In easy way, this class can open way to simple work with light
 '''
@@ -22,26 +23,48 @@ class generateScene():
     """
     def __init__(self, colums_main = 0, devices = 0):
         self.horizontal = 5
+
+        '''Set table of containers'''
+
         self.microContainers = [[0 for x in range(self.checkInput(colums_main, self.horizontal))] for y in
                                 range(self.horizontal)]
         self.devices = devices
 
+        '''Make main window'''
+
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("destroy",gtk.main_quit)
         self.main_window_col = gtk.VBox(gtk.FALSE,3)
+
+        '''Add to main window main container'''
+
         self.window.add(self.main_window_col)
-        #self.line_window_bottom = gtk.HBox(gtk.FALSE,4)
+        '''self.line_window_bottom = gtk.HBox(gtk.FALSE,4)'''
+        #
         self.main_window_col.pack_start(self.menuTool(), False, False, 0)
+        '''If enter values equals 0, then program won't generate singleContainers'''
+
         if colums_main !=0 | devices !=0:
             try:
-                self.table = gtk.Table(self.checkInput(colums_main,self.horizontal), self.horizontal, True)
+                '''Set value self.table as gtk.Table'''
+                '''gtk.Table looks like two-dimenstional array. If we set parameters as 3 and 3 it would look like:
 
+                Y
+                  00   -   01   -   02
+                  10   -   11   -   12
+                  20   -   21   -   22
+                                       X
+
+                '''
+
+                self.table = gtk.Table(self.checkInput(colums_main,self.horizontal), self.horizontal, True)
+                ''' Test string'''
                 self.napis = [[0 for x in range(self.checkInput(colums_main, self.horizontal))] for y in range(colums_main)]
                 for x in range(0,colums_main):
                     for y in range(0, self.checkInput(colums_main,self.horizontal)):
                         self.napis[x][y] = gtk.Button("Test")
                         self.napis[x][y].show()
-
+                '''Do loop which add elements to array od objects. This objects will show as singleConstainers'''
                 for x in range(0,self.checkInput(colums_main,self.horizontal)):
                     print str(x) + " " + str(colums_main)
                     if(colums_main>5):
@@ -54,10 +77,12 @@ class generateScene():
                             self.generateSingleContainer(y, x)
                             self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
                 self.table.show()
+                '''Add gtk.table to main container'''
                 self.main_window_col.pack_start(self.table, True, True, 0)
             except(IndexError):
-                print "lel"
+                print "IndexError"
         else:
+            '''Method to generate any table if values are bad or don't exist'''
             containerToFill = gtk.Table(3,3,True)
             containerToFill.show()
             self.main_window_col.pack_start(containerToFill,True,True,0)
@@ -86,14 +111,18 @@ class generateScene():
         #self.line_window_bottom.show()
         self.menu.show()
         # self.x_Box.show()
-    #Metoda do przekonwertowania ilości urządzeń do tablicy kontenerów
+    '''Metoda do przekonwertowania ilości urządzeń do tablicy kontenerów
+        Method to convert a number of devices to container array
+    '''
     def checkInput(self, number,column):
         if(number%column==0):
             return (number/column)
         else:
             return ((number/column)+1)
 
-    #Metoda do generowania pojedyńczego kontenera
+    '''Metoda do generowania pojedyńczego kontenera
+        Method to generate singleContainer
+    '''
     def generateSingleContainer(self,x,y):
         self.microContainers[x][y] = gtk.VBox(gtk.FALSE,self.devices+1)
         self.chkbx = {}
@@ -111,7 +140,9 @@ class generateScene():
         for i in range(0,self.devices):
             self.microContainers[x][y].pack_start(self.chkbx[i],False,False,0)
 
-    #Metoda do generowania paska menu
+    '''Pasek menu
+        Menubar
+    '''
     def menuTool(self):
         self.menu = gtk.Menu()
         self.firstMenuitem = {}
@@ -153,27 +184,35 @@ class generateScene():
     END
 
     """
+
     def fileInterpret(self,widget,option):
+        '''Main method to run all other methods responsible for files'''
+        '''Open and get file object'''
         self.File = self.fileOpen_Choose_Save(widget, option)
         if self.File != None:
             print self.File
+            '''We will open file'''
             if option == 'open':
+                '''Read all content'''
                 buffer = self.File['read'].readlines()
+                '''Send it to fileParserOpen method which will interpret it'''
                 self.fileParserOpen(buffer)
                 # self.napis = [[0 for x in range(self.checkInput(, ))] for y in
                 #               range()]
+        '''Close file at the end'''
         self.File['read'].close()
 
     def fileParserOpen(self,buffer):
-        #Get all str(file)
+        '''Method to interpret content of opened file'''
+        '''Get all str(file)'''
         sbuffer = str(buffer)
-        #Convert into list without dot
+        '''Convert into list without dot'''
         list = sbuffer.split(".")
         print list[1]
-        #Convert into sublist without comma
+        '''Convert into sublist without comma'''
         listOfComma = list[1].split(",")
         print listOfComma
-        #Run window with value from file
+        '''Run window with value from file'''
         print self.firstArgumentParse(listOfComma,1)
         self.__init__(int(self.firstArgumentParse(listOfComma,1)),int(self.firstArgumentParse(listOfComma,2)))
         self.obj["label"].set_label("1/" + str(self.firstArgumentParse(listOfComma,3)))
@@ -184,6 +223,7 @@ class generateScene():
                  num = listOfComma[number][x+1:]
         return num
     def fileOpen_Choose_Save(self,widget,option):
+        '''Main method which open file in two other way. One is read-write other is append. It also set up action for dialog buttons'''
         chooser = self.switch_choose(option)
         response = chooser.run()
         self.file = {}
@@ -202,9 +242,10 @@ class generateScene():
     def fileOpen(self, file,mode):
         return open(file,mode)
 
-    #Switch to decite which dialog is suppose to call
+
 
     def switch_choose(self,x):
+        '''Switch to decide which dialog is suppose to call'''
         return {
             'open' : gtk.FileChooserDialog(title="FileMenu", action=gtk.FILE_CHOOSER_ACTION_OPEN,
                                         buttons=(
@@ -220,15 +261,18 @@ class generateScene():
         }.get(x,gtk.FileChooserDialog(title="FileMenu", action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                         buttons=(
                                         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_NEW, gtk.RESPONSE_OK)))
+
     def MainBottom(self):
+        '''Bottom buttons'''
         self.container = gtk.HBox(gtk.FALSE,4)
         self.obj = {}
+        '''Generate 4 objects for the first page'''
         self.obj["label"] = self.obj[0] = gtk.Label("-/-")
         self.obj["edit"] = self.obj[1] = gtk.Button("Edytuj")
         self.obj["leftbt"] = self.obj[2] = gtk.Button("<")
         self.obj["rightbt"] = self.obj[3] = gtk.Button(">")
 
-
+        '''Add it to the container'''
         for i in range(0,4):
             self.obj[i].show()
             if(i!=1):
