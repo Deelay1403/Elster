@@ -1,5 +1,11 @@
 """
+Autor:  Patryk Szczodrowski
+        Oskar Jaskólski
+Data modyfikacji: 10.11.16
 
+Program do obsługi systemu bezprzewodowego zarządzania elSter. Dzięki procesorom ATMEGA program
+jest w stanie komunikować się z odbiornikami. Wszystkie urządzenia w systemie muszą być wcześniej spreparowane oraz
+zaprogramowane do działania pod konkretnym modułem
 """
 # import self as self
 import Tkinter as tk
@@ -68,12 +74,12 @@ for i in range(47, 91):
 def getWho():
     return Who
 
-
+'''Metoda przeznaczona do wysyłania komend'''
 def lightLED(receiver, state, led, option):
     ser.write(`receiver` + "." + `state` + "." + `led` + "." + `option` + ".")
     # ser.write(receiver + "." + state + "." + led + "." + option + ".")
 
-
+'''Gaszenie pojedyńczego urządzenia'''
 def forLedBlackOutSingle(cstate, check1, check2, bt1, bt2, receiver, state, option):
     check1.set_active(cstate)
     check2.set_active(cstate)
@@ -82,7 +88,7 @@ def forLedBlackOutSingle(cstate, check1, check2, bt1, bt2, receiver, state, opti
     for x in range(1, 3):
         lightLED(receiver, state, x, option)
 
-
+'''Gaszenie wszystkich urządzeń'''
 def forLedBlackOutAll(state, option):
     for x in range(2, 7):
         for y in range(1, 3):
@@ -95,6 +101,7 @@ activebuttons = True
 
 # Example of callFunctionLightLed();
 # def on_togglebutton1_3_toggled(self, widget):callFunctionLightLed(self, self.toggle1_3,self.check1_2, 2, 1, 2, 0)
+'''Metoda wywoływana przez przyciski mająca na celu jednoczesne przygaszanie ich'''
 def callFunctionLightLed(self, bt, check, receiver, state, led, option):
     check.set_active(True)
     lightLED(receiver, state, led, option)
