@@ -185,19 +185,46 @@ class generateScene():
 
         return self.menu_bar
     """
-    BEGIN
-    D:5 L:2 S:5.
-    S:1.
-    1:10.
-    2:01.
-    3:11.
-    4:11.
-    5:00.
-    -
-    S:2.
-    ...
-    END
+Typical file:
 
+(lp0
+I2
+aI5
+aI2
+a.(lp0
+(lp1
+(lp2
+I0
+aI1
+aa(lp3
+I0
+aI0
+aa(lp4
+I0
+aI0
+aa(lp5
+I0
+aI0
+aa(lp6
+I0
+aI0
+aaa(lp7
+(lp8
+I0
+aI0
+aa(lp9
+I0
+aI0
+aa(lp10
+I0
+aI0
+aa(lp11
+I0
+aI0
+aa(lp12
+I0
+aI0
+aaa.
     """
 
     def fileInterpret(self,widget,option):
