@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 Author: Patryk Szczodrowski\n
-Date of last update: 03.11.16\n
+Date of last update: 24.12.16\n
 Values: int devices = 0, int LED's = 0 (Default values,named differend in constructor)
 Class created to generate/open file of scenes designed to work with elSter Light System
 In easy way, this class can open way to simple work with light
