@@ -257,27 +257,27 @@ aaa.
         '''Close file at the end'''
 
 
-
-    def fileParserOpen(self,buffer):
-        '''Method to interpret content of opened file'''
-        '''Get all str(file)'''
-        sbuffer = str(buffer)
-        '''Convert into list without dot'''
-        list = sbuffer.split(".")
-        print list[1]
-        '''Convert into sublist without comma'''
-        listOfComma = list[1].split(",")
-        print listOfComma
-        '''Run window with value from file'''
-        print self.firstArgumentParse(listOfComma,1)
-        self.__init__(int(self.firstArgumentParse(listOfComma,1)),int(self.firstArgumentParse(listOfComma,2)))
-        self.obj["label"].set_label("1/" + str(self.firstArgumentParse(listOfComma,3)))
-    def firstArgumentParse(self,listOfComma,number):
-        num = 0
-        for x in range(0,len(listOfComma[number])):
-            if listOfComma[number][x] == ":":
-                 num = listOfComma[number][x+1:]
-        return num
+    #
+    # def fileParserOpen(self,buffer):
+    #     '''Method to interpret content of opened file'''
+    #     '''Get all str(file)'''
+    #     sbuffer = str(buffer)
+    #     '''Convert into list without dot'''
+    #     list = sbuffer.split(".")
+    #     print list[1]
+    #     '''Convert into sublist without comma'''
+    #     listOfComma = list[1].split(",")
+    #     print listOfComma
+    #     '''Run window with value from file'''
+    #     print self.firstArgumentParse(listOfComma,1)
+    #     self.__init__(int(self.firstArgumentParse(listOfComma,1)),int(self.firstArgumentParse(listOfComma,2)))
+    #     self.obj["label"].set_label("1/" + str(self.firstArgumentParse(listOfComma,3)))
+    # def firstArgumentParse(self,listOfComma,number):
+    #     num = 0
+    #     for x in range(0,len(listOfComma[number])):
+    #         if listOfComma[number][x] == ":":
+    #              num = listOfComma[number][x+1:]
+    #     return num
 
     """
 import pickle
