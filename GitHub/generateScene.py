@@ -251,6 +251,7 @@ aaa.
                 pickle.dump(body_tab,self.File['save'])
                 self.File['save'].close()
             if option == 'new':
+                '''Still working..'''
                 print "new"
                 print self.File
         '''Close file at the end'''
