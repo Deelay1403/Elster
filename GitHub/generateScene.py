@@ -373,5 +373,6 @@ text.close()
         return self.container
 
 if __name__ == "__main__":
+    '''Runnig with 5,5,2 for example - can be run with nothing'''
     g = generateScene(5,2,2)
     gtk.main()
