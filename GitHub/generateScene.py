@@ -8,6 +8,7 @@ Class created to generate/open file of scenes designed to work with elSter Light
 In easy way, this class can open way to simple work with light
 '''
 import gtk
+import pickle
 
 # TODO: 1.Make changebutton responsible to call -> Throw it to the table
 # TODO: 2.Create method to read/write file and generate window
@@ -21,7 +22,19 @@ class generateScene():
     PL:Konstruktor klasy generateScene():
     ENG:generateScene() class constructor
     """
-    def __init__(self, colums_main = 0, devices = 0):
+    head_tab = []
+    body_tab = []
+    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = []):
+        global head_tab,body_tab
+        print colums_main
+        head_tab = [number_of_scenes, colums_main,devices]
+        body_tab = [[[0 for l in range(devices)] for d in range(colums_main)] for s in range(number_of_scenes)]
+
+        if(body != []):
+            body_tab = body
+
+        print head_tab
+        print body_tab
         self.horizontal = 5
 
         '''Set table of containers'''
@@ -39,12 +52,14 @@ class generateScene():
         '''Add to main window main container'''
 
         self.window.add(self.main_window_col)
+
         '''self.line_window_bottom = gtk.HBox(gtk.FALSE,4)'''
         #
         self.main_window_col.pack_start(self.menuTool(), False, False, 0)
+
         '''If enter values equals 0, then program won't generate singleContainers'''
 
-        if colums_main !=0 | devices !=0:
+        if colums_main != 0 or devices != 0:
             try:
                 '''Set value self.table as gtk.Table'''
                 '''gtk.Table looks like two-dimenstional array. If we set parameters as 3 and 3 it would look like:
@@ -194,13 +209,26 @@ class generateScene():
             '''We will open file'''
             if option == 'open':
                 '''Read all content'''
-                buffer = self.File['read'].readlines()
+                head = pickle.load(self.File['read'])
+                body = pickle.load(self.File['read'])
+                '''Head = [number_of_scenes, colums_main,devices]'''
+                print head
+                print body
                 '''Send it to fileParserOpen method which will interpret it'''
-                self.fileParserOpen(buffer)
+                g = generateScene(head[1],head[2],head[0],body)
                 # self.napis = [[0 for x in range(self.checkInput(, ))] for y in
                 #               range()]
+                self.File['read'].close()
+            if option == 'save':
+                pickle.dump(head_tab,self.File['save'])
+                pickle.dump(body_tab,self.File['save'])
+                self.File['save'].close()
+            if option == 'new':
+                print "new"
+                print self.File
         '''Close file at the end'''
-        self.File['read'].close()
+
+
 
     def fileParserOpen(self,buffer):
         '''Method to interpret content of opened file'''
@@ -222,16 +250,44 @@ class generateScene():
             if listOfComma[number][x] == ":":
                  num = listOfComma[number][x+1:]
         return num
+
+    """
+import pickle
+text = open("lel.bin","wb")
+tab = [123,"32",'v',10.3]
+tab2 = [[0 for x in range(5)] for y in range(5)]
+tab2[0][0] = 1
+print tab2
+tab4 = [[]]
+
+i = 3
+#pickle.dump(tab,text)
+pickle.dump(tab2,text)
+tab3 =[[0 for x in range(5)]for y in range(5)]
+text.close()
+text = open("lel.bin","rb")
+tab3 = pickle.load(text)
+print "Unpickled"
+print tab3
+
+
+text.close()
+
+"""
     def fileOpen_Choose_Save(self,widget,option):
         '''Main method which open file in two other way. One is read-write other is append. It also set up action for dialog buttons'''
         chooser = self.switch_choose(option)
         response = chooser.run()
         self.file = {}
         if response == gtk.RESPONSE_OK:
-            name = chooser.get_filename()
-            self.file['read'] = self.fileOpen(name,"rw")
-            # self.file['write'] = self.fileOpen(name,"w")
-            self.file['append'] = self.fileOpen(name, "a")
+            if(option == 'open'):
+                name = chooser.get_filename()
+                self.file['read'] = self.fileOpen(name,"rw")
+            if(option == 'save'):
+                name = chooser.get_filename()
+                self.file['save'] = self.fileOpen(name,"w")
+            if(option == 'new'):
+                self.file = chooser.get_filename()
             chooser.destroy()
             return self.file
         if response == gtk.RESPONSE_CANCEL:
@@ -289,5 +345,5 @@ class generateScene():
         return self.container
 
 if __name__ == "__main__":
-    g = generateScene()
+    g = generateScene(5,2,2)
     gtk.main()
