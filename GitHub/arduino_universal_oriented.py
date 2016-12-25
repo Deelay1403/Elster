@@ -76,8 +76,12 @@ def getWho():
 
 '''Metoda przeznaczona do wysyłania komend'''
 def lightLED(receiver, state, led, option):
-    ser.write(`receiver` + "." + `state` + "." + `led` + "." + `option` + ".")
-    # ser.write(receiver + "." + state + "." + led + "." + option + ".")
+    if not ser == 'NO_PORTS':
+        ser.write(`receiver` + "." + `state` + "." + `led` + "." + `option` + ".")
+        # ser.write(receiver + "." + state + "." + led + "." + option + ".")
+    else:
+        print('EMULATING')
+        #TODO: SIMULATING SCENES
 
 '''Gaszenie pojedyńczego urządzenia'''
 def forLedBlackOutSingle(cstate, check1, check2, bt1, bt2, receiver, state, option):
@@ -527,7 +531,12 @@ time.sleep(2)
 
 def serialActivate(dial):
     global ser
-    ser = serial.Serial(serial_ports[dial.getIndex()], 9600)
+    
+    if not serial_ports:
+        print "BRAK PORTOW NA STATKI";
+        ser = "NO_PORTS";
+    else:
+        ser = serial.Serial(serial_ports[dial.getIndex()], 9600)
 
 def getSer():
     return ser
