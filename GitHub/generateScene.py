@@ -23,17 +23,54 @@ class generateScene():
     ENG:generateScene() class constructor
     """
     head_tab = []
+    meta_tab = []
     body_tab = []
     def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = []):
         global head_tab,body_tab
         print colums_main
         head_tab = [number_of_scenes, colums_main,devices]
+        '''
+            head_tab
+
+                0           1           2
+             scenes       Devices     "Leds"
+
+            meta_tab
+    scenes
+    ↓         0           1           2                3
+        0     time        loops     description   count of loops
+        1
+        2
+        3
+
+            body_tab
+                    x →
+                    "LEDS" →
+        y             0            1               2
+      devices   0    status        status        status
+         ↓      1
+                2
+                3
+
+    Scenes ↗
+
+          ↗
+        z
+                            4   scene 5
+                        3   scene 4
+                    2   scene 3
+                1   scene 2
+            0   scene 1
+
+        '''
+        meta_tab = [[0 for i in range(4)]for l in range(number_of_scenes)]
         body_tab = [[[0 for l in range(devices)] for d in range(colums_main)] for s in range(number_of_scenes)]
 
         if(body != []):
             body_tab = body
 
         print head_tab
+        print meta_tab
         print body_tab
         self.horizontal = 5
 
