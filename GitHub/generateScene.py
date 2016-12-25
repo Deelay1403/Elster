@@ -17,7 +17,7 @@ import pickle
 # TODO: 5.Talk with Popcorator
 # TODO: 6.Table of objects(containers) created to work with one method (in __init__ ). This method will update
 # TODO: table and light up single LED. It's gonna be difficult because I HAVE FUCKIN' XYZ TABLE. Loot work to do.
-# TODO: While method operate bottom run through scenes - chkbtns must be update and light up automatically.
+# TODO: While method operate, bottom run through scenes - chkbtns must be update and light up automatically.
 # TODO: Similar situation must be on OPEN. First scene must be update automatically.
 
 
@@ -32,7 +32,11 @@ class generateScene():
     def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = []):
         global head_tab,body_tab,startScene
         self.startScene = 1
+        self.activeDevice = 0
         self.head_tab = [number_of_scenes, colums_main,devices]
+        self.chkbtn_tab = {}
+        for j in range(self.head_tab[1]):
+            self.chkbtn_tab[j] = {}
         '''
         ________________________________________________________________________________
         |                                                                               |
@@ -84,6 +88,8 @@ class generateScene():
         print self.meta_tab
         print self.body_tab
 
+
+
         #self.changeSceneOnBottom(1,number_of_scenes)
 
         self.horizontal = 5
@@ -125,7 +131,8 @@ class generateScene():
 
                 self.table = gtk.Table(self.checkInput(colums_main,self.horizontal), self.horizontal, True)
                 ''' Test string'''
-                self.napis = [[0 for x in range(self.checkInput(colums_main, self.horizontal))] for y in range(colums_main)]
+                self.napis = [[0 for x in range(self.checkInput(colums_main, self.horizontal))]
+                              for y in range(colums_main)]
                 for x in range(0,colums_main):
                     for y in range(0, self.checkInput(colums_main,self.horizontal)):
                         self.napis[x][y] = gtk.Button("Test")
@@ -135,13 +142,16 @@ class generateScene():
                     print str(x) + " " + str(colums_main)
                     if(colums_main>5):
                         for y in range(0, self.horizontal):
-                            self.generateSingleContainer(y, x)
+                            self.generateSingleContainer(y, x,self.activeDevice)
                             self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
+                            self.activeDevice +=1
                             colums_main-=1
                     elif (colums_main <= 5):
                         for y in range(0, colums_main):
-                            self.generateSingleContainer(y, x)
+                            self.generateSingleContainer(y, x,self.activeDevice)
                             self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
+                            self.activeDevice+=1
+                            print self.activeDevice
                 self.table.show()
                 '''Add gtk.table to main container'''
                 self.main_window_col.pack_start(self.table, True, True, 0)
@@ -176,6 +186,7 @@ class generateScene():
         self.main_window_col.show()
         #self.line_window_bottom.show()
         self.menu.show()
+        self.changeChkbtnActive(self.startScene)
         # self.x_Box.show()
     '''Metoda do przekonwertowania ilości urządzeń do tablicy kontenerów
         Method to convert a number of devices to container array
@@ -195,7 +206,8 @@ class generateScene():
         Method to generate singleContainer
     '''
 
-    def generateSingleContainer(self,x,y):
+    def generateSingleContainer(self,x,y,dev):
+
         self.microContainers[x][y] = gtk.VBox(gtk.FALSE,self.devices+1)
         self.chkbx = {}
         self.entry = gtk.Entry()
@@ -205,6 +217,10 @@ class generateScene():
 
         for i in range(0,self.devices):
             self.chkbx[i] = gtk.CheckButton("LED"+str(i+1))
+            self.chkbx[i].connect("toggled",self.changeBody_tabStatus,(self.startScene-1),dev,i)
+            #self.chkbtn_tab = [[0 for i in range(self.devices)]for j in range(self.head_tab[1])]
+
+            self.chkbtn_tab[dev][i] = self.chkbx[i]
             self.chkbx[i].show()
 
         self.microContainers[x][y].pack_start(self.entry,False,False,0)
@@ -215,6 +231,21 @@ class generateScene():
     '''Pasek menu
         Menubar
     '''
+    def changeBody_tabStatus(self,widget,scene,device,led):
+        if  widget.get_active():
+            self.body_tab[self.startScene-1][device][led] = 1
+        else:
+            self.body_tab[self.startScene-1][device][led] = 0
+        print self.body_tab
+    def changeChkbtnActive(self,scene):
+        for i in range(self.head_tab[1]):
+            for j in range(self.head_tab[2]):
+                if self.body_tab[scene-1][i][j] == 1:
+                    self.chkbtn_tab[i][j].set_active(True)
+                else:
+                    print self.chkbtn_tab
+                    self.chkbtn_tab[i][j].set_active(False)
+
     def menuTool(self):
         self.menu = gtk.Menu()
         self.firstMenuitem = {}
@@ -304,8 +335,8 @@ aaa.
                 #               range()]
                 self.File['read'].close()
             if option == 'save':
-                pickle.dump(head_tab,self.File['save'])
-                pickle.dump(body_tab,self.File['save'])
+                pickle.dump(self.head_tab,self.File['save'])
+                pickle.dump(self.body_tab,self.File['save'])
                 self.File['save'].close()
             if option == 'new':
                 '''Still working..'''
@@ -441,6 +472,7 @@ text.close()
             return 0
         self.startScene +=1
         self.changeSceneOnBottom(self.startScene,self.head_tab[0])
+        self.changeChkbtnActive(self.startScene)
 
     def bottomArrowLeft(self, widget):
         if (self.startScene == 1):
@@ -448,9 +480,10 @@ text.close()
             return 0
         self.startScene -= 1
         self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+        self.changeChkbtnActive(self.startScene)
 
 
 if __name__ == "__main__":
     '''Runnig with 5,5,2 for example - can be run with nothing'''
-    g = generateScene(6,6,8)
+    g = generateScene(5,2,8)
     gtk.main()
