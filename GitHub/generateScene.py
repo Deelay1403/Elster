@@ -3,7 +3,8 @@
 '''
 Author: Patryk Szczodrowski\n
 Date of last update: 24.12.16\n
-Values: int devices = 0, int LED's = 0 , int scenes = 0, three dimenstional array = [](Default values, named differend in constructor)
+Values: int devices = 0, int LED's = 0 , int scenes = 0, three dimenstional array = [], two dimenstional array = []
+(Default values, named differend in constructor)
 Class created to generate/open file of scenes designed to work with elSter Light System
 In easy way, this class can open way to simple work with light
 '''
@@ -26,14 +27,12 @@ class generateScene():
     PL:Konstruktor klasy generateScene():
     ENG:generateScene() class constructor
     """
-    head_tab = []
-    meta_tab = []
-    body_tab = []
-    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = []):
-        global head_tab,body_tab,startScene
+
+    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = []):
         self.startScene = 1
         self.activeDevice = 0
         self.head_tab = [number_of_scenes, colums_main,devices]
+        '''For all methods with chkbtn's'''
         self.chkbtn_tab = {}
         for j in range(self.head_tab[1]):
             self.chkbtn_tab[j] = {}
@@ -78,13 +77,19 @@ class generateScene():
         self.meta_tab = [[0 for i in range(4)]for l in range(number_of_scenes)]
         self.body_tab = [[[0 for l in range(devices)] for d in range(colums_main)] for s in range(number_of_scenes)]
 
+        '''automatically fill body_tab with body (when body != [])'''
         if(body != []):
             for x in range(number_of_scenes):
                 for y in range(colums_main):
                     for z in range(devices):
                         self.body_tab[x][y][z] = body[x][y][z]
+        if(meta != []):
+            for x in range(number_of_scenes):
+                for y in range(4):
+                    self.meta_tab[x][y] = meta[x][y]
 
         print self.head_tab
+        print "META"
         print self.meta_tab
         print self.body_tab
 
@@ -140,13 +145,16 @@ class generateScene():
                 '''Do loop which add elements to array od objects. This objects will show as singleConstainers'''
                 for x in range(0,self.checkInput(colums_main,self.horizontal)):
                     print str(x) + " " + str(colums_main)
+                    '''When devices is more than 5, program will render this in 2+ line'''
                     if(colums_main>5):
                         for y in range(0, self.horizontal):
                             self.generateSingleContainer(y, x,self.activeDevice)
                             self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
                             self.activeDevice +=1
                             colums_main-=1
-                    elif (colums_main <= 5):
+
+                        '''When devices is less than 5, program will render 1 line'''
+                    elif(colums_main <= 5):
                         for y in range(0, colums_main):
                             self.generateSingleContainer(y, x,self.activeDevice)
                             self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
@@ -186,6 +194,7 @@ class generateScene():
         self.main_window_col.show()
         #self.line_window_bottom.show()
         self.menu.show()
+        '''This react to body_tab and set status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
         # self.x_Box.show()
     '''Metoda do przekonwertowania ilości urządzeń do tablicy kontenerów
@@ -237,6 +246,7 @@ class generateScene():
         else:
             self.body_tab[self.startScene-1][device][led] = 0
         print self.body_tab
+
     '''Change status of CheckButtons using body_tab'''
     def changeChkbtnActive(self,scene):
         for i in range(self.head_tab[1]):
@@ -326,17 +336,19 @@ aaa.
             if option == 'open':
                 '''Read all content'''
                 head = pickle.load(self.File['read'])
+                meta = pickle.load(self.File['read'])
                 body = pickle.load(self.File['read'])
                 '''Head = [number_of_scenes, colums_main,devices]'''
                 print head
                 print body
                 '''Send it to fileParserOpen method which will interpret it'''
-                g = generateScene(head[1],head[2],head[0],body)
+                g = generateScene(head[1],head[2],head[0],body,meta)
                 # self.napis = [[0 for x in range(self.checkInput(, ))] for y in
                 #               range()]
                 self.File['read'].close()
             if option == 'save':
                 pickle.dump(self.head_tab,self.File['save'])
+                pickle.dump(self.meta_tab,self.File['save'])
                 pickle.dump(self.body_tab,self.File['save'])
                 self.File['save'].close()
             if option == 'new':
@@ -344,29 +356,6 @@ aaa.
                 print "new"
                 print self.File
         '''Close file at the end'''
-
-
-    #
-    # def fileParserOpen(self,buffer):
-    #     '''Method to interpret content of opened file'''
-    #     '''Get all str(file)'''
-    #     sbuffer = str(buffer)
-    #     '''Convert into list without dot'''
-    #     list = sbuffer.split(".")
-    #     print list[1]
-    #     '''Convert into sublist without comma'''
-    #     listOfComma = list[1].split(",")
-    #     print listOfComma
-    #     '''Run window with value from file'''
-    #     print self.firstArgumentParse(listOfComma,1)
-    #     self.__init__(int(self.firstArgumentParse(listOfComma,1)),int(self.firstArgumentParse(listOfComma,2)))
-    #     self.obj["label"].set_label("1/" + str(self.firstArgumentParse(listOfComma,3)))
-    # def firstArgumentParse(self,listOfComma,number):
-    #     num = 0
-    #     for x in range(0,len(listOfComma[number])):
-    #         if listOfComma[number][x] == ":":
-    #              num = listOfComma[number][x+1:]
-    #     return num
 
     """
 import pickle
