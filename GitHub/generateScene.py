@@ -3,7 +3,7 @@
 '''
 Author: Patryk Szczodrowski\n
 Date of last update: 24.12.16\n
-Values: int devices = 0, int LED's = 0 (Default values,named differend in constructor)
+Values: int devices = 0, int LED's = 0 , int scenes = 0, three dimenstional array = [](Default values, named differend in constructor)
 Class created to generate/open file of scenes designed to work with elSter Light System
 In easy way, this class can open way to simple work with light
 '''
@@ -26,16 +26,20 @@ class generateScene():
     meta_tab = []
     body_tab = []
     def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = []):
-        global head_tab,body_tab
-        print colums_main
-        head_tab = [number_of_scenes, colums_main,devices]
+        global head_tab,body_tab,startScene
+        self.startScene = 1
+        self.head_tab = [number_of_scenes, colums_main,devices]
         '''
-            head_tab
+        ________________________________________________________________________________
+        |                                                                               |
+        |     head_tab                                                                  |
+        |                                                                               |
+        |       0           1           2                                               |
+        |    scenes       Devices     "Leds"                                            |
+        |                                                                               |
+        |   meta_tab                                                                    |
+        |_______________________________________________________________________________|
 
-                0           1           2
-             scenes       Devices     "Leds"
-
-            meta_tab
     scenes
     ↓         0           1           2                3
         0     time        loops     description   count of loops
@@ -63,15 +67,21 @@ class generateScene():
             0   scene 1
 
         '''
-        meta_tab = [[0 for i in range(4)]for l in range(number_of_scenes)]
-        body_tab = [[[0 for l in range(devices)] for d in range(colums_main)] for s in range(number_of_scenes)]
+        self.meta_tab = [[0 for i in range(4)]for l in range(number_of_scenes)]
+        self.body_tab = [[[0 for l in range(devices)] for d in range(colums_main)] for s in range(number_of_scenes)]
 
         if(body != []):
-            body_tab = body
+            for x in range(number_of_scenes):
+                for y in range(colums_main):
+                    for z in range(devices):
+                        self.body_tab[x][y][z] = body[x][y][z]
 
-        print head_tab
-        print meta_tab
-        print body_tab
+        print self.head_tab
+        print self.meta_tab
+        print self.body_tab
+
+        #self.changeSceneOnBottom(1,number_of_scenes)
+
         self.horizontal = 5
 
         '''Set table of containers'''
@@ -166,6 +176,11 @@ class generateScene():
     '''Metoda do przekonwertowania ilości urządzeń do tablicy kontenerów
         Method to convert a number of devices to container array
     '''
+
+    def changeSceneOnBottom(self, actualScene, oldScene):
+        # self.obj["label"].set_text("lel")
+        self.obj["label"].set_label(str(actualScene)+"/"+str(oldScene))
+
     def checkInput(self, number,column):
         if(number%column==0):
             return (number/column)
@@ -175,6 +190,7 @@ class generateScene():
     '''Metoda do generowania pojedyńczego kontenera
         Method to generate singleContainer
     '''
+
     def generateSingleContainer(self,x,y):
         self.microContainers[x][y] = gtk.VBox(gtk.FALSE,self.devices+1)
         self.chkbx = {}
@@ -393,6 +409,8 @@ text.close()
         self.obj["leftbt"] = self.obj[2] = gtk.Button("<")
         self.obj["rightbt"] = self.obj[3] = gtk.Button(">")
 
+        self.obj["rightbt"].connect("clicked", self.bottomArrowRight)
+        self.obj["leftbt"].connect("clicked", self.bottomArrowLeft)
         '''Add it to the container'''
         for i in range(0,4):
             self.obj[i].show()
@@ -407,9 +425,28 @@ text.close()
         self.obj["rightbt"].set_size_request(40, -1)
 
         self.container.show()
+
+        '''set label on start'''
+
+        self.changeSceneOnBottom(self.startScene,self.head_tab[0])
         return self.container
+
+    def bottomArrowRight(self,widget):
+        if(self.startScene==self.head_tab[0]):
+            self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+            return 0
+        self.startScene +=1
+        self.changeSceneOnBottom(self.startScene,self.head_tab[0])
+
+    def bottomArrowLeft(self, widget):
+        if (self.startScene == 1):
+            self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+            return 0
+        self.startScene -= 1
+        self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+
 
 if __name__ == "__main__":
     '''Runnig with 5,5,2 for example - can be run with nothing'''
-    g = generateScene(5,2,2)
+    g = generateScene(6,6,8)
     gtk.main()
