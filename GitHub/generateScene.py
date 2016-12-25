@@ -217,9 +217,8 @@ class generateScene():
 
         for i in range(0,self.devices):
             self.chkbx[i] = gtk.CheckButton("LED"+str(i+1))
+            '''connect "toggled" to every chkbtn'''
             self.chkbx[i].connect("toggled",self.changeBody_tabStatus,(self.startScene-1),dev,i)
-            #self.chkbtn_tab = [[0 for i in range(self.devices)]for j in range(self.head_tab[1])]
-
             self.chkbtn_tab[dev][i] = self.chkbx[i]
             self.chkbx[i].show()
 
@@ -231,12 +230,14 @@ class generateScene():
     '''Pasek menu
         Menubar
     '''
+    '''Change body_tab information while checkbutton is toggled'''
     def changeBody_tabStatus(self,widget,scene,device,led):
         if  widget.get_active():
             self.body_tab[self.startScene-1][device][led] = 1
         else:
             self.body_tab[self.startScene-1][device][led] = 0
         print self.body_tab
+    '''Change status of CheckButtons using body_tab'''
     def changeChkbtnActive(self,scene):
         for i in range(self.head_tab[1]):
             for j in range(self.head_tab[2]):
@@ -466,20 +467,26 @@ text.close()
         self.changeSceneOnBottom(self.startScene,self.head_tab[0])
         return self.container
 
+    '''react to right arrow on bottom'''
     def bottomArrowRight(self,widget):
         if(self.startScene==self.head_tab[0]):
             self.changeSceneOnBottom(self.startScene, self.head_tab[0])
             return 0
         self.startScene +=1
+        '''change label on bottom'''
         self.changeSceneOnBottom(self.startScene,self.head_tab[0])
+        '''change status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
 
+    '''react to left arrow on bottom'''
     def bottomArrowLeft(self, widget):
         if (self.startScene == 1):
             self.changeSceneOnBottom(self.startScene, self.head_tab[0])
             return 0
         self.startScene -= 1
+        '''change label on bottom'''
         self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+        '''change status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
 
 
