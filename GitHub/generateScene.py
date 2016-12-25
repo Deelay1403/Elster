@@ -30,6 +30,8 @@ class generateScene():
 
     def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = []):
         self.startScene = 1
+        if(number_of_scenes==0):
+            self.startScene = 0
         self.activeDevice = 0
         self.head_tab = [number_of_scenes, colums_main,devices]
         '''For all methods with chkbtn's'''
@@ -458,6 +460,8 @@ text.close()
 
     '''react to right arrow on bottom'''
     def bottomArrowRight(self,widget):
+        if(self.startScene==0):
+            return 0
         if(self.startScene==self.head_tab[0]):
             self.changeSceneOnBottom(self.startScene, self.head_tab[0])
             return 0
@@ -469,6 +473,8 @@ text.close()
 
     '''react to left arrow on bottom'''
     def bottomArrowLeft(self, widget):
+        if (self.startScene == 0):
+            return 0
         if (self.startScene == 1):
             self.changeSceneOnBottom(self.startScene, self.head_tab[0])
             return 0
@@ -481,5 +487,5 @@ text.close()
 
 if __name__ == "__main__":
     '''Runnig with 5,5,2 for example - can be run with nothing'''
-    g = generateScene(5,2,8)
+    g = generateScene()
     gtk.main()
