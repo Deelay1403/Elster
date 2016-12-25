@@ -15,6 +15,10 @@ import pickle
 # TODO: 3.Make it look better
 # TODO: 4.Drink coffee - You deserve :)
 # TODO: 5.Talk with Popcorator
+# TODO: 6.Table of objects(containers) created to work with one method (in __init__ ). This method will update
+# TODO: table and light up single LED. It's gonna be difficult because I HAVE FUCKIN' XYZ TABLE. Loot work to do.
+# TODO: While method operate bottom run through scenes - chkbtns must be update and light up automatically.
+# TODO: Similar situation must be on OPEN. First scene must be update automatically.
 
 
 class generateScene():
