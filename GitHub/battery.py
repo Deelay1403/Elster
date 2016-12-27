@@ -7,6 +7,8 @@ class battery:
 	def __init__(self):
 		self.level = 0
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+		self.window.set_border_width(10)
+
     
 		self.window.connect("delete_event", self.delete_event)
 		self.window.connect("destroy", self.destroy)
