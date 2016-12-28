@@ -96,7 +96,8 @@ class serialWindow:
             x = 0
             self.liststore.clear()
             for pack in serialPorts:
-                self.liststore.append([serialPorts[x]]) #ustawic na miejsce domyslne
+                #TODO niech nowe porty pojawiaja sie od miejsca 0
+                self.liststore.append([serialPorts[x]])
                 x += 1
             return
         arduino_universal.ser.write("99,4")
