@@ -2,40 +2,93 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-class battery:
+class batteryWindow:
 
-	def __init__(self):
-		self.level = 0
+	def __init__(self, port, howManyInRow, buttonFunction):
+		self.port = port
+		self.buttonFunction = buttonFunction
+		self.howManyInRow = howManyInRow
+
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+		self.window.set_title("elSter - battery mannager")
 		self.window.set_border_width(10)
-
     
 		self.window.connect("delete_event", self.delete_event)
 		self.window.connect("destroy", self.destroy)
-	   
+
+		self.glownyVKontener = gtk.VBox(gtk.FALSE, 10)
+		self.glownyVKontener.show()
+		self.window.add(self.glownyVKontener)
+		self.kontenerH3 = {}
+		self.podkontenerH = {}
+		self.battery = {}
+		self.battery_icon = {}
+		if self.buttonFunction: self.battery_button = {}
+		self.battery_ID_label = {}
+		self.battery_poziom_label = {}
+		self.addresses = {}
+		self.howMany = 0
+		self.level = {}
+		self.level_old = {}
+
 	def __call__(self):
 		self.show()
 
-	def add(self, ID):
-		self.battery = gtk.VBox(gtk.FALSE, 1)
+	def add(self, ID, name):
+		if self.port == "NO_PORTS":
+			print "I:------------ batterry.py BRAK PORTOW NA STATKII!"
 
-		self.baterry_icon = gtk.Image()
+		if ID not in self.addresses:
+			self.addresses[ID] = self.howMany
+		else:
+			print "E:------- ERROR THE SAME ID (" + str(ID) + ") IN LIST FOR " + str(self.addresses[ID]) + "! (cloudn't add '" + str(name) + "')"
+			return
+
+		if not self.howMany%self.howManyInRow:
+			self.obecne_ID_kontenera = self.howMany
+			self.podkontenerH[self.addresses[ID]] = gtk.HBox(gtk.FALSE, 10)
+			self.podkontenerH[self.addresses[ID]].show()
+			self.glownyVKontener.add(self.podkontenerH[self.addresses[ID]])
+
+		
+		self.battery[self.addresses[ID]] = gtk.VBox(gtk.FALSE, 10)
+
+		self.battery_icon[self.addresses[ID]] = gtk.Image()
 		self.obraz = "./battW" + str(6) + ".png"
-		self.baterry_icon.set_from_file(self.obraz)
-		self.baterry_icon.show()
-		    
-		self.baterry_ID_label = gtk.Label("Bateria " + str(ID))
-		self.baterry_ID_label.show()
-		self.baterry_poziom_label = gtk.Label("100%")
-		self.baterry_poziom_label.show()
+		self.battery_icon[self.addresses[ID]].set_from_file(self.obraz)
+		self.battery_icon[self.addresses[ID]].show()
 
-		self.battery.add(self.baterry_icon)
-		self.battery.add(self.baterry_ID_label)
-		self.battery.add(self.baterry_poziom_label)
+		if self.buttonFunction:
+			self.battery_button[self.addresses[ID]] = gtk.Button()
+			self.battery_button[self.addresses[ID]].add(self.battery_icon[self.addresses[ID]])
+			self.battery_button[self.addresses[ID]].connect("clicked", self.update, ID)
+			self.battery_button[self.addresses[ID]].show()
 
-		self.battery.show()
+		self.battery_ID_label[self.addresses[ID]] = gtk.Label("Bateria " + str(name))
+		self.battery_ID_label[self.addresses[ID]].show()
+		self.battery_poziom_label[self.addresses[ID]] = gtk.Label("100%")
+		self.battery_poziom_label[self.addresses[ID]].show()
 
-		self.window.add(self.battery)
+		if self.buttonFunction: 
+			self.battery[self.addresses[ID]].add(self.battery_button[self.addresses[ID]])
+		else:
+			self.battery[self.addresses[ID]].add(self.battery_icon[self.addresses[ID]])
+		self.battery[self.addresses[ID]].add(self.battery_ID_label[self.addresses[ID]])
+		self.battery[self.addresses[ID]].add(self.battery_poziom_label[self.addresses[ID]])
+
+		self.battery[self.addresses[ID]].show()
+		self.podkontenerH[self.obecne_ID_kontenera].add(self.battery[self.addresses[ID]])
+		self.howMany = self.howMany + 1
+
+
+		self.level[self.addresses[ID]] = 0
+
+
+		# print self.howMany
+		# print self.obecne_ID_kontenera
+		# print ID
+		# print name
+		# print self.addresses
 
 	def delete_event(self, widget, event, data=None):
 		# If you return FALSE in the "delete_event" signal handler,
@@ -54,50 +107,55 @@ class battery:
 		gtk.main_quit()
 
 	def info(self, ID):
-		# a horizontal box to hold the buttons
+		# a horizontal box to hold the battery_buttons
 	
 
 		# create several images with data from files and load images into
-		# buttons
+		# battery_buttons
 		if ID == 0:
 			self.ID_OLD = 6
 		else:
-			self.ID_OLD = ID
+			self.ID_OLD = 6
 
 		self.ID_OLD = ID
 		self.image = gtk.Image()
 		self.update(1, ID)
 		self.image.show()
-		# a button to contain the image widget
-		self.button = gtk.Button()
+		# a battery_button to contain the image widget
+		self.button = gtk.button()
 		self.button.add(self.image)
 		self.button.show()
 		self.hbox.pack_start(self.button)
 		self.button.connect("clicked", self.update, ID)
-
-		print ID
 		pass
 
-	def update(self, ok, level):
-		if self.level == 0:
-			self.level = level
-		print level
-		self.level_old = self.level - 1
-		self.level = self.level_old
-
-		obraz = "./batt" + str(self.level) + ".png"
-		print(obraz)
-		self.image.set_from_file(obraz)
+	def update(self, widget, ID):
+		if self.level[self.addresses[ID]] == 0:
+			self.level[self.addresses[ID]] = 6
+		self.level_old[self.addresses[ID]] = self.level[self.addresses[ID]] - 1
+		self.level[self.addresses[ID]] = self.level_old[self.addresses[ID]]
+		obraz = "./battW" + str(self.level[self.addresses[ID]]) + ".png"
+		self.battery_icon[self.addresses[ID]].set_from_file(obraz)
 		pass
 
 
 	def show(self):
+		#self.pokaz()
 		self.window.show()
  		gtk.main()
 		pass
 
 if __name__ == "__main__":
-	bateria = battery()
-	bateria.add(5)
-	bateria.add(7)
+	bateria = batteryWindow('COM1', 5, True)
+	bateria.add(1,"aktor 1")
+	bateria.add(2,"aktor 2")
+	bateria.add(3,"wytwornica dymu")
+	bateria.add(4,"swiatlo")
+	bateria.add(5,"pioruny")
+	bateria.add(6,5)
+	bateria.add(7,4)
+	bateria.add(8,3)
+	bateria.add(9,1)
+	bateria.add(10,2)
 	bateria.show()
+	

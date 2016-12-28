@@ -69,8 +69,9 @@ class serialWindow:
         self.dialog.action_area.pack_end(self.cb_serial)
 
         x = 0
-        for pack in arduino_universal.serial_ports:
-            self.liststore.append([arduino_universal.serial_ports[x]])
+        serial_ports = arduino_universal.serialPorts().get()
+        for pack in serial_ports:
+            self.liststore.append([serial_ports[x]])
             x += 1
         self.cb_serial.set_model(self.liststore)
         self.cb_serial.connect('changed', self.changed_cb)
@@ -87,14 +88,23 @@ class serialWindow:
             gtk.main_quit()
 
     def autoset(self,Widget):
-        arduino_universal.serialActivate()
-        self.ser.write("99,4")
+        arduino_universal.serialActivate(index, False)
+        if arduino_universal.ser == "NO_PORTS":
+            print "zaden statek nie zadokuje :c"
+            serialPorts = arduino_universal.serialPorts().get()
+            print serialPorts
+            x = 0
+            self.liststore.clear()
+            for pack in serialPorts:
+                self.liststore.append([serialPorts[x]]) #ustawic na miejsce domyslne
+                x += 1
+            return
+        arduino_universal.ser.write("99,4")
         time.sleep(2)
-        self.ser.write("99,5")
+        arduino_universal.ser.write("99,5")
         komenda = ''
-        k = arduino_universal.getSe.read_until(';')
         x = -1;
-        line = self.ser.read_until(';')
+        line = arduino_universal.ser.read_until(';')
         line = line.strip("\r\n")
         print line
         if line.startswith('ACT_'):  # szuka odpowiedzniej komendy
@@ -107,6 +117,7 @@ class serialWindow:
                 except IndexError:
                     break
 
+        #TODO: spisac i przekazac aktywne adresy do typu danych dict nastepnie do klasy battery
         self.count_sp_Address.set_value(2)
         self.count_sp_Devices.set_value(x)
 

@@ -32,6 +32,7 @@ from random import randint
 import StepWindow
 import ConfigWindow
 import generateScene
+import battery #dodal oskar
 
 x = 1
 #gladeFileName = "./window.glade"
@@ -62,6 +63,7 @@ logo = """
 
 
 """
+
 print(logo)
 global alphabet
 global Who
@@ -343,6 +345,7 @@ class Mainwindow:
     def __init__(self):
         '''Konstruktor klasy MainWindow'''
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("elSter - console")
         self.window.connect("destroy", self.on_window1_destroy)
         self.window.set_border_width(10)
         self.container = gtk.HBox(gtk.FALSE, ConfigWindow.zmienna)
@@ -483,39 +486,54 @@ class Mainwindow:
 # Serial detect!
 '''Wykrycie podłączonych urządzeń do komputera'''
 def serial_ports():
-    # Windows
-    if sys.platform.startswith('win'):
-        ports = ['COM%s' % (i + 1) for i in range(256)]
-    # Linux
-    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
-        # this excludes your current terminal "/dev/tty"
-        ports = glob.glob('/dev/tty[A-Za-z]*')
-    # Mac OS X
-    elif sys.platform.startswith('darwin'):
-        ports = glob.glob('/dev/tty.*')
-    else:
-        raise EnvironmentError('Unsupported platform')
-    result = []
-    for port in ports:
-        try:
-            # Trying if ports are open
-            s = serial.Serial(port)
-            s.close()
-            result.append(port)
-        # if OS is diferent it pass program without connect serial
-        except (OSError, serial.SerialException):
-            pass
-    return result
+    ok = []
+    return ok
 
+class serialPorts():
+    def __init__(self):
+        # print "WYSZUKUJEE"
+        # Windows
+        if sys.platform.startswith('win'):
+            ports = ['COM%s' % (i + 1) for i in range(256)]
+        # Linux
+        elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+            # this excludes your current terminal "/dev/tty"
+            ports = glob.glob('/dev/tty[A-Za-z]*')
+        # Mac OS X
+        elif sys.platform.startswith('darwin'):
+            ports = glob.glob('/dev/tty.*')
+        else:
+            raise EnvironmentError('Unsupported platform')
+        self.portsOpen = []
+        for port in ports:
+            try:
+                # Trying if ports are open
+                s = serial.Serial(port, timeout=0.5)
+                print port
+                s.write("99,7") #PING
+                print "zapisano"
+                line = s.read_until(';')
+                print "odczytano"
+                line = line.strip("\r\n")
+                print line
+                if line.startswith('ACK_OK'): #akceptujemy tylko nasze urzadzenia, a nie jakies modemy xD
+                    s.close()
+                    self.portsOpen.append(port)
+            # if OS is diferent it pass program without connect serial
+            except (OSError, serial.SerialException):
+                pass
 
-serial_ports = serial_ports()
+    def get(self):
+        return self.portsOpen
+        pass
+
 '''Ustawienie urządzenia obsługiwanego'''
 def set_serial(serial):
     global index
     index = serial
-    print index
+    print "SET SERIAL " + str(index)
 
-for situation in serial_ports:
+for situation in serialPorts().get():
     print str(x) + ": " + situation
     x += 1
 
@@ -529,26 +547,47 @@ def keyrequest():
 
 time.sleep(2)
 
-def serialActivate(dial):
+#if mode False wykonanie z ConfigWindow, True, przeciwnie xD
+def serialActivate(dial, mode):
+    print "SERIAL active"
     global ser
-    
+    serial_ports = serialPorts().get()
+    print serial_ports
+    print dial
+    print mode
+    print "END"
+
+
     if not serial_ports:
         print "BRAK PORTOW NA STATKI";
         ser = "NO_PORTS";
     else:
-        ser = serial.Serial(serial_ports[dial.getIndex()], 9600)
+        if mode:
+            whichIndex = dial.getIndex()
+        else:
+            whichIndex = dial
+        if whichIndex > -1:
+            print whichIndex
+            print serial_ports[whichIndex]
+            ser = serial.Serial(serial_ports[whichIndex], 9600)
+        else:
+            print "BRAK PORTOW NA STATKII";
+            ser = "NO_PORTS";
 
-def getSer():
-    return ser
+
 '''Funcja uruchamiana przez wątek. Obsługuje ona wszystko'''
 def start():
     dial = ConfigWindow.serialWindow()
-    serialActivate(dial)
+    serialActivate(dial, True)
+    bateria = battery.batteryWindow(ser, 5, True)
     app = Mainwindow()
     app2 = blinkInTime(ConfigWindow.zmienna)
+    for num in range(1,(ConfigWindow.zmienna + 1)):
+        bateria.add(num, num)
+    bateria.show()
     gtk.main()
-    t3 = Thread(name="key", target=keyrequest())
-    t3.start()
+    #t3 = Thread(name="key", target=keyrequest())
+    #t3.start()
 
 '''Główna metoda klasy uruchamiająca wątek'''
 if __name__ == "__main__":
@@ -557,3 +596,6 @@ if __name__ == "__main__":
     t2 = Thread(name="main", target=start)
     # t.start()
     t2.start()
+#TODO wraz ze zmiana adresu urzadzenia zmiana adresu baterii
+#TODO sprawdanie bledow w tle
+#TODO pokomentowc troche :>
