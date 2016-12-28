@@ -5,28 +5,47 @@ class newWindowToGenerateScene:
                                  None,
                                  gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                                  (gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_APPLY,gtk.RESPONSE_ACCEPT))
-        self.vbox = gtk.VBox(False,3)
-        self.window.add(self.vbox)
+        self.vbox = gtk.VBox(True,3)
 
-        self.adj = [ gtk.Adjustment(1,1,100000,1)
-                    ,gtk.Adjustment(1,1,100000,1)
-                    ,gtk.Adjustment(1,1,100000,1)]
-        #
+
+
+        self.adj = {}
+        self.SPBtn = {}
+
+        self.label = [gtk.Label("Scene"),
+                      gtk.Label("Devices"),
+                      gtk.Label("Led")]
+        self.Frame = [gtk.Frame(""),
+                      gtk.Frame(""),
+                      gtk.Frame("")]
         # self.scene = gtk.SpinButton(self.adj[0],0,0)
         # self.devices = gtk.SpinButton(self.adj[1],0,0)
         # self.led = gtk.SpinButton(self.adj[2],0,0)
 
+        for i in range(3):
+            self.adj[i] = gtk.Adjustment(1,1,100000,1)
+            self.SPBtn[i] = gtk.SpinButton(self.adj[i],0,0)
 
-        self.SPBtn = [   gtk.SpinButton(self.adj[0],0,0)
-                        ,gtk.SpinButton(self.adj[1],0,0)
-                        ,gtk.SpinButton(self.adj[2],0,0)]
-
-        for i in range(2):
+            self.Frame[i].show()
             self.SPBtn[i].show()
-            self.vbox.pack_start(self.SPBtn[i], False, True)
+            self.label[i].show()
 
-        self.vbox.show()
+            self.Frame[i].add(self.label[i])
+            self.window.vbox.pack_start(self.Frame[i], False, True)
+            self.window.vbox.pack_start(self.SPBtn[i], False, True)
+
+        self.window.connect('destroy', gtk.main_quit)
+        self.window.connect('delete-event', gtk.main_quit)
+        self.window.connect('close', gtk.main_quit)
+        self.window.connect('response',self.Accept)
+
         self.window.show()
 
-n = newWindowToGenerateScene()
-gtk.main()
+    def Accept(self,widget,seal):
+        if(seal==gtk.RESPONSE_ACCEPT):
+            gtk.main_quit()
+        elif(seal==gtk.RESPONSE_CANCEL):
+            gtk.main_quit()
+
+    def getAdj(self):
+        return self.adj

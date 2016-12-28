@@ -10,7 +10,7 @@ In easy way, this class can open way to simple work with light
 '''
 import gtk
 import pickle
-
+import newWindowToGenerateScene
 # TODO: 1.Make changebutton responsible to call -> Throw it to the table
 # TODO: 2.Create method to read/write file and generate window
 # TODO: 3.Make it look better
@@ -329,35 +329,37 @@ aaa.
     """
 
     def fileInterpret(self,widget,option):
-        '''Main method to run all other methods responsible for files'''
-        '''Open and get file object'''
-        self.File = self.fileOpen_Choose_Save(widget, option)
-        if self.File != None:
-            print self.File
-            '''We will open file'''
-            if option == 'open':
-                '''Read all content'''
-                head = pickle.load(self.File['read'])
-                meta = pickle.load(self.File['read'])
-                body = pickle.load(self.File['read'])
-                '''Head = [number_of_scenes, colums_main,devices]'''
-                print head
-                print body
-                '''Send it to fileParserOpen method which will interpret it'''
-                g = generateScene(head[1],head[2],head[0],body,meta)
-                # self.napis = [[0 for x in range(self.checkInput(, ))] for y in
-                #               range()]
-                self.File['read'].close()
-            if option == 'save':
-                pickle.dump(self.head_tab,self.File['save'])
-                pickle.dump(self.meta_tab,self.File['save'])
-                pickle.dump(self.body_tab,self.File['save'])
-                self.File['save'].close()
+    # Main method to run all other methods responsible for files
+    # Open and get file object
+            if(option!='new'):
+                self.File = self.fileOpen_Choose_Save(widget, option)
+                if self.File != None:
+                    print self.File
+                    '''We will open file'''
+                    if option == 'open':
+                        '''Read all content'''
+                        head = pickle.load(self.File['read'])
+                        meta = pickle.load(self.File['read'])
+                        body = pickle.load(self.File['read'])
+                        '''Head = [number_of_scenes, colums_main,devices]'''
+                        print head
+                        print body
+                        '''Send it to fileParserOpen method which will interpret it'''
+                        g = generateScene(head[1],head[2],head[0],body,meta)
+                        # self.napis = [[0 for x in range(self.checkInput(, ))] for y in
+                        #               range()]
+                        self.File['read'].close()
+                    if option == 'save':
+                        pickle.dump(self.head_tab,self.File['save'])
+                        pickle.dump(self.meta_tab,self.File['save'])
+                        pickle.dump(self.body_tab,self.File['save'])
+                        self.File['save'].close()
             if option == 'new':
                 '''Still working..'''
-                print "new"
-                print self.File
-        '''Close file at the end'''
+                n = newWindowToGenerateScene.newWindowToGenerateScene()
+                adj = n.getAdj()
+                generateScene(adj[1].get_value(),adj[0].get_value(),adj[2].get_value())
+        # '''Close file at the end'''
 
     """
 import pickle
@@ -394,8 +396,8 @@ text.close()
             if(option == 'save'):
                 name = chooser.get_filename()
                 self.file['save'] = self.fileOpen(name,"w")
-            if(option == 'new'):
-                self.file = chooser.get_filename()
+            # if(option == 'new'):
+            #     self.file = chooser.get_filename()
             chooser.destroy()
             return self.file
         if response == gtk.RESPONSE_CANCEL:
