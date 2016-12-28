@@ -487,5 +487,5 @@ text.close()
 
 if __name__ == "__main__":
     '''Runnig with 5,5,2 for example - can be run with nothing'''
-    g = generateScene()
+    g = generateScene(10,3,10)
     gtk.main()
