@@ -1,4 +1,5 @@
 import gtk
+from threading import Thread
 class newWindowToGenerateScene:
     def __init__(self):
         self.window = gtk.Dialog("New Generate",
@@ -43,9 +44,9 @@ class newWindowToGenerateScene:
 
     def Accept(self,widget,seal):
         if(seal==gtk.RESPONSE_ACCEPT):
-            gtk.main_quit()
+            self.window.hide()
+            from generateScene import main
+            g = main(int(self.adj[1].get_value()), int(self.adj[2].get_value()),int(self.adj[0].get_value()))
+
         elif(seal==gtk.RESPONSE_CANCEL):
             gtk.main_quit()
-
-    def getAdj(self):
-        return self.adj

@@ -11,6 +11,9 @@ In easy way, this class can open way to simple work with light
 import gtk
 import pickle
 import newWindowToGenerateScene
+from threading import Thread
+import time
+
 # TODO: 1.Make changebutton responsible to call -> Throw it to the table
 # TODO: 2.Create method to read/write file and generate window
 # TODO: 3.Make it look better
@@ -27,8 +30,12 @@ class generateScene():
     PL:Konstruktor klasy generateScene():
     ENG:generateScene() class constructor
     """
-
     def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = []):
+        t3 = Thread(name="main",target=self.wind(colums_main,devices,number_of_scenes,body,meta))
+        t3.daemon = True
+        t3.start()
+        t3.join()
+    def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = []):
         self.startScene = 1
         if(number_of_scenes==0):
             self.startScene = 0
@@ -328,6 +335,7 @@ aI0
 aaa.
     """
 
+
     def fileInterpret(self,widget,option):
     # Main method to run all other methods responsible for files
     # Open and get file object
@@ -356,34 +364,48 @@ aaa.
                         self.File['save'].close()
             if option == 'new':
                 '''Still working..'''
-                n = newWindowToGenerateScene.newWindowToGenerateScene()
-                adj = n.getAdj()
-                generateScene(adj[1].get_value(),adj[0].get_value(),adj[2].get_value())
-        # '''Close file at the end'''
+                t1=Thread(name="New",target=self.threadNew)
+                t1.daemon = True
 
-    """
-import pickle
-text = open("lel.bin","wb")
-tab = [123,"32",'v',10.3]
-tab2 = [[0 for x in range(5)] for y in range(5)]
-tab2[0][0] = 1
-print tab2
-tab4 = [[]]
+                t1.start()
+                t1.join()
 
-i = 3
-#pickle.dump(tab,text)
-pickle.dump(tab2,text)
-tab3 =[[0 for x in range(5)]for y in range(5)]
-text.close()
-text = open("lel.bin","rb")
-tab3 = pickle.load(text)
-print "Unpickled"
-print tab3
-
-
-text.close()
-
-"""
+    def threadNew(self):
+        self.n = newWindowToGenerateScene.newWindowToGenerateScene()
+    #     t2 = Thread(target=self.loopNew)
+    #     t2.daemon = True
+    #     t2.start()
+    #     t2.join()
+    # def loopNew(self):
+    #     while (True):
+    #         time.sleep(1)
+    #         print self.n.state
+    #         if (self.n.state == True):
+    #             return self.adj
+    #         else:
+    #             pass
+# '''Close file at the end'''
+# """
+# import pickle
+# text = open("lel.bin","wb")
+# tab = [123,"32",'v',10.3]
+# tab2 = [[0 for x in range(5)] for y in range(5)]
+# tab2[0][0] = 1
+# print tab2
+# tab4 = [[]]
+#
+# i = 3
+# #pickle.dump(tab,text)
+# pickle.dump(tab2,text)
+# tab3 =[[0 for x in range(5)]for y in range(5)]
+# text.close()
+# text = open("lel.bin","rb")
+# tab3 = pickle.load(text)
+# print "Unpickled"
+# print tab3
+#
+#
+# text.close()"""
     def fileOpen_Choose_Save(self,widget,option):
         '''Main method which open file in two other way. One is read-write other is append. It also set up action for dialog buttons'''
         chooser = self.switch_choose(option)
@@ -486,7 +508,9 @@ text.close()
         '''change status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
 
-
+def main(a,b,c):
+    g = generateScene(a, b, c)
+    gtk.main()
 if __name__ == "__main__":
     '''Runnig with 5,5,2 for example - can be run with nothing'''
     g = generateScene(10,3,10)
