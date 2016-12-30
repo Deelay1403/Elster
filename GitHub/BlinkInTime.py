@@ -2,6 +2,7 @@ import gtk
 class blinkInTime():
     def __init__(self,zmienna):
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("elSter - blinkInTime")
         self.window.connect('destroy', gtk.main_quit)
         self.window.connect('delete-event', gtk.main_quit)
         # self.window.connect('close',gtk.main_quit)
