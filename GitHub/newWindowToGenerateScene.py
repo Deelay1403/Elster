@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import gtk
 from threading import Thread
 class newWindowToGenerateScene:

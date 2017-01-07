@@ -513,5 +513,5 @@ def main(a,b,c):
     gtk.main()
 if __name__ == "__main__":
     '''Runnig with 5,5,2 for example - can be run with nothing'''
-    g = generateScene(10,3,10)
+    g = generateScene()
     gtk.main()

@@ -602,6 +602,12 @@ if __name__ == "__main__":
     t2 = Thread(name="main", target=start)
     # t.start()
     t2.start()
+def __init__():
+    # t = Thread(name="log", target=log("lel"))
+    # t.setDaemon(True)
+    t2 = Thread(name="main", target=start)
+    # t.start()
+    t2.start()
 #TODO wraz ze zmiana adresu urzadzenia zmiana adresu baterii
 #TODO sprawdanie bledow w tle
 #TODO pokomentowc troche :>
