@@ -4,10 +4,12 @@ import gtk
 
 class batteryWindow:
 
-	def __init__(self, port, howManyInRow, buttonFunction):
+	def __init__(self, port, howManyInRow=3, buttonFunction=False, maxLevel=1024, maxBar=6):
 		self.port = port
 		self.buttonFunction = buttonFunction
 		self.howManyInRow = howManyInRow
+		self.maxLevel = maxLevel
+		self.maxBar = maxBar
 
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 		self.window.set_title("elSter - battery mannager")
@@ -129,7 +131,7 @@ class batteryWindow:
 		self.button.connect("clicked", self.update, ID)
 		pass
 
-	def update(self, widget, ID):
+	def updateOLD(self, widget, ID):
 		if self.level[self.addresses[ID]] == 0:
 			self.level[self.addresses[ID]] = 6
 		self.level_old[self.addresses[ID]] = self.level[self.addresses[ID]] - 1
@@ -139,6 +141,35 @@ class batteryWindow:
 		pass
 
 
+	def update(self, ID, level, maxLevel=None, maxBar=None):
+		if maxLevel == None:
+			maxLevel = self.maxLevel
+		if maxBar == None:
+			maxBar = self.maxBar
+
+		ileBelek = 0;
+		while ileBelek <= maxBar:
+			procentLvl = self.obliczProcent(level, maxLevel)
+			procentBelka = self.obliczProcent(ileBelek, maxBar)
+			if (procentLvl >= procentBelka) & (procentLvl <= self.obliczProcent(ileBelek+1, maxBar)):
+				print "BELKI: " + str(procentLvl) + " " + str(ileBelek)
+				obraz = "./battW" + str(ileBelek) + ".png"
+
+				self.battery_poziom_label[self.addresses[ID]].set_text(str(procentLvl) + "%")
+				self.battery_icon[self.addresses[ID]].set_from_file(obraz)
+				return
+			ileBelek = ileBelek + 1
+			print ""
+		pass
+
+	def obliczProcent(self, level, maxLevel):
+		return round(((100*float(level))/maxLevel), 1)
+		pass
+
+	def changeName(self, ID, name):
+		self.battery_ID_label[self.addresses[ID]].set_text("Bateria " + str(name))
+		pass
+
 	def show(self):
 		#self.pokaz()
 		self.window.show()
@@ -146,16 +177,10 @@ class batteryWindow:
 		pass
 
 if __name__ == "__main__":
-	bateria = batteryWindow('COM1', 5, True)
-	bateria.add(1,"aktor 1")
-	bateria.add(2,"aktor 2")
-	bateria.add(3,"wytwornica dymu")
-	bateria.add(4,"swiatlo")
-	bateria.add(5,"pioruny")
-	bateria.add(6,5)
-	bateria.add(7,4)
-	bateria.add(8,3)
-	bateria.add(9,1)
-	bateria.add(10,2)
-	bateria.show()
+
+	bateriAa = batteryWindow('COM1', 3, True, 1024, 6)
+	bateriAa.add(5,"pioruny")
+	bateriAa.update(5, 555)
+	bateriAa.changeName(5, "chuuuj")
+	bateriAa.show()
 	
