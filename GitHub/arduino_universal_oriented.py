@@ -579,12 +579,18 @@ def serialActivate(dial, mode):
 def start():
     dial = ConfigWindow.serialWindow()
     serialActivate(dial, True)
-    bateria = battery.batteryWindow(ser, 5, True)
+    bateria = battery.batteryWindow(ser, 5, True, 1024, 6)
     app = Mainwindow()
     app2 = blinkInTime(ConfigWindow.zmienna)
     for num in range(1,(ConfigWindow.zmienna + 1)):
         bateria.add(num, num)
+    #mały pokaz nowych funkcji
+    '''zmiana nazwy baterii'''
+    bateria.changeName(1, "DZIAŁA!")
+    '''aktualizacja stanu baterii'''
+    bateria.update(1, 640)
     bateria.show()
+    gtk.main()
     gtk.main()
     #t3 = Thread(name="key", target=keyrequest())
     #t3.start()
