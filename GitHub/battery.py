@@ -56,7 +56,7 @@ class batteryWindow:
 		self.battery[self.addresses[ID]] = gtk.VBox(gtk.FALSE, 10)
 
 		self.battery_icon[self.addresses[ID]] = gtk.Image()
-		self.obraz = "./battW" + str(6) + ".png"
+		self.obraz = "./img/battW" + str(6) + ".png"
 		self.battery_icon[self.addresses[ID]].set_from_file(self.obraz)
 		self.battery_icon[self.addresses[ID]].show()
 
@@ -136,7 +136,7 @@ class batteryWindow:
 			self.level[self.addresses[ID]] = 6
 		self.level_old[self.addresses[ID]] = self.level[self.addresses[ID]] - 1
 		self.level[self.addresses[ID]] = self.level_old[self.addresses[ID]]
-		obraz = "./battW" + str(self.level[self.addresses[ID]]) + ".png"
+		obraz = "./img/battW" + str(self.level[self.addresses[ID]]) + ".png"
 		self.battery_icon[self.addresses[ID]].set_from_file(obraz)
 		pass
 
@@ -153,7 +153,7 @@ class batteryWindow:
 			procentBelka = self.obliczProcent(ileBelek, maxBar)
 			if (procentLvl >= procentBelka) & (procentLvl <= self.obliczProcent(ileBelek+1, maxBar)):
 				print "BELKI: " + str(procentLvl) + " " + str(ileBelek)
-				obraz = "./battW" + str(ileBelek) + ".png"
+				obraz = "./img/battW" + str(ileBelek) + ".png"
 
 				self.battery_poziom_label[self.addresses[ID]].set_text(str(procentLvl) + "%")
 				self.battery_icon[self.addresses[ID]].set_from_file(obraz)
