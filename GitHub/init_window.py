@@ -39,3 +39,6 @@ class initWindow:
 if __name__ == "__main__":
     i = initWindow()
     gtk.main()
+def __init__():
+    i = initWindow()
+    gtk.main()

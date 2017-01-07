@@ -1,10 +1,7 @@
-import arduino_universal_oriented
-import generateScene
+#-*- coding: utf-8 -*-
+'''Działa aż miło'''
+import init_window
 import gtk
 if __name__ == "__main__":
-    arduino_universal_oriented
-    generateScene
+    i = init_window.__init__()
     gtk.main()
-'''Na razie nie dziala, program nalezy uruchamiac interpreterem z osobna arduino_universal_oriented oraz generateScene
-    W razie problemu należy doinstalować brakujące biblioteki(interpreter powie jakie)
-'''
