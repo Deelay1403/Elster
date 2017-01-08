@@ -347,11 +347,17 @@ class Mainwindow:
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("elSter - console")
         self.window.connect("destroy", self.on_window1_destroy)
-        self.window.set_border_width(10)
-        self.container = gtk.HBox(gtk.FALSE, ConfigWindow.zmienna)
+        self.window.set_border_width(0)
+        self.container = gtk.HBox(gtk.FALSE, ConfigWindow.zmienna+1)
+        self.container.set_border_width(10)
+        self.vcontainer = gtk.VBox(gtk.FALSE,2)
         self.window.set_default_size((self.size_of_window * ConfigWindow.zmienna) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
                                      (self.size_of_window * ConfigWindow.iloscbt) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt)
-        self.window.add(self.container)
+        self.window.add(self.vcontainer)
+        self.vcontainer.pack_start(self.menuTool(),False,False,0)
+        self.vcontainer.pack_start(self.container,False,False,0)
+
+
         # self.cb_list = gtk.ListStore(str)
         # self.cb_keyboard = gtk.ComboBox(self.cb_list)
         # self.cb_cell = gtk.CellRendererText()
@@ -440,8 +446,33 @@ class Mainwindow:
         '''Uruchomienie kilku ważnych wewnętrznych metod'''
         self.printfuckingBT()
         self.container.show()
+        self.vcontainer.show()
         self.window.show()
 
+    def menuTool(self):
+        self.menu = gtk.Menu()
+        self.firstMenuitem = {}
+        self.firstMenuitem[0] = gtk.MenuItem("Generator")
+        self.firstMenuitem[1] = gtk.MenuItem("Zamknij")
+        for i in range(0, len(self.firstMenuitem)):
+            self.menu.append(self.firstMenuitem[i])
+            self.firstMenuitem[i].show()
+
+        self.firstMenuitem[0].connect("activate", self.generateSceneWindow)
+        self.firstMenuitem[1].connect("activate", gtk.main_quit)
+        self.root = gtk.MenuItem("Narzędzia")
+
+        self.root.show()
+        self.root.set_submenu(self.menu)
+        self.menu_bar = gtk.MenuBar()
+        self.menu_bar.show()
+        self.menu_bar.append(self.root)
+
+        self.menu.show()
+
+        return self.menu_bar
+    def generateSceneWindow(self,args):
+        g = generateScene.generateScene()
     def activecheck(self, chbutton):
         print "kek"
     '''Metoda nie używana'''
