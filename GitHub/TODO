@@ -1,0 +1,33 @@
+Lista będzie wypełniana rzeczami do wykonania:
+
+TODO wszystkie:
+    1.Uzupełnić komentarze
+    2.Zbadać jakie biblioteki są potrzebne do uruchomienia i sprawdzić czy można kompilować Python -> C++
+TODO arduino_universal_oriented.py:
+    1.Dodać obsługę klawiatury
+    2.Uzupełnienie menu o liste "Widok" zawierającą:
+        -Battery
+        -GenerateScene
+        -BlinkInTime
+      Wszystko ma być na zasadzie ptaszka pokazującego czy okno jest włączone, czy nie
+    3.Zmiana kodu na bardziej przyjazny dla oka
+    4.Zmiana grafiki na ładniejszą - Może jakieś animacje OpenGL, symulacje przestrzeni XYZ i urządzeń na scenie XD
+
+TODO battery.py:
+    1.Uzupełnij Oskar [..]
+
+TODO generateScene.py:
+    1.Dodanie obsługi tablicy meta
+    2.Dodanie LiveMode
+    3.Dodanie obsługi przycisku dla "Edytuj"
+    4.Zmiana formatu pliku na .hsk
+    5.Zbadanie po co dodałem przycik "Nowy" (┛◉Д◉)┛彡┻━┻
+    5.Edit - Zapomniałem, że już nie otwiera to okna tylko pyta o konfiguracje 😌
+    6.meta ma posiadać międzyinnymi nazwy urządzeń
+    7.Dodanie obsługi pętli
+TODO BlinkInTime.py:
+    ∞. Zrobić
+TODO init_window.py:
+    1.Może zmienić lekko wygląd
+
+
