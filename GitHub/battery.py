@@ -178,9 +178,9 @@ class batteryWindow:
 
 if __name__ == "__main__":
 
-	bateriAa = batteryWindow('COM1', 3, True, 1024, 6)
-	bateriAa.add(5,"pioruny")
-	bateriAa.update(5, 555)
-	bateriAa.changeName(5, "chuuuj")
-	bateriAa.show()
+	bateria = batteryWindow('COM1', 3, True, 1024, 6)
+	bateria.add(5,"pioruny")
+	bateria.update(5, 555)
+	bateria.changeName(5,"Aktor 1")
+	bateria.show()
 	
