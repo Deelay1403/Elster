@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import gtk
 import arduino_universal_oriented
 import time
