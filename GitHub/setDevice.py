@@ -3,7 +3,8 @@ import arduino_universal_oriented
 import time
 arduino_universal = arduino_universal_oriented
 class serialWindow:
-
+    def __init__(self):
+        print "Aby uruchomić okno wywołaj WALSIENARYJ__init__"
     def WALSIENARYJ__init__(self):
 
         self.cb_serial = gtk.ComboBox()

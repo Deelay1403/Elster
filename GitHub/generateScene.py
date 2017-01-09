@@ -308,8 +308,8 @@ class generateScene():
     #Method to set device with setDevice.serialWindow
     def setDevice(self,data):
         s = setDevice.serialWindow().WALSIENARYJ__init__()
-        self.ser = serial.Serial(s, 9600)
-        print self.ser
+        self.serial = serial.Serial(s, 9600)
+        print self.serial
     """
 Typical file:
 
