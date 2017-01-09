@@ -12,17 +12,9 @@ import gtk
 import pickle
 import newWindowToGenerateScene
 from threading import Thread
+import serial
+import setDevice
 import time
-
-# TODO: 1.Make changebutton responsible to call -> Throw it to the table
-# TODO: 2.Create method to read/write file and generate window
-# TODO: 3.Make it look better
-# TODO: 4.Drink coffee - You deserve :)
-# TODO: 5.Talk with Popcorator
-# TODO: 6.Table of objects(containers) created to work with one method (in __init__ ). This method will update
-# TODO: table and light up single LED. It's gonna be difficult because I HAVE FUCKIN' XYZ TABLE. Loot work to do.
-# TODO: While method operate, bottom run through scenes - chkbtns must be update and light up automatically.
-# TODO: Similar situation must be on OPEN. First scene must be update automatically.
 
 
 class generateScene():
@@ -202,7 +194,7 @@ class generateScene():
         self.window.show()
         self.main_window_col.show()
         #self.line_window_bottom.show()
-        self.menu.show()
+        self.fileMenusub.show()
         '''This react to body_tab and set status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
         # self.x_Box.show()
@@ -267,31 +259,57 @@ class generateScene():
                     self.chkbtn_tab[i][j].set_active(False)
 
     def menuTool(self):
-        self.menu = gtk.Menu()
-        self.firstMenuitem = {}
-        self.firstMenuitem[0] = gtk.MenuItem("Nowy")
-        self.firstMenuitem[1] = gtk.MenuItem("Otworz")
-        self.firstMenuitem[2] = gtk.MenuItem("Zapisz")
-        self.firstMenuitem[3] = gtk.MenuItem("Zamknij")
-        for i in range(0,len(self.firstMenuitem)):
-            self.menu.append(self.firstMenuitem[i])
-            self.firstMenuitem[i].show()
+        self.fileMenusub = gtk.Menu()
 
-        self.firstMenuitem[0].connect("activate", self.fileInterpret,'new')
-        self.firstMenuitem[1].connect("activate", self.fileInterpret,'open')
-        self.firstMenuitem[2].connect("activate", self.fileInterpret,'save')
-        self.firstMenuitem[3].connect("activate", gtk.main_quit)
-        self.root = gtk.MenuItem("Plik")
+        self.fileMenuitem = {}
+        self.fileMenuitem[0] = gtk.MenuItem("Nowy")
+        self.fileMenuitem[1] = gtk.MenuItem("Otworz")
+        self.fileMenuitem[2] = gtk.MenuItem("Zapisz")
+        self.fileMenuitem[3] = gtk.MenuItem("Zamknij")
 
-        self.root.show()
-        self.root.set_submenu(self.menu)
+        self.deviceMenusub = gtk.Menu()
+        self.deviceMenuItem = {}
+        self.deviceMenuItem[0] = gtk.MenuItem("Wybierz urządzenie")
+        self.deviceMenusub.append(self.deviceMenuItem[0])
+
+
+        self.fileMenuitem[0].connect("activate", self.fileInterpret, 'new')
+        self.fileMenuitem[1].connect("activate", self.fileInterpret, 'open')
+        self.fileMenuitem[2].connect("activate", self.fileInterpret, 'save')
+        self.fileMenuitem[3].connect("activate", gtk.main_quit)
+
+        self.deviceMenuItem[0].connect("activate", self.setDevice)
+
+        self.deviceMenu = gtk.MenuItem("Narzędzia")
+        self.fileMenu = gtk.MenuItem("Plik")
+
+
+        self.fileMenu.set_submenu(self.fileMenusub)
+        self.deviceMenu.set_submenu(self.deviceMenusub)
+
         self.menu_bar = gtk.MenuBar()
-        self.menu_bar.show()
-        self.menu_bar.append(self.root)
 
-        self.menu.show()
+        self.menu_bar.append(self.fileMenu)
+        self.menu_bar.append(self.deviceMenu)
+
+        self.fileMenu.show()
+        self.fileMenusub.show()
+        self.menu_bar.show()
+        for i in range(0, len(self.fileMenuitem)):
+            self.fileMenusub.append(self.fileMenuitem[i])
+            self.fileMenuitem[i].show()
+        self.deviceMenu.show()
+        self.deviceMenusub.show()
+        self.deviceMenuItem[0].show()
+
 
         return self.menu_bar
+
+    #Method to set device with setDevice.serialWindow
+    def setDevice(self,data):
+        s = setDevice.serialWindow().WALSIENARYJ__init__()
+        self.ser = serial.Serial(s, 9600)
+        print self.ser
     """
 Typical file:
 

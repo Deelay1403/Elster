@@ -1,5 +1,7 @@
 Lista będzie wypełniana rzeczami do wykonania:
 
+Ptaszek do kopiowania i zaznaczania - ✓
+
 TODO wszystkie:
     1.Uzupełnić komentarze
     2.Zbadać jakie biblioteki są potrzebne do uruchomienia i sprawdzić czy można kompilować Python -> C++
@@ -21,10 +23,26 @@ TODO generateScene.py:
     2.Dodanie LiveMode
     3.Dodanie obsługi przycisku dla "Edytuj"
     4.Zmiana formatu pliku na .hsk
-    5.Zbadanie po co dodałem przycik "Nowy" (┛◉Д◉)┛彡┻━┻
-    5.Edit - Zapomniałem, że już nie otwiera to okna tylko pyta o konfiguracje 😌
+    5.Zbadanie po co dodałem przycik "Nowy" (┛◉Д◉)┛彡┻━┻ ✓
+    5.Edit - Zapomniałem, że już nie otwiera to okna tylko pyta o konfiguracje 😌 ✓
     6.meta ma posiadać międzyinnymi nazwy urządzeń
     7.Dodanie obsługi pętli
+    8.Dodanie wyboru urządzenia ✓
+    8.edit - Zmienić nazwę WALSIENARYJ__init__()
+
+    Stare TODO - Pomyślałem żeby wstawić "
+    # TODO: 1.Make changebutton responsible to call -> Throw it to the table
+    # TODO: 2.Create method to read/write file and generate window
+    # TODO: 3.Make it look better
+    # TODO: 4.Drink coffee - You deserve :)
+    # TODO: 5.Talk with Popcorator
+    # TODO: 6.Table of objects(containers) created to work with one method (in __init__ ). This method will update
+    # TODO: table and light up single LED. It's gonna be difficult because I HAVE FUCKIN' XYZ TABLE. Loot work to do.
+    # TODO: While method operate, bottom run through scenes - chkbtns must be update and light up automatically.
+    # TODO: Similar situation must be on OPEN. First scene must be update automatically.
+
+
+    "
 TODO BlinkInTime.py:
     ∞. Zrobić
 TODO init_window.py:

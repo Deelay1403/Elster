@@ -546,6 +546,7 @@ class serialPorts():
                 line = s.read_until(';')
                 print "odczytano"
                 line = line.strip("\r\n")
+                self.portsOpen.append(port)
                 print line
                 if line.startswith('ACK_OK'): #akceptujemy tylko nasze urzadzenia, a nie jakies modemy xD
                     s.close()
