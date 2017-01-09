@@ -32,6 +32,7 @@ import StepWindow
 import ConfigWindow
 import generateScene
 import battery #dodal oskar
+from mainSerial import serialComunnication
 
 x = 1
 #gladeFileName = "./window.glade"
