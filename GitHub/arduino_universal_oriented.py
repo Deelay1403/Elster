@@ -26,7 +26,6 @@ sudo apt-get install python python-tk idle python-pmw python-imaging python-gtk2
 pass
 from threading import Thread
 import gtk
-# import gtk.glade
 import glob
 from random import randint
 import StepWindow

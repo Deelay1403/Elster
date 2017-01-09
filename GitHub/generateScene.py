@@ -205,7 +205,6 @@ class generateScene():
     def changeSceneOnBottom(self, actualScene, oldScene):
         # self.obj["label"].set_text("lel")
         self.obj["label"].set_label(str(actualScene)+"/"+str(oldScene))
-
     def checkInput(self, number,column):
         if(number%column==0):
             return (number/column)
@@ -236,7 +235,6 @@ class generateScene():
 
         for i in range(0,self.devices):
             self.microContainers[x][y].pack_start(self.chkbx[i],False,False,0)
-
     '''Pasek menu
         Menubar
     '''
@@ -247,7 +245,6 @@ class generateScene():
         else:
             self.body_tab[self.startScene-1][device][led] = 0
         print self.body_tab
-
     '''Change status of CheckButtons using body_tab'''
     def changeChkbtnActive(self,scene):
         for i in range(self.head_tab[1]):
@@ -257,7 +254,6 @@ class generateScene():
                 else:
                     print self.chkbtn_tab
                     self.chkbtn_tab[i][j].set_active(False)
-
     def menuTool(self):
         self.fileMenusub = gtk.Menu()
 
@@ -304,7 +300,6 @@ class generateScene():
 
 
         return self.menu_bar
-
     #Method to set device with setDevice.serialWindow
     def setDevice(self,data):
         s = setDevice.serialWindow().WALSIENARYJ__init__()
@@ -352,8 +347,6 @@ I0
 aI0
 aaa.
     """
-
-
     def fileInterpret(self,widget,option):
     # Main method to run all other methods responsible for files
     # Open and get file object
@@ -387,7 +380,6 @@ aaa.
 
                 t1.start()
                 t1.join()
-
     def threadNew(self):
         self.n = newWindowToGenerateScene.newWindowToGenerateScene()
     #     t2 = Thread(target=self.loopNew)
@@ -447,9 +439,6 @@ aaa.
         return 0
     def fileOpen(self, file,mode):
         return open(file,mode)
-
-
-
     def switch_choose(self,x):
         '''Switch to decide which dialog is suppose to call'''
         return {
@@ -467,7 +456,6 @@ aaa.
         }.get(x,gtk.FileChooserDialog(title="FileMenu", action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                         buttons=(
                                         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_NEW, gtk.RESPONSE_OK)))
-
     def MainBottom(self):
         '''Bottom buttons'''
         self.container = gtk.HBox(gtk.FALSE,4)
@@ -499,7 +487,6 @@ aaa.
 
         self.changeSceneOnBottom(self.startScene,self.head_tab[0])
         return self.container
-
     '''react to right arrow on bottom'''
     def bottomArrowRight(self,widget):
         if(self.startScene==0):
@@ -512,7 +499,6 @@ aaa.
         self.changeSceneOnBottom(self.startScene,self.head_tab[0])
         '''change status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
-
     '''react to left arrow on bottom'''
     def bottomArrowLeft(self, widget):
         if (self.startScene == 0):
@@ -525,7 +511,6 @@ aaa.
         self.changeSceneOnBottom(self.startScene, self.head_tab[0])
         '''change status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
-
 def main(a,b,c):
     g = generateScene(a, b, c)
     gtk.main()
