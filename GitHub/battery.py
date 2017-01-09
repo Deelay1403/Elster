@@ -63,7 +63,7 @@ class batteryWindow:
 		if self.buttonFunction:
 			self.battery_button[self.addresses[ID]] = gtk.Button()
 			self.battery_button[self.addresses[ID]].add(self.battery_icon[self.addresses[ID]])
-			self.battery_button[self.addresses[ID]].connect("clicked", self.update, ID)
+			self.battery_button[self.addresses[ID]].connect("clicked", self.updateFromBttn, ID, 190)
 			self.battery_button[self.addresses[ID]].show()
 
 		self.battery_ID_label[self.addresses[ID]] = gtk.Label("Bateria " + str(name))
@@ -128,7 +128,7 @@ class batteryWindow:
 		self.button.add(self.image)
 		self.button.show()
 		self.hbox.pack_start(self.button)
-		self.button.connect("clicked", self.update, ID)
+		self.button.connect("clicked", self.updateFromBttn, ID, 190)
 		pass
 
 	def updateOLD(self, widget, ID):
@@ -140,6 +140,10 @@ class batteryWindow:
 		self.battery_icon[self.addresses[ID]].set_from_file(obraz)
 		pass
 
+
+	def updateFromBttn(self, idButtn, ID, level):
+		self.update(ID, level)
+		pass
 
 	def update(self, ID, level, maxLevel=None, maxBar=None):
 		if maxLevel == None:
