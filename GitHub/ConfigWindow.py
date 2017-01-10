@@ -69,10 +69,16 @@ class serialWindow:
 
         self.dialog.action_area.pack_end(self.cb_serial)
 
+        # x = 0
+        # serial_ports = arduino_universal.serialPorts().get()
+        # for pack in serial_ports:
+        #     self.liststore.append([serial_ports[x]])
+        #     x += 1
         x = 0
-        serial_ports = arduino_universal.serialPorts().get()
-        for pack in serial_ports:
-            self.liststore.append([serial_ports[x]])
+        self.serial = serialComunnication()
+        self.serial_ports = self.serial.GetAvailablePorts()
+        for pack in self.serial_ports:
+            self.liststore.append([self.serial_ports[x]])
             x += 1
         self.cb_serial.set_model(self.liststore)
         self.cb_serial.connect('changed', self.changed_cb)
@@ -89,24 +95,41 @@ class serialWindow:
             gtk.main_quit()
 
     def autoset(self,Widget):
-        arduino_universal.serialActivate(index, False)
-        if arduino_universal.ser == "NO_PORTS":
+        print "INDEX"
+        index = self.cb_serial.get_active()
+        print index
+        self.serial.SerialActivate(index, False)
+        print "AUTOSET GET"
+        print self.serial.GetOpenPort()
+        print "ENDD"
+        if self.serial.GetOpenPort() == "NO_PORTS":
             print "zaden statek nie zadokuje :c"
-            serialPorts = arduino_universal.serialPorts().get()
-            print serialPorts
+            self.serial = serialComunnication()
+            print self.serial.GetAvailablePorts()
             x = 0
             self.liststore.clear()
-            for pack in serialPorts:
+            for pack in self.serial.GetAvailablePorts():
                 #TODO niech nowe porty pojawiaja sie od miejsca 0
-                self.liststore.append([serialPorts[x]])
+                self.liststore.append([self.serial.GetAvailablePorts()[x]])
                 x += 1
             return
-        arduino_universal.ser.write("99,4")
+        #self.liststore.move_before(0) #proba indeksowania od zera? ;_;
+        if self.serial.SerialSend("99,4") == "ERR01":
+            self.serial.SerialClose()
+            self.autoset(Widget)
+            return
         time.sleep(2)
-        arduino_universal.ser.write("99,5")
+        if self.serial.SerialSend("99,5") == "ERR01":
+            self.serial.SerialClose()
+            self.autoset(Widget)
+            return
         komenda = ''
         x = -1;
-        line = arduino_universal.ser.read_until(';')
+        line = self.serial.ReadUntil(';')
+        if line == "ERR02":
+            self.serial.SerialClose()
+            self.autoset(Widget)
+            return
         line = line.strip("\r\n")
         print line
         if line.startswith('ACT_'):  # szuka odpowiedzniej komendy
@@ -127,8 +150,9 @@ class serialWindow:
     def changed_cb(self, combobox):
         global index
         index = combobox.get_active()
-        if index > -1:
-            arduino_universal.set_serial(index)
+        self.serial.SetSerialIndex(index)
+        # if index > -1:
+        #     arduino_universal.set_serial(index)
         return
     def getIndex(self = None):
         return index

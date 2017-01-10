@@ -27,7 +27,7 @@ class serialComunnication():
                 line = s.read_until(';')
                 print "odczytano"
                 line = line.strip("\r\n")
-                #self.portsOpen.append(port)
+                self.portsOpen.append(port)
                 print line
                 if line.startswith('ACK_OK'): #akceptujemy tylko nasze urzadzenia, a nie jakies modemy xD
                     s.close()
@@ -44,7 +44,11 @@ class serialComunnication():
             print str(x) + ": " + situation
             x += 1
 
+        self.serialIndex = -1 #jako brak wyboru
+        self.portOpen = False
+
     def SerialActivate(self, dial, mode):
+
         print "SERIAL active"
         print "DIAL"
         print dial
@@ -57,6 +61,7 @@ class serialComunnication():
         if not self.portsOpen:
             print "BRAK PORTOW NA STATKI"
             self.ser = "NO_PORTS"
+            print self.ser
             #dial = ConfigWindow.serialWindow()
         else:
             if mode:
@@ -68,10 +73,24 @@ class serialComunnication():
             if whichIndex > -1:
                 print whichIndex
                 print self.portsOpen[whichIndex]
-                self.ser = serial.Serial(self.portsOpen[whichIndex], 9600)
+                print "KURWA"
+                if not self.portOpen:
+                    self.ser = serial.Serial(self.portsOpen[whichIndex], 9600, timeout=1)
+                    self.portOpen = True
+                else:
+                    print "port byl otwarty"
+                print "MAM TO"
             else:
                 print "BRAK PORTOW NA STATKII"
                 self.ser = "NO_PORTS"
+                print self.ser
+                print "GDZIE SA STATKI"
+
+    def SerialClose(self):
+        self.portOpen = False
+        self.portsOpen = []
+        self.ser = ""
+        pass
 
     def GetAvailablePorts(self):
         return self.portsOpen
@@ -81,14 +100,27 @@ class serialComunnication():
         return self.ser
         pass
 
+    def SetSerialIndex(self, index):
+        self.serialIndex = index
+        pass
+
     def SerialSend(self, whatSend):
-        if not ser == 'NO_PORTS':
+        if not self.ser == 'NO_PORTS':
             try:
-                self.ser.write(`receiver` + "." + `state` + "." + `led` + "." + `option` + ".")
-                raise 
+                self.ser.write(whatSend)
+                print whatSend
             except serial.serialutil.SerialException:
                 print 'Blad zapisu'
+                return "ERR01"
         else:
             print('EMULATING')
             #TODO: SIMULATING SCENES
+        pass
+
+    def ReadUntil(self, what):
+        try:
+            return self.ser.read_until(what)
+        except serial.serialutil.SerialException:
+            print 'Blad odczytu'
+            return "ERR02"
         pass

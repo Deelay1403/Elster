@@ -564,9 +564,9 @@ def set_serial(serial):
     index = serial
     print "SET SERIAL " + str(index)
 
-for situation in serialPorts().get():
-    print str(x) + ": " + situation
-    x += 1
+# for situation in serialPorts().get():
+#     print str(x) + ": " + situation
+#     x += 1
 
 def keylisten(event):
     print(event.char)
