@@ -78,9 +78,11 @@ def getWho():
 
 '''Metoda przeznaczona do wysyłania komend'''
 def lightLED(receiver, state, led, option):
-    if not ser == 'NO_PORTS':
-        ser.write(`receiver` + "." + `state` + "." + `led` + "." + `option` + ".")
-        # ser.write(receiver + "." + state + "." + led + "." + option + ".")
+    if not dial == 'NO_PORTS':
+        str = `receiver` + "." + `state` + "." + `led` + "." + `option` + "."
+        dial.serial.SerialSend(str)
+        # ser.write(`receiver` + "." + `state` + "." + `led` + "." + `option` + ".")
+        # # ser.write(receiver + "." + state + "." + led + "." + option + ".")
     else:
         print('EMULATING')
         #TODO: SIMULATING SCENES
@@ -608,8 +610,10 @@ def serialActivate(dial, mode):
 
 '''Funcja uruchamiana przez wątek. Obsługuje ona wszystko'''
 def start():
+    global dial
     dial = ConfigWindow.serialWindow()
     serialActivate(dial, True)
+    # ser = dial.serial.GetOpenPort()
     bateria = battery.batteryWindow(ser, 5, True, 1024, 6)
     app = Mainwindow()
     app2 = blinkInTime(ConfigWindow.zmienna)

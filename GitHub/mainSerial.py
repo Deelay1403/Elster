@@ -1,6 +1,8 @@
 import ConfigWindow
 import serial
 import sys
+import glob
+import time
 class serialComunnication():
     def __init__(self):
         # print "WYSZUKUJEE"
@@ -22,12 +24,14 @@ class serialComunnication():
                 # Trying if ports are open
                 s = serial.Serial(port, timeout=0.5)
                 print port
-                s.write("99,7") #PING
+                time.sleep(1.5)
+                s.write("99,8") #PING
                 print "zapisano"
                 line = s.read_until(';')
+                print line
                 print "odczytano"
                 line = line.strip("\r\n")
-                self.portsOpen.append(port)
+                #self.portsOpen.append(port)
                 print line
                 if line.startswith('ACK_OK'): #akceptujemy tylko nasze urzadzenia, a nie jakies modemy xD
                     s.close()
