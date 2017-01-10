@@ -1,6 +1,7 @@
 import gtk
 import arduino_universal_oriented
 import time
+from mainSerial import serialComunnication
 arduino_universal = arduino_universal_oriented
 class serialWindow:
 
