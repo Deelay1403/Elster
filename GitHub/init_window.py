@@ -32,8 +32,9 @@ class initWindow:
 
     def arduinoUniversalOrientedDef(self,args):
         import arduino_universal_oriented
-        a = arduino_universal_oriented.start()
         self.window.hide()
+        a = arduino_universal_oriented.start(self)
+
 
 
 if __name__ == "__main__":

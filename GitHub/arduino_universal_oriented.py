@@ -308,7 +308,11 @@ class Mainwindow:
         state = Widget.get_active()
         for x in range(1, 3):
             state = Widget.get_active()
-            lightLED(Data[0], state, x, 0)
+            # if(state == True):
+            #     state = 1
+            # else:
+            #     state = 0
+            lightLED((Data[0]+1), 0, x, 0)
     '''Zmiana adresu danej kolumy - adresu komunikacyjnego kolumny'''
     def addressValueChange(self, Widget, *Data):
         for bt in range(1, ConfigWindow.iloscbt + 1):
@@ -344,7 +348,8 @@ class Mainwindow:
     def printfuckingBT(self):
         print self.bt_table_id
     '''Konstruktor klasy'''
-    def __init__(self):
+    def __init__(self,self2):
+        self = self2
         '''Konstruktor klasy MainWindow'''
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("elSter - console")
@@ -453,26 +458,55 @@ class Mainwindow:
 
     def menuTool(self):
         self.menu = gtk.Menu()
+        self.viewMenu = gtk.Menu()
+
         self.firstMenuitem = {}
+        self.viewMenuitem = {}
+
         self.firstMenuitem[0] = gtk.MenuItem("Generator")
         self.firstMenuitem[1] = gtk.MenuItem("Zamknij")
+
+        self.viewMenuitem[0] = gtk.MenuItem("Bateria")
+        self.viewMenuitem[1] = gtk.MenuItem("Miganie")
+
         for i in range(0, len(self.firstMenuitem)):
             self.menu.append(self.firstMenuitem[i])
             self.firstMenuitem[i].show()
 
+        for i in range(0, len(self.viewMenuitem)):
+            self.viewMenu.append(self.viewMenuitem[i])
+            self.viewMenuitem[i].show()
+
         self.firstMenuitem[0].connect("activate", self.generateSceneWindow)
         self.firstMenuitem[1].connect("activate", gtk.main_quit)
+
+        self.viewMenuitem[0].connect("activate", self.viewWindow,"battery")
+        self.viewMenuitem[1].connect("activate", self.viewWindow,"blink")
+
         self.root = gtk.MenuItem("Narzędzia")
+        self.view = gtk.MenuItem("Widok")
 
         self.root.show()
         self.root.set_submenu(self.menu)
+
+        self.view.show()
+        self.view.set_submenu(self.viewMenu)
+
         self.menu_bar = gtk.MenuBar()
         self.menu_bar.show()
         self.menu_bar.append(self.root)
+        self.menu_bar.append(self.view)
 
         self.menu.show()
+        self.viewMenu.show()
 
         return self.menu_bar
+    def viewWindow(self,Data,SayMyName):
+            if SayMyName == "battery":
+                print self.batteryWindow.getVisibleOfWindow()
+        # except AttributeError:
+        #     print "lel"
+
     def generateSceneWindow(self,args):
         g = generateScene.generateScene()
     def activecheck(self, chbutton):
@@ -515,6 +549,9 @@ class Mainwindow:
         forLedBlackOutAll(0, 0)
         if self.toggle_blackout.get_active() == False:
             forLedBlackOutAll(1, 0)
+
+
+
 
 # Serial detect!
 '''Wykrycie podłączonych urządzeń do komputera'''
@@ -560,6 +597,8 @@ class serialPorts():
         return self.portsOpen
         pass
 
+
+
 '''Ustawienie urządzenia obsługiwanego'''
 def set_serial(serial):
     global index
@@ -604,33 +643,35 @@ def serialActivate(dial, mode):
             print serial_ports[whichIndex]
             ser = serial.Serial(serial_ports[whichIndex], 9600)
         else:
-            print "BRAK PORTOW NA STATKII";
-            ser = "NO_PORTS";
+            print "BRAK PORTOW NA STATKII"
+            ser = "NO_PORTS"
 
 
 '''Funcja uruchamiana przez wątek. Obsługuje ona wszystko'''
-def start():
-    global dial
+
+
+'''Główna metoda klasy uruchamiająca wątek'''
+
+
+def start(self):
+    global dial, batteryWindow, blinkWindow
     dial = ConfigWindow.serialWindow()
     serialActivate(dial, True)
     # ser = dial.serial.GetOpenPort()
-    bateria = battery.batteryWindow(ser, 5, True, 1024, 6)
-    app = Mainwindow()
-    app2 = blinkInTime(ConfigWindow.zmienna)
-    for num in range(1,(ConfigWindow.zmienna + 1)):
-        bateria.add(num, num)
-    #mały pokaz nowych funkcji
+    self.batteryWindow = battery.batteryWindow(ser, 5, True, 1024, 6)
+    blinkWindow = blinkInTime(ConfigWindow.zmienna)
+    for num in range(1, (ConfigWindow.zmienna + 1)):
+        self.batteryWindow.add(num, num)
+    # mały pokaz nowych funkcji
     '''zmiana nazwy baterii'''
-    bateria.changeName(1, "DZIAŁA!")
+    self.batteryWindow.changeName(1, "DZIAŁA!")
     '''aktualizacja stanu baterii'''
-    bateria.update(1, 640)
-    bateria.show()
+    self.batteryWindow.update(1, 640)
+    self.batteryWindow.show()
+    app = Mainwindow(self)
     gtk.main()
-    gtk.main()
-    #t3 = Thread(name="key", target=keyrequest())
-    #t3.start()
-
-'''Główna metoda klasy uruchamiająca wątek'''
+    # t3 = Thread(name="key", target=keyrequest())
+    # t3.start()
 if __name__ == "__main__":
     # t = Thread(name="log", target=log("lel"))
     # t.setDaemon(True)
