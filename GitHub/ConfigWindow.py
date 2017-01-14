@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import gtk
 import arduino_universal_oriented
 import time
@@ -93,6 +95,11 @@ class serialWindow:
             gtk.main_quit()
         if response == gtk.STOCK_CLOSE:
             gtk.main_quit()
+        #Warunek stworzony na szybko by usunąć problem z nieaktywnym portem bez naciśnięcia przycisku "AutoSet"
+        if response == gtk.RESPONSE_ACCEPT:
+            index = self.cb_serial.get_active()
+            if(index != None):
+                self.serial.SerialActivate(index, False)
 
     def autoset(self,Widget):
         print "INDEX"
@@ -154,8 +161,10 @@ class serialWindow:
         # if index > -1:
         #     arduino_universal.set_serial(index)
         return
+        pass
     def getIndex(self = None):
         return index
+        pass
 
     #zmienna2 = zmienna = iloscbt = 3
     def response(self,Widget,Data):
@@ -164,3 +173,4 @@ class serialWindow:
         zmienna = self.count_sp_Devices.get_value_as_int()
         zmienna2 = self.count_sp_Devices.get_value_as_int()
         iloscbt = self.count_sp_Address.get_value_as_int()
+        pass

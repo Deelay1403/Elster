@@ -102,8 +102,7 @@ class serialComunnication():
 
     def GetOpenPort(self):
         return self.ser
-        pass
-
+        # pass
     def SetSerialIndex(self, index):
         self.serialIndex = index
         pass

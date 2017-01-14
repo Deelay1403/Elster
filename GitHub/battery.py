@@ -85,11 +85,22 @@ class batteryWindow:
 
         self.level[self.addresses[ID]] = 0
 
-    # print self.howMany
+    def hideWindow(self):
+        self.window.hide()
+
+    def showWindow(self):
+        self.window.show()
+
+    def getVisibleOfWindow(self):
+        return self.window.get_property("visible")
+
+            # print self.howMany
     # print self.obecne_ID_kontenera
     # print ID
     # print name
     # print self.addresses
+
+
 
     def delete_event(self, widget, event, data=None):
         # If you return FALSE in the "delete_event" signal handler,
@@ -180,9 +191,9 @@ class batteryWindow:
 
 
 if __name__ == "__main__":
-    bateria = batteryWindow('COM1', 3, True, 1024, 6)
-    bateria.add(5, "pioruny")
-    bateria.update(5, 555)
-    bateria.changeName(5, "Aktor 1")
-    bateria.show()
+    batteryWindow = batteryWindow('COM1', 3, True, 1024, 6)
+    batteryWindow.add(5, "pioruny")
+    batteryWindow.update(5, 555)
+    batteryWindow.changeName(5, "Aktor 1")
+    batteryWindow.show()
 
