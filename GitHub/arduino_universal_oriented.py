@@ -33,6 +33,7 @@ import ConfigWindow
 import generateScene
 import battery #dodal oskar
 from mainSerial import serialComunnication
+from multiprocessing import Process
 
 x = 1
 #gladeFileName = "./window.glade"
@@ -348,8 +349,7 @@ class Mainwindow:
     def printfuckingBT(self):
         print self.bt_table_id
     '''Konstruktor klasy'''
-    def __init__(self,self2):
-        self = self2
+    def __init__(self):
         '''Konstruktor klasy MainWindow'''
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("elSter - console")
@@ -652,38 +652,56 @@ def serialActivate(dial, mode):
 
 '''Główna metoda klasy uruchamiająca wątek'''
 
-
-def start(self):
-    global dial, batteryWindow, blinkWindow
+def createObjectDial():
+    global dial
     dial = ConfigWindow.serialWindow()
+def createObjectWindowMain():
+    global window
+    window = Mainwindow()
+def createObjectBlink():
+    global blink
+    blink = blinkInTime(ConfigWindow.zmienna)
+def createObjectBaterry():
+    global batteryWindow
+    batteryWindow = battery.batteryWindow(ser, 5, True, 1024, 6)
+def start():
+    #global dial, batteryWindow, blinkWindow
+    dialProcess = Process(target=createObjectDial(),name="Dial").start()
+    # dial = ConfigWindow.serialWindow()
     serialActivate(dial, True)
+    windowProcess = Process(target=createObjectWindowMain(),name="Window").start()
+    # window = Mainwindow()
     # ser = dial.serial.GetOpenPort()
-    self.batteryWindow = battery.batteryWindow(ser, 5, True, 1024, 6)
-    blinkWindow = blinkInTime(ConfigWindow.zmienna)
+    Battery = Process(target=createObjectBaterry()).start()
+    # batteryWindow = battery.batteryWindow(ser, 5, True, 1024, 6)
+    blinkWindow = Process(target=createObjectBlink()).start()
+    # blinkWindow = blinkInTime(ConfigWindow.zmienna)
     for num in range(1, (ConfigWindow.zmienna + 1)):
-        self.batteryWindow.add(num, num)
+        batteryWindow.add(num, num)
     # mały pokaz nowych funkcji
     '''zmiana nazwy baterii'''
-    self.batteryWindow.changeName(1, "DZIAŁA!")
+    batteryWindow.changeName(1, "DZIAŁA!")
     '''aktualizacja stanu baterii'''
-    self.batteryWindow.update(1, 640)
-    self.batteryWindow.show()
-    app = Mainwindow(self)
-    gtk.main()
+    batteryWindow.update(1, 640)
+    batteryWindow.show()
+
+    Process(target=gtk.main()).start()
     # t3 = Thread(name="key", target=keyrequest())
     # t3.start()
 if __name__ == "__main__":
     # t = Thread(name="log", target=log("lel"))
     # t.setDaemon(True)
-    t2 = Thread(name="main", target=start)
-    # t.start()
-    t2.start()
+    # t2 = Thread(name="main", target=start)
+    # # t.start()
+    # t2.start()
+    t2 = Process(target=start).start()
 def __init__():
     # t = Thread(name="log", target=log("lel"))
     # t.setDaemon(True)
-    t2 = Thread(name="main", target=start)
-    # t.start()
-    t2.start()
+    # t2 = Thread(name="main", target=start)
+    # # t.start()
+    # t2.start()
+    t2 = Process(target=start).start()
 #TODO wraz ze zmiana adresu urzadzenia zmiana adresu baterii
 #TODO sprawdanie bledow w tle
 #TODO pokomentowc troche :>

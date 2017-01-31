@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 import gtk
-
+from multiprocessing import Process
 
 
 class initWindow:
@@ -26,15 +26,26 @@ class initWindow:
         self.arduinoUniversalOriented.show()
 
     def generateSceneDef(self,args):
-        import generateScene
-        g = generateScene.generateScene()
+
+        self.target = "generateScene.generateScene()"
+        p1 = Process(target=self.createObjectGenerate()).start()
+        #g = generateScene.generateScene()
         self.window.hide()
 
     def arduinoUniversalOrientedDef(self,args):
-        import arduino_universal_oriented
-        self.window.hide()
-        a = arduino_universal_oriented.start(self)
 
+        self.window.hide()
+        # a = arduino_universal_oriented.start(self)
+        self.target = "arduino_universal_oriented.start(self)"
+        p2 = Process(target=self.createObjectArduino()).start()
+
+    def createObjectGenerate(self):
+        import generateScene
+        self.g = generateScene.generateScene()
+
+    def createObjectArduino(self):
+        import arduino_universal_oriented
+        self.a = arduino_universal_oriented.start()
 
 
 if __name__ == "__main__":
