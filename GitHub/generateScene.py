@@ -242,8 +242,14 @@ class generateScene():
     def changeBody_tabStatus(self,widget,scene,device,led):
         if  widget.get_active():
             self.body_tab[self.startScene-1][device][led] = 1
+            if(self.canILive==True):
+                self.serial.write(`device` + "." + `1` + "." + `led` + "." + `0` + ".")
+                print(`device` + "." + `1` + "." + `led` + "." + `0` + ".")
         else:
             self.body_tab[self.startScene-1][device][led] = 0
+            if (self.canILive == True):
+                self.serial.write(`device` + "." + `0` + "." + `led` + "." + `0` + ".")
+                print(`device` + "." + `0` + "." + `led` + "." + `0` + ".")
         print self.body_tab
     '''Change status of CheckButtons using body_tab'''
     def changeChkbtnActive(self,scene):
@@ -298,9 +304,13 @@ class generateScene():
         self.deviceMenusub.show()
         self.deviceMenuItem[0].show()
 
+        """Ustawienie serialu by potem być w stanie sprawdzać go w live mode"""
+        self.serial = None
 
         return self.menu_bar
     #Method to set device with setDevice.serialWindow
+
+
     def setDevice(self,data):
         s = setDevice.serialWindow().WALSIENARYJ__init__()
         self.serial = serial.Serial(s, 9600)
@@ -456,7 +466,16 @@ aaa.
         }.get(x,gtk.FileChooserDialog(title="FileMenu", action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                         buttons=(
                                         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_NEW, gtk.RESPONSE_OK)))
-
+    def liveModeActive(self,data):
+        if (data.get_active()):
+            if(self.serial!=None):
+                self.canILive = True
+            if(self.serial==None):
+                self.setDevice(None)
+                self.canILive = False
+        if (data.get_active()!=True):
+            self.serial = None
+        print data.get_active()
     def MainBottom(self):
         '''Bottom buttons'''
         self.container = gtk.HBox(gtk.FALSE,4)
@@ -471,6 +490,7 @@ aaa.
 
         self.btnsWithoutEdit["rightbt"].connect("clicked", self.bottomArrowRight)
         self.btnsWithoutEdit["leftbt"].connect("clicked", self.bottomArrowLeft)
+        self.btnsWithoutEdit["liveMode"].connect("toggled",self.liveModeActive)
         '''Add it to the container'''
         for i in range(0,6):
             self.btnsWithoutEdit[i].show()
@@ -479,9 +499,9 @@ aaa.
             else:
                 self.container.pack_start(self.btnsWithoutEdit[i], True, True, 0)
 
-        # self.btnsWithoutEdit["addScene"].set_size_request(-1, -1)
-        # self.btnsWithoutEdit["deleScene"].set_size_request(-1, -1)
-        # self.btnsWithoutEdit["liveMode"].set_size_request(-1, -1)
+        self.btnsWithoutEdit["addScene"].set_size_request(-1, -1)
+        self.btnsWithoutEdit["deleScene"].set_size_request(-1, -1)
+        self.btnsWithoutEdit["liveMode"].set_size_request(-1, -1)
         self.btnsWithoutEdit["label"].set_size_request(50, -1)
         self.btnsWithoutEdit["leftbt"].set_size_request(40, -1)
         self.btnsWithoutEdit["rightbt"].set_size_request(40, -1)
