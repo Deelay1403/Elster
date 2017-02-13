@@ -5,10 +5,10 @@ Ptaszek do kopiowania i zaznaczania - ✓ ☑
 TODO wszystkie:
     1.Uzupełnić komentarze
     2.Zbadać jakie biblioteki są potrzebne do uruchomienia i sprawdzić czy można kompilować Python -> C++
-    3.Zastosować Multiprocessing zamiast Threading
+    3.Zastosować Multiprocessing zamiast Threading ✓
 TODO arduino_universal_oriented.py:
     1.Dodać obsługę klawiatury
-    2.Uzupełnienie menu o liste "Widok" zawierającą:
+    2.Uzupełnienie menu o liste "Widok" zawierającą: ✓
         -Battery
         -GenerateScene
         -BlinkInTime
@@ -25,9 +25,9 @@ TODO generateScene.py:
     2.Dodanie LiveMode
     3.Dodanie obsługi przycisku dla "Edytuj"
     4.Zmiana formatu pliku na .hsk -
-    5.Zbadanie po co dodałem przycik "Nowy" (┛◉Д◉)┛彡┻━┻ ✓
+    5.Zbadanie po co dodałem przycik "Nowy" (┛◉Д◉)┛彡┻━┻  ✓
     5.Edit - Zapomniałem, że już nie otwiera to okna tylko pyta o konfiguracje 😌 ✓
-    6.meta ma posiadać międzyinnymi nazwy urządzeń
+    6.meta ma posiadać między innymi nazwy urządzeń
     7.Dodanie obsługi pętli
     8.Dodanie wyboru urządzenia ✓
     8.edit - Zmienić nazwę WALSIENARYJ__init__() ✓

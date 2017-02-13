@@ -204,7 +204,7 @@ class generateScene():
 
     def changeSceneOnBottom(self, actualScene, oldScene):
         # self.obj["label"].set_text("lel")
-        self.obj["label"].set_label(str(actualScene)+"/"+str(oldScene))
+        self.btnsWithoutEdit["label"].set_label(str(actualScene) + "/" + str(oldScene))
     def checkInput(self, number,column):
         if(number%column==0):
             return (number/column)
@@ -456,30 +456,35 @@ aaa.
         }.get(x,gtk.FileChooserDialog(title="FileMenu", action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                         buttons=(
                                         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_NEW, gtk.RESPONSE_OK)))
+
     def MainBottom(self):
         '''Bottom buttons'''
         self.container = gtk.HBox(gtk.FALSE,4)
-        self.obj = {}
-        '''Generate 4 objects for the first page'''
-        self.obj["label"] = self.obj[0] = gtk.Label("-/-")
-        self.obj["edit"] = self.obj[1] = gtk.Button("Edytuj")
-        self.obj["leftbt"] = self.obj[2] = gtk.Button("<")
-        self.obj["rightbt"] = self.obj[3] = gtk.Button(">")
+        self.btnsWithoutEdit = {}
+        '''Generate 6 objects for the first page'''
+        self.btnsWithoutEdit["label"] = self.btnsWithoutEdit[0] = gtk.Label("-/-")
+        self.btnsWithoutEdit["liveMode"] = self.btnsWithoutEdit[1] = gtk.CheckButton("Live Mode")
+        self.btnsWithoutEdit["addScene"] = self.btnsWithoutEdit[2] = gtk.Button("Dodaj scene")
+        self.btnsWithoutEdit["deleScene"] = self.btnsWithoutEdit[3] = gtk.Button("Usuń scene")
+        self.btnsWithoutEdit["leftbt"] = self.btnsWithoutEdit[4] = gtk.Button("<")
+        self.btnsWithoutEdit["rightbt"] = self.btnsWithoutEdit[5] = gtk.Button(">")
 
-        self.obj["rightbt"].connect("clicked", self.bottomArrowRight)
-        self.obj["leftbt"].connect("clicked", self.bottomArrowLeft)
+        self.btnsWithoutEdit["rightbt"].connect("clicked", self.bottomArrowRight)
+        self.btnsWithoutEdit["leftbt"].connect("clicked", self.bottomArrowLeft)
         '''Add it to the container'''
-        for i in range(0,4):
-            self.obj[i].show()
+        for i in range(0,6):
+            self.btnsWithoutEdit[i].show()
             if(i!=1):
-                self.container.pack_start(self.obj[i],False,False,0)
+                self.container.pack_start(self.btnsWithoutEdit[i], False, False, 0)
             else:
-                self.container.pack_start(self.obj[i],True,True,0)
+                self.container.pack_start(self.btnsWithoutEdit[i], True, True, 0)
 
-        self.obj["edit"].set_size_request(-1,-1)
-        self.obj["label"].set_size_request(50,-1)
-        self.obj["leftbt"].set_size_request(40,-1)
-        self.obj["rightbt"].set_size_request(40, -1)
+        # self.btnsWithoutEdit["addScene"].set_size_request(-1, -1)
+        # self.btnsWithoutEdit["deleScene"].set_size_request(-1, -1)
+        # self.btnsWithoutEdit["liveMode"].set_size_request(-1, -1)
+        self.btnsWithoutEdit["label"].set_size_request(50, -1)
+        self.btnsWithoutEdit["leftbt"].set_size_request(40, -1)
+        self.btnsWithoutEdit["rightbt"].set_size_request(40, -1)
 
         self.container.show()
 
