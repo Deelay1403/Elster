@@ -12,6 +12,11 @@ class batteryWindow:
         self.maxLevel = maxLevel
         self.maxBar = maxBar
 
+        import os
+        import sys
+        os.chdir(os.path.dirname(sys.argv[0])) #zmiana working directory na lokalizacje skryptu
+        #print os.getcwd()
+
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("elSter - battery mannager")
         self.window.set_border_width(10)
@@ -167,7 +172,6 @@ class batteryWindow:
             if (procentLvl >= procentBelka) & (procentLvl <= self.obliczProcent(ileBelek + 1, maxBar)):
                 print "BELKI: " + str(procentLvl) + " " + str(ileBelek)
                 obraz = "./img/battW" + str(ileBelek) + ".png"
-
                 self.battery_poziom_label[self.addresses[ID]].set_text(str(procentLvl) + "%")
                 self.battery_icon[self.addresses[ID]].set_from_file(obraz)
                 return
