@@ -16,6 +16,48 @@ import serial
 import setDevice
 import time
 
+"""
+Typical file:
+
+(lp0
+I2
+aI5
+aI2
+a.(lp0
+(lp1
+(lp2
+I0
+aI1
+aa(lp3
+I0
+aI0
+aa(lp4
+I0
+aI0
+aa(lp5
+I0
+aI0
+aa(lp6
+I0
+aI0
+aaa(lp7
+(lp8
+I0
+aI0
+aa(lp9
+I0
+aI0
+aa(lp10
+I0
+aI0
+aa(lp11
+I0
+aI0
+aa(lp12
+I0
+aI0
+aaa.
+    """
 
 class generateScene():
     """
@@ -315,48 +357,7 @@ class generateScene():
         s = setDevice.serialWindow().WALSIENARYJ__init__()
         self.serial = serial.Serial(s, 9600)
         print self.serial
-    """
-Typical file:
 
-(lp0
-I2
-aI5
-aI2
-a.(lp0
-(lp1
-(lp2
-I0
-aI1
-aa(lp3
-I0
-aI0
-aa(lp4
-I0
-aI0
-aa(lp5
-I0
-aI0
-aa(lp6
-I0
-aI0
-aaa(lp7
-(lp8
-I0
-aI0
-aa(lp9
-I0
-aI0
-aa(lp10
-I0
-aI0
-aa(lp11
-I0
-aI0
-aa(lp12
-I0
-aI0
-aaa.
-    """
     def fileInterpret(self,widget,option):
     # Main method to run all other methods responsible for files
     # Open and get file object
@@ -466,6 +467,9 @@ aaa.
         }.get(x,gtk.FileChooserDialog(title="FileMenu", action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                         buttons=(
                                         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_NEW, gtk.RESPONSE_OK)))
+
+    def addScene(self,data):
+        print "In work"
     def liveModeActive(self,data):
         if (data.get_active()):
             if(self.serial!=None):
@@ -491,6 +495,7 @@ aaa.
         self.btnsWithoutEdit["rightbt"].connect("clicked", self.bottomArrowRight)
         self.btnsWithoutEdit["leftbt"].connect("clicked", self.bottomArrowLeft)
         self.btnsWithoutEdit["liveMode"].connect("toggled",self.liveModeActive)
+
         '''Add it to the container'''
         for i in range(0,6):
             self.btnsWithoutEdit[i].show()
