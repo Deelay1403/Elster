@@ -167,7 +167,9 @@ class batteryWindow:
             if (procentLvl >= procentBelka) & (procentLvl <= self.obliczProcent(ileBelek + 1, maxBar)):
                 print "BELKI: " + str(procentLvl) + " " + str(ileBelek)
                 obraz = "./img/battW" + str(ileBelek) + ".png"
-
+                import os
+                print "COOO :C"
+                print os.getcwd()
                 self.battery_poziom_label[self.addresses[ID]].set_text(str(procentLvl) + "%")
                 self.battery_icon[self.addresses[ID]].set_from_file(obraz)
                 return
