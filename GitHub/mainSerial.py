@@ -1,4 +1,4 @@
-import ConfigWindow
+#import ConfigWindow
 import serial
 import sys
 import glob

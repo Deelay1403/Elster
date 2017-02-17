@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import gtk
-import arduino_universal_oriented
+#import arduino_universal_oriented
 import time
-arduino_universal = arduino_universal_oriented
+#arduino_universal = arduino_universal_oriented
+import mainSerial
 class serialWindow:
     def __init__(self):
         print "Aby uruchomić okno wywołaj WALSIENARYJ__init__"
@@ -34,7 +35,9 @@ class serialWindow:
         self.dialog.action_area.pack_end(self.cb_serial)
 
         x = 0
-        serial_ports = arduino_universal.serialPorts().get()
+        self.serial = mainSerial.serialComunnication()
+        serial_ports = self.serial.GetAvailablePorts()
+
         for pack in serial_ports:
             self.liststore.append([serial_ports[x]])
             x += 1
@@ -51,8 +54,10 @@ class serialWindow:
             gtk.main_quit()
         if response == gtk.STOCK_CLOSE:
             gtk.main_quit()
-        if response == gtk.RESPONSE_ACCEPT:
-            return self.cb_serial.get_active_text()
+        # if response == gtk.RESPONSE_ACCEPT:
+        #     return serialWindow
+    def getCombobox(self):
+        return self.cb_serial
     def response(self,Widget,Data):
         if(Data == gtk.RESPONSE_ACCEPT):
             return self.cb_serial.get_active_text()
