@@ -13,9 +13,8 @@ import pickle
 import newWindowToGenerateScene
 from threading import Thread
 import serial
-import setDevice
 import time
-
+import setDevice
 """
 Typical file:
 
@@ -64,12 +63,18 @@ class generateScene():
     PL:Konstruktor klasy generateScene():
     ENG:generateScene() class constructor
     """
-    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = []):
-        t3 = Thread(name="main",target=self.wind(colums_main,devices,number_of_scenes,body,meta))
+    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,serial = None,body = [],meta = []):
+        t3 = Thread(name="main",target=self.wind(colums_main,devices,number_of_scenes,serial,body,meta))
         t3.daemon = True
         t3.start()
         t3.join()
-    def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = []):
+    def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,serial = None,body = [],meta = []):
+        '''Wind like Wind Of The Change'''
+        """Ustawienie serialu by potem być w stanie sprawdzać go w live mode"""
+        self.serial = serial
+
+        """Ustawienie canILive dla każdego chkbox - W celu zniwelowania błędów"""
+        self.canILive = False
         self.startScene = 1
         if(number_of_scenes==0):
             self.startScene = 0
@@ -284,14 +289,15 @@ class generateScene():
     def changeBody_tabStatus(self,widget,scene,device,led):
         if  widget.get_active():
             self.body_tab[self.startScene-1][device][led] = 1
+            print self.canILive
             if(self.canILive==True):
-                self.serial.write(`device` + "." + `1` + "." + `led` + "." + `0` + ".")
-                print(`device` + "." + `1` + "." + `led` + "." + `0` + ".")
+                self.serial.serial.SerialSend(`device+2` + "." + `1` + "." + `led+1` + "." + `0` + ".")
+                print(`device+2` + "." + `1` + "." + `led+1` + "." + `0` + ".")
         else:
             self.body_tab[self.startScene-1][device][led] = 0
             if (self.canILive == True):
-                self.serial.write(`device` + "." + `0` + "." + `led` + "." + `0` + ".")
-                print(`device` + "." + `0` + "." + `led` + "." + `0` + ".")
+                self.serial.serial.SerialSend(`device+2` + "." + `0` + "." + `led+1` + "." + `0` + ".")
+                print(`device+2` + "." + `0` + "." + `led+1` + "." + `0` + ".")
         print self.body_tab
     '''Change status of CheckButtons using body_tab'''
     def changeChkbtnActive(self,scene):
@@ -346,17 +352,21 @@ class generateScene():
         self.deviceMenusub.show()
         self.deviceMenuItem[0].show()
 
-        """Ustawienie serialu by potem być w stanie sprawdzać go w live mode"""
-        self.serial = None
+
 
         return self.menu_bar
     #Method to set device with setDevice.serialWindow
 
 
     def setDevice(self,data):
-        s = setDevice.serialWindow().WALSIENARYJ__init__()
-        self.serial = serial.Serial(s, 9600)
-        print self.serial
+        """
+        :param data: Will import serDevice to set value on self.serial
+        :return: nothing
+        """
+        self.serial = setDevice.serialWindow()
+        self.serial.WALSIENARYJ__init__()
+        print serial
+        self.serial.serial.SerialActivate(self.serial.getCombobox().get_active(),False)
 
     def fileInterpret(self,widget,option):
     # Main method to run all other methods responsible for files
@@ -392,7 +402,7 @@ class generateScene():
                 t1.start()
                 t1.join()
     def threadNew(self):
-        self.n = newWindowToGenerateScene.newWindowToGenerateScene()
+        self.n = newWindowToGenerateScene.newWindowToGenerateScene(self.serial)
     #     t2 = Thread(target=self.loopNew)
     #     t2.daemon = True
     #     t2.start()
@@ -468,18 +478,72 @@ class generateScene():
                                         buttons=(
                                         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_NEW, gtk.RESPONSE_OK)))
 
+    '''
+    Function to add scene. It will add 1 more x value to body_tab
+    '''
     def addScene(self,data):
-        print "In work"
+        print self.body_tab
+        scenes = self.head_tab[0]
+        scenes += 1
+        self.head_tab[0] = scenes
+        print scenes
+        body_tab_new = [[[0 for l in range(self.head_tab[2])]for d in range(self.head_tab[1])]for s in range(scenes)]
+        for x in range(self.head_tab[0]-1):
+            for y in range(self.head_tab[1]):
+                for z in range(self.head_tab[2]):
+                    body_tab_new[x][y][z] = self.body_tab[x][y][z]
+        self.body_tab = body_tab_new
+        print self.body_tab
+        self.changeSceneOnBottom(self.startScene,self.head_tab[0])
+
+        #self.head_tab = [number_of_scenes, colums_main,devices]
+    '''
+    Function to del scene. Will remove 1 x from body_tab
+    '''
+    def delScene(self,data):
+        if(self.head_tab[0]!=1):
+            print self.body_tab
+            scenes = self.head_tab[0]
+            scenes -= 1
+            self.head_tab[0] = scenes
+            print scenes
+            body_tab_new = [[[0 for l in range(self.head_tab[2])]for d in range(self.head_tab[1])]for s in range(scenes)]
+
+            for x in range(self.startScene-1):
+                print "X"
+                print x
+                for y in range(self.head_tab[1]):
+                    for z in range(self.head_tab[2]):
+                        body_tab_new[x][y][z] = self.body_tab[x][y][z]
+            difference = self.head_tab[0] - self.startScene
+            if (difference != 0):
+                for x in range(difference):
+                    print "X"
+                    print x+self.startScene
+                    for y in range(self.head_tab[1]):
+                        for z in range(self.head_tab[2]):
+                            body_tab_new[x+self.startScene][y][z] = self.body_tab[x+self.startScene][y][z]
+            self.body_tab = body_tab_new
+            print self.body_tab
+            if(self.startScene>self.head_tab[0]):
+                self.startScene -=1
+                self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+            else:
+                self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+    '''
+    Activate live mode. First check if serial is connected, if not program force select device
+    '''
     def liveModeActive(self,data):
         if (data.get_active()):
-            if(self.serial!=None):
+            print "gg4"
+            print self.serial
+            if(self.serial != None):
                 self.canILive = True
-            if(self.serial==None):
+            elif(self.serial==None):
                 self.setDevice(None)
-                self.canILive = False
+                self.canILive = True
         if (data.get_active()!=True):
             self.serial = None
-        print data.get_active()
     def MainBottom(self):
         '''Bottom buttons'''
         self.container = gtk.HBox(gtk.FALSE,4)
@@ -495,6 +559,8 @@ class generateScene():
         self.btnsWithoutEdit["rightbt"].connect("clicked", self.bottomArrowRight)
         self.btnsWithoutEdit["leftbt"].connect("clicked", self.bottomArrowLeft)
         self.btnsWithoutEdit["liveMode"].connect("toggled",self.liveModeActive)
+        self.btnsWithoutEdit["addScene"].connect("clicked", self.addScene)
+        self.btnsWithoutEdit["deleScene"].connect("clicked", self.delScene)
 
         '''Add it to the container'''
         for i in range(0,6):
@@ -541,8 +607,8 @@ class generateScene():
         self.changeSceneOnBottom(self.startScene, self.head_tab[0])
         '''change status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
-def main(a,b,c):
-    g = generateScene(a, b, c)
+def main(a,b,c,d = None):
+    g = generateScene(a, b, c, d)
     gtk.main()
 if __name__ == "__main__":
     '''Runnig with 5,5,2 for example - can be run with nothing'''

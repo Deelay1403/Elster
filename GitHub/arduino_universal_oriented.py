@@ -663,12 +663,13 @@ def createObjectBlink():
     blink = blinkInTime(ConfigWindow.zmienna)
 def createObjectBaterry():
     global batteryWindow
-    batteryWindow = battery.batteryWindow(ser, 5, True, 1024, 6)
+    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6)
 def start():
+    import mainSerial
     #global dial, batteryWindow, blinkWindow
     dialProcess = Process(target=createObjectDial(),name="Dial").start()
     # dial = ConfigWindow.serialWindow()
-    serialActivate(dial, True)
+    #mainSerial.serialComunnication().SerialActivate(dial, True)
     windowProcess = Process(target=createObjectWindowMain(),name="Window").start()
     # window = Mainwindow()
     # ser = dial.serial.GetOpenPort()

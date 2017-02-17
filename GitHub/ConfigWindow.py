@@ -98,6 +98,7 @@ class serialWindow:
         #Warunek stworzony na szybko by usunąć problem z nieaktywnym portem bez naciśnięcia przycisku "AutoSet"
         if response == gtk.RESPONSE_ACCEPT:
             index = self.cb_serial.get_active()
+            print index
             if(index != None):
                 self.serial.SerialActivate(index, False)
 
