@@ -43,7 +43,6 @@ class serialWindow:
             x += 1
         self.cb_serial.set_model(self.liststore)
 
-        self.dialog.connect('response', self.response)
         self.cb_serial.set_active(0)
 
         self.cb_serial.show()

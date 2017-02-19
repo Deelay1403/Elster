@@ -14,8 +14,13 @@ class batteryWindow:
 
         import os
         import sys
-        os.chdir(os.path.dirname(sys.argv[0])) #zmiana working directory na lokalizacje skryptu
-        #print os.getcwd()
+        os.chdir(os.path.dirname(os.path.abspath(__file__))) #zmiana working directory na lokalizacje skryptu
+
+        print os.getcwd() #dziala /home/oskar i nie dziala na innym systemie
+        print os.path.dirname(os.path.abspath(__file__)) #dziala /home/oskar/Pulpit/elSter/GitHub
+        print os.getcwd() #dziala /home/oskar i nie dziala na innym systemie
+        print os.path.dirname(sys.argv[0]) #!dziala ./Pulpit/elSter/GitHub
+        print "DEBUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUG"
 
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("elSter - battery mannager")

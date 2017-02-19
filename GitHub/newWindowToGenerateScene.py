@@ -2,7 +2,9 @@
 import gtk
 from threading import Thread
 class newWindowToGenerateScene:
-    def __init__(self,serial):
+    def __init__(self,serial,oldGenerateScene):
+        #To work in accept
+        self.oldGenerateScene = oldGenerateScene
         self.window = gtk.Dialog("New Generate",
                                  None,
                                  gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
@@ -46,8 +48,8 @@ class newWindowToGenerateScene:
     def Accept(self,widget,seal):
         if(seal==gtk.RESPONSE_ACCEPT):
             self.window.hide()
-            from generateScene import main
-            g = main(int(self.adj[1].get_value()), int(self.adj[2].get_value()),int(self.adj[0].get_value()),self.serial)
-
+            self.oldGenerateScene.hide()
+            import generateScene
+            g = generateScene.generateScene(int(self.adj[1].get_value()), int(self.adj[2].get_value()),int(self.adj[0].get_value()),serial = self.serial)
         elif(seal==gtk.RESPONSE_CANCEL):
             gtk.main_quit()
