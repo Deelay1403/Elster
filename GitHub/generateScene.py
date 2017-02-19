@@ -63,12 +63,12 @@ class generateScene():
     PL:Konstruktor klasy generateScene():
     ENG:generateScene() class constructor
     """
-    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,serial = None,body = [],meta = []):
-        t3 = Thread(name="main",target=self.wind(colums_main,devices,number_of_scenes,serial,body,meta))
+    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None):
+        t3 = Thread(name="main",target=self.wind(colums_main,devices,number_of_scenes,body,meta,serial))
         t3.daemon = True
         t3.start()
         t3.join()
-    def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,serial = None,body = [],meta = []):
+    def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None):
         '''Wind like Wind Of The Change'''
         """Ustawienie serialu by potem być w stanie sprawdzać go w live mode"""
         self.serial = serial
@@ -402,7 +402,7 @@ class generateScene():
                 t1.start()
                 t1.join()
     def threadNew(self):
-        self.n = newWindowToGenerateScene.newWindowToGenerateScene(self.serial)
+        self.n = newWindowToGenerateScene.newWindowToGenerateScene(self.serial,self.window)
     #     t2 = Thread(target=self.loopNew)
     #     t2.daemon = True
     #     t2.start()
@@ -522,7 +522,7 @@ class generateScene():
                     print x+self.startScene
                     for y in range(self.head_tab[1]):
                         for z in range(self.head_tab[2]):
-                            body_tab_new[x+self.startScene][y][z] = self.body_tab[x+self.startScene][y][z]
+                            body_tab_new[x+self.startScene-1][y][z] = self.body_tab[x+self.startScene][y][z]
             self.body_tab = body_tab_new
             print self.body_tab
             if(self.startScene>self.head_tab[0]):
@@ -552,7 +552,7 @@ class generateScene():
         self.btnsWithoutEdit["label"] = self.btnsWithoutEdit[0] = gtk.Label("-/-")
         self.btnsWithoutEdit["liveMode"] = self.btnsWithoutEdit[1] = gtk.CheckButton("Live Mode")
         self.btnsWithoutEdit["addScene"] = self.btnsWithoutEdit[2] = gtk.Button("Dodaj scene")
-        self.btnsWithoutEdit["deleScene"] = self.btnsWithoutEdit[3] = gtk.Button("Usuń scene")
+        self.btnsWithoutEdit["delScene"] = self.btnsWithoutEdit[3] = gtk.Button("Usuń scene")
         self.btnsWithoutEdit["leftbt"] = self.btnsWithoutEdit[4] = gtk.Button("<")
         self.btnsWithoutEdit["rightbt"] = self.btnsWithoutEdit[5] = gtk.Button(">")
 
@@ -560,7 +560,7 @@ class generateScene():
         self.btnsWithoutEdit["leftbt"].connect("clicked", self.bottomArrowLeft)
         self.btnsWithoutEdit["liveMode"].connect("toggled",self.liveModeActive)
         self.btnsWithoutEdit["addScene"].connect("clicked", self.addScene)
-        self.btnsWithoutEdit["deleScene"].connect("clicked", self.delScene)
+        self.btnsWithoutEdit["delScene"].connect("clicked", self.delScene)
 
         '''Add it to the container'''
         for i in range(0,6):
@@ -571,7 +571,7 @@ class generateScene():
                 self.container.pack_start(self.btnsWithoutEdit[i], True, True, 0)
 
         self.btnsWithoutEdit["addScene"].set_size_request(-1, -1)
-        self.btnsWithoutEdit["deleScene"].set_size_request(-1, -1)
+        self.btnsWithoutEdit["delScene"].set_size_request(-1, -1)
         self.btnsWithoutEdit["liveMode"].set_size_request(-1, -1)
         self.btnsWithoutEdit["label"].set_size_request(50, -1)
         self.btnsWithoutEdit["leftbt"].set_size_request(40, -1)
@@ -608,7 +608,7 @@ class generateScene():
         '''change status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
 def main(a,b,c,d = None):
-    g = generateScene(a, b, c, d)
+    g = generateScene(a, b, c,serial = d)
     gtk.main()
 if __name__ == "__main__":
     '''Runnig with 5,5,2 for example - can be run with nothing'''
