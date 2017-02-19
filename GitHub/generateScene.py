@@ -502,28 +502,30 @@ class generateScene():
     '''
     def delScene(self,data):
         if(self.head_tab[0]!=1):
-            print self.body_tab
-            scenes = self.head_tab[0]
-            scenes -= 1
-            self.head_tab[0] = scenes
-            print scenes
-            body_tab_new = [[[0 for l in range(self.head_tab[2])]for d in range(self.head_tab[1])]for s in range(scenes)]
-
-            for x in range(self.startScene-1):
-                print "X"
-                print x
-                for y in range(self.head_tab[1]):
-                    for z in range(self.head_tab[2]):
-                        body_tab_new[x][y][z] = self.body_tab[x][y][z]
-            difference = self.head_tab[0] - self.startScene
-            if (difference != 0):
-                for x in range(difference):
-                    print "X"
-                    print x+self.startScene
-                    for y in range(self.head_tab[1]):
-                        for z in range(self.head_tab[2]):
-                            body_tab_new[x+self.startScene-1][y][z] = self.body_tab[x+self.startScene][y][z]
-            self.body_tab = body_tab_new
+            self.head_tab[0] -= 1
+        #     print self.body_tab
+        #     scenes = self.head_tab[0]
+        #     scenes -= 1
+        #     self.head_tab[0] = scenes
+        #     print scenes
+        #     body_tab_new = [[[0 for l in range(self.head_tab[2])]for d in range(self.head_tab[1])]for s in range(scenes)]
+        #
+        #     for x in range(self.startScene-1):
+        #         print "X"
+        #         print x
+        #         for y in range(self.head_tab[1]):
+        #             for z in range(self.head_tab[2]):
+        #                 body_tab_new[x][y][z] = self.body_tab[x][y][z]
+        #     difference = self.head_tab[0] - self.startScene
+        #     if (difference != 0):
+        #         for x in range(difference):
+        #             print "X"
+        #             print x+self.startScene
+        #             for y in range(self.head_tab[1]):
+        #                 for z in range(self.head_tab[2]):
+        #                     body_tab_new[x+self.startScene-1][y][z] = self.body_tab[x+self.startScene][y][z]
+        #     self.body_tab = body_tab_new
+            self.body_tab.pop(self.startScene-1)
             print self.body_tab
             if(self.startScene>self.head_tab[0]):
                 self.startScene -=1
@@ -535,7 +537,6 @@ class generateScene():
     '''
     def liveModeActive(self,data):
         if (data.get_active()):
-            print "gg4"
             print self.serial
             if(self.serial != None):
                 self.canILive = True

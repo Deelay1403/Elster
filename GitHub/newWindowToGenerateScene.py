@@ -51,6 +51,5 @@ class newWindowToGenerateScene:
             self.oldGenerateScene.hide()
             import generateScene
             g = generateScene.generateScene(int(self.adj[1].get_value()), int(self.adj[2].get_value()),int(self.adj[0].get_value()),serial = self.serial)
-
         elif(seal==gtk.RESPONSE_CANCEL):
             gtk.main_quit()
