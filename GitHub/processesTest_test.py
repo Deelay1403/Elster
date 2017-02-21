@@ -1,13 +1,14 @@
 from multiprocessing import Process, Queue
-import interactiveSerial as inSer
+import interactiveSerial_nauka as inSer
 from time import sleep
 
 
 if __name__ == '__main__':
     print "TEST"
     global popcorn
-    popcorn = inSer.interactiveSerial("ok")
+    popcorn = inSer.interactiveSerial()
     popcorn.start()
-    popcorn.changeState(True)
-    sleep(3)
+
     popcorn.changeState(False)
+    sleep(3)
+    popcorn.changeState(True)
