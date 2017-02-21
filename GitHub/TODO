@@ -22,13 +22,13 @@ TODO battery.py:
 
 TODO generateScene.py:
     1.Dodanie obsługi tablicy meta
-    2.Dodanie LiveMode
-    3.Dodanie obsługi przycisku dla "Edytuj"
+    2.Dodanie LiveMode ✓
+    3.Dodanie obsługi przycisku dla "Edytuj" - Zamieniony na add i del ✓
     4.Zmiana formatu pliku na .hsk -
     5.Zbadanie po co dodałem przycik "Nowy" (┛◉Д◉)┛彡┻━┻  ✓
     5.Edit - Zapomniałem, że już nie otwiera to okna tylko pyta o konfiguracje 😌 ✓
     6.meta ma posiadać między innymi nazwy urządzeń
-    7.Dodanie obsługi pętli
+    7.Dodanie obsługi pętli ✓
     8.Dodanie wyboru urządzenia ✓
     8.edit - Zmienić nazwę WALSIENARYJ__init__() ✓
 
