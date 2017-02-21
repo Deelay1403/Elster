@@ -366,7 +366,7 @@ class generateScene():
         self.serial = setDevice.serialWindow()
         self.serial.WALSIENARYJ__init__()
         print serial
-        if(serial.hidedvaluetofuckthesystem == 1):
+        if(self.serial.hidedvaluetofuckthesystem == 1):
             self.serial.serial.SerialActivate(self.serial.getCombobox().get_active(),False)
 
     def fileInterpret(self,widget,option):
