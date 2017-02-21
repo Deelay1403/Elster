@@ -9,6 +9,7 @@ class serialWindow:
     def __init__(self):
         print "Aby uruchomić okno wywołaj WALSIENARYJ__init__"
     def WALSIENARYJ__init__(self):
+        self.hidedvaluetofuckthesystem = 0
         self.cb_serial = gtk.ComboBox()
         self.liststore = gtk.ListStore(str)
         self.cell = gtk.CellRendererText()
@@ -28,9 +29,9 @@ class serialWindow:
                                  (gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_APPLY,gtk.RESPONSE_ACCEPT))
         self.dialog.vbox.pack_start(self.cb_serial_frame)
 
-        self.dialog.connect('destroy', gtk.main_quit)
-        self.dialog.connect('delete-event', gtk.main_quit)
-        self.dialog.connect('close', gtk.main_quit)
+        # self.dialog.connect('destroy', gtk.main_quit)
+        # self.dialog.connect('delete-event', gtk.main_quit)
+        # self.dialog.connect('close', gtk.main_quit)
 
         self.dialog.action_area.pack_end(self.cb_serial)
 
@@ -42,21 +43,24 @@ class serialWindow:
             self.liststore.append([serial_ports[x]])
             x += 1
         self.cb_serial.set_model(self.liststore)
-
+        self.dialog.connect('response', self.response)
         self.cb_serial.set_active(0)
 
         self.cb_serial.show()
         response = self.dialog.run()
         self.dialog.destroy()
 
-        if response == gtk.RESPONSE_CANCEL:
-            gtk.main_quit()
-        if response == gtk.STOCK_CLOSE:
-            gtk.main_quit()
-        # if response == gtk.RESPONSE_ACCEPT:
-        #     return serialWindow
+        # if response == gtk.RESPONSE_CANCEL:
+        #     gtk.main_quit()
+        # if response == gtk.STOCK_CLOSE:
+        #     gtk.main_quit()
+        if response == gtk.RESPONSE_ACCEPT:
+            # return serialWindow
+            print "Akceptowales :D"
+            self.hidedvaluetofuckthesystem = 1
     def getCombobox(self):
         return self.cb_serial
     def response(self,Widget,Data):
         if(Data == gtk.RESPONSE_ACCEPT):
-            return self.cb_serial.get_active_text()
+            print "Akceptowales :D"
+            self.hidedvaluetofuckthesystem = 1

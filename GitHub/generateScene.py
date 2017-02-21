@@ -360,13 +360,14 @@ class generateScene():
 
     def setDevice(self,data):
         """
-        :param data: Will import serDevice to set value on self.serial
+        :param data: Will import setDevice to set value on self.serial
         :return: nothing
         """
         self.serial = setDevice.serialWindow()
         self.serial.WALSIENARYJ__init__()
         print serial
-        self.serial.serial.SerialActivate(self.serial.getCombobox().get_active(),False)
+        if(serial.hidedvaluetofuckthesystem == 1):
+            self.serial.serial.SerialActivate(self.serial.getCombobox().get_active(),False)
 
     def fileInterpret(self,widget,option):
     # Main method to run all other methods responsible for files
