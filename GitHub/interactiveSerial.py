@@ -2,6 +2,8 @@ from multiprocessing import Process, Queue
 from time import sleep
 import serial
 import gtk
+from threading import Thread
+import multiprocessing
 
 class interactiveSerial:
     def __init__(self, port):
@@ -53,15 +55,31 @@ class interactiveSerial:
                         print "VAL:" + infoBattery[1]
                         # self.objects['battery'].update(4,699)
                         #testuje
-                        self.updateBattery(4,100)
-                        self.objects["battery"].update(5,300)
-                        self.objects["bettery"].update(ID=2,level=300)
 
 
 
-                        while gtk.events_pending():
-                            gtk.main_iteration()
-                        print "OK!"
+                        self.event.clear()
+                        for i in range(1,6):
+                            t = Thread(name="log", target=self.updateBattery(i,self.y)).start()
+                            self.y = self.y + 100
+                        self.event.set()
+
+                        self.event.clear()
+                        self.updateBattery(6,600)
+                        self.event.set()
+                        if(self.dziala == 1):
+                            self.event.clear()
+                            self.updateBattery(1,700)
+                            self.event.set()
+                        # p = Process(target=self.updateBattery(3,100), name="Window").start()
+                        # if self.x==6:
+                        #     break
+                        # self.objects["battery"].update(self.x,self.y)
+                        # self.objects["battery"].update(ID=2,level=300)
+                        # print "OK!"
+                        # self.x=self.x+1
+
+
 
                 elif lineOfData.startswith('ER_'):
                     raw = lineOfData.strip('ER_;\n')  # "oczyszcza" ja
@@ -108,10 +126,22 @@ class interactiveSerial:
     def jebacTo(self, ID, LVL):
         self.updateBattery(ID, LVL)
 
+    def setup(event,d):
+        global unpaused
+        unpaused = event
     def start(self, endLineChar = ';'):
+        self.dziala = 0
+        self.x = 1
+        self.y = 150
         print "START!"
-        #p = Process(target=self.startListen, args=(self.queue, endLineChar,)).start()
-        p = Process(target=self.jebacTo, args=(5,500,)).start()
+        self.event = multiprocessing.Event()
+        self.pool = multiprocessing.Pool(1, self.setup, (self.event,))
+        self.result = self.pool.map_async(self.startListen(self.queue), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        self.event.set()
+        #p = Thread(target=self.startListen(self.queue),name="kek").start()
+        # t = Thread(name="log", target=self.updateBattery(4,300)).start()
+        #p = Process(target=self.jebacTo, args=(5,500,)).start()
+        #self.jebacTo(4,100)
         print "OKK!"
 
 

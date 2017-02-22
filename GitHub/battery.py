@@ -188,7 +188,6 @@ class batteryWindow:
                 print "zmienilem obraz"
                 self.glownyVKontener.queue_draw()
                 self.window.queue_draw()
-                self.battery_icon.queue_draw()
                 return
             ileBelek = ileBelek + 1
             print ""

@@ -663,10 +663,12 @@ def createObjectBlink():
     blink = blinkInTime(ConfigWindow.zmienna)
 def createObjectBaterry():
     global batteryWindow
+    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6)
+
+def createObjectInter():
     import interactiveSerial as inSer
     global inter
     inter = inSer.interactiveSerial('kurwa')
-    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6)
     inter.addObject('battery', batteryWindow)
 def start():
     import mainSerial
@@ -678,8 +680,9 @@ def start():
     # window = Mainwindow()
     # ser = dial.serial.GetOpenPort()
     Battery = Process(target=createObjectBaterry()).start()
+    interProcess = Process(target=createObjectInter()).start()
     # batteryWindow = battery.batteryWindow(ser, 5, True, 1024, 6)
-    blinkWindow = Process(target=createObjectBlink()).start()
+    #blinkWindow = Process(target=createObjectBlink()).start()
     # blinkWindow = blinkInTime(ConfigWindow.zmienna)
     for num in range(1, (ConfigWindow.zmienna + 1)):
         batteryWindow.add(num, num)
@@ -692,9 +695,11 @@ def start():
     batteryWindow.changeName(1, "DZIAŁA!")
     '''aktualizacja stanu baterii'''
     #batteryWindow.update(1, 640)
+
     batteryWindow.show()
 
     Process(target=gtk.main()).start()
+
     # t3 = Thread(name="key", target=keyrequest())
     # t3.start()
 if __name__ == "__main__":
