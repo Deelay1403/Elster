@@ -32,7 +32,6 @@ class batteryWindow:
         self.glownyVKontener = gtk.VBox(gtk.FALSE, 10)
         self.glownyVKontener.show()
         self.window.add(self.glownyVKontener)
-        self.kontenerH3 = {}
         self.podkontenerH = {}
         self.battery = {}
         self.battery_icon = {}
@@ -165,6 +164,7 @@ class batteryWindow:
         pass
 
     def update(self, ID, level, maxLevel=None, maxBar=None):
+        ID = int(ID)
         if maxLevel == None:
             maxLevel = self.maxLevel
         if maxBar == None:
@@ -175,10 +175,20 @@ class batteryWindow:
             procentLvl = self.obliczProcent(level, maxLevel)
             procentBelka = self.obliczProcent(ileBelek, maxBar)
             if (procentLvl >= procentBelka) & (procentLvl <= self.obliczProcent(ileBelek + 1, maxBar)):
-                print "BELKI: " + str(procentLvl) + " " + str(ileBelek)
+                print "BELKI: " + str(procentLvl) + " " + str(ileBelek) + " ID: " + str(ID)
                 obraz = "./img/battW" + str(ileBelek) + ".png"
                 self.battery_poziom_label[self.addresses[ID]].set_text(str(procentLvl) + "%")
+                print "zmienilem label"
+                print "ADRES: " + str(self.addresses[ID])
+                print "ID: " + str(ID)
+                print "OBRAZ: " + obraz
+                print "OBIEKT BAT: " + str(self.battery_icon[self.addresses[ID]])
+
                 self.battery_icon[self.addresses[ID]].set_from_file(obraz)
+                print "zmienilem obraz"
+                self.glownyVKontener.queue_draw()
+                self.window.queue_draw()
+                self.battery_icon.queue_draw()
                 return
             ileBelek = ileBelek + 1
             print ""
