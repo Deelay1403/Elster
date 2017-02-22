@@ -24,7 +24,7 @@ class serialComunnication():
                 # Trying if ports are open
                 s = serial.Serial(port, timeout=0.5)
                 print port
-                time.sleep(1.5)
+                time.sleep(1)
                 s.write("99,8") #PING
                 print "zapisano"
                 line = s.read_until(';')
