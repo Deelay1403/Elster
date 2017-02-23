@@ -60,10 +60,13 @@ class serialWindow:
         self.cb_serial_frame.add(self.cb_serial_hbox)
         self.cb_serial_frame.show()
         self.cb_serial_hbox.show()
+        '''Create dialog'''
         self.dialog = gtk.Dialog("Configuration",
                                  None,
                                  gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                                  (gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_APPLY,gtk.RESPONSE_ACCEPT))
+        '''Center dialog'''
+        self.dialog.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.dialog.vbox.pack_start(self.cb_serial_frame)
         self.dialog.vbox.add(self.count_frame)
         self.dialog.connect('destroy', gtk.main_quit)

@@ -7,6 +7,8 @@ Values: int devices = 0, int LED's = 0 , int scenes = 0, three dimenstional arra
 (Default values, named differend in constructor)
 Class created to generate/open file of scenes designed to work with elSter Light System
 In easy way, this class can open way to simple work with light
+
+#need to install librsvg if doesn't work
 '''
 import gtk
 import pickle
@@ -74,6 +76,7 @@ class generateScene():
         t3.daemon = True
         t3.start()
         t3.join()
+
     def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None,names=[]):
         '''Wind like Wind Of The Change'''
         """Ustawienie serialu by potem być w stanie sprawdzać go w live mode"""
@@ -173,7 +176,32 @@ class generateScene():
 
         '''Make main window'''
 
+        '''Trying to set up icon'''
+
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        #icon_theme = gtk.icon_theme_get_default()
+        print "Hehe"
+
+        #pixbuf = gtk.gdk.pixbuf_new_from_file_at_size("./img/batt0.png", 48, 48)
+        #pixbuf = icon_theme.load_icon("./img/batt0.png", 48, 0)
+
+        #need to install librsvg if doesn't work
+
+        #windowicon = self.window.set_icon_from_file("./yfc.ico")
+        #self.window.set_icon(windowicon)
+        print "OK"
+        # try:
+        #     pixbuf = icon_theme.load_icon("./img/batt0.png", 48, 0)
+        # except:
+        #     print "can't load icon"
+        #self.window.set_icon_from_file("./yfc.ico")
+        #gtk.window_set_default_icon_from_file("./img/batt0.png")
+        self.window.set_icon_from_file("./yfc.ico")
+        print self.window.get_icon()
+        self.window.set_gravity(gtk.gdk.GRAVITY_CENTER)
+        self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+
+        print self.window.get_gravity()
         self.window.connect("destroy",gtk.main_quit)
         self.main_window_col = gtk.VBox(gtk.FALSE,3)
 
