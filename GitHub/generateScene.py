@@ -63,16 +63,23 @@ class generateScene():
     PL:Konstruktor klasy generateScene():
     ENG:generateScene() class constructor
     """
-    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None):
-        t3 = Thread(name="main",target=self.wind(colums_main,devices,number_of_scenes,body,meta,serial))
+    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None,names=[]):
+        t3 = Thread(name="main",target=self.wind(colums_main=colums_main,
+                                                 devices=devices,
+                                                 number_of_scenes=number_of_scenes,
+                                                 body=body,
+                                                 meta=meta,
+                                                 serial=serial,
+                                                 names=names))
         t3.daemon = True
         t3.start()
         t3.join()
-    def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None):
+    def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None,names=[]):
         '''Wind like Wind Of The Change'''
         """Ustawienie serialu by potem być w stanie sprawdzać go w live mode"""
         self.serial = serial
-
+        """To sendNames"""
+        self.nevermind = 0
         """Ustawienie canILive dla każdego chkbox - W celu zniwelowania błędów"""
         self.canILive = False
         self.startScene = 1
@@ -122,24 +129,35 @@ class generateScene():
             0   scene 1
 
         '''
-        self.meta_tab = [[0 for i in range(4)]for l in range(number_of_scenes)]
-        self.body_tab = [[[0 for l in range(devices)] for d in range(colums_main)] for s in range(number_of_scenes)]
-
+        self.meta_tab = [[0 for i in range(4)]for l in range(self.head_tab[0])]
+        self.body_tab = [[[0 for l in range(self.head_tab[2])] for d in range(self.head_tab[1])] for s in range(self.head_tab[0])]
+        self.names_tab = [" " for j in range(self.head_tab[1])]
         '''automatically fill body_tab with body (when body != [])'''
         if(body != []):
-            for x in range(number_of_scenes):
-                for y in range(colums_main):
-                    for z in range(devices):
+            for x in range(self.head_tab[0]):
+                for y in range(self.head_tab[1]):
+                    for z in range(self.head_tab[2]):
                         self.body_tab[x][y][z] = body[x][y][z]
-        if(meta != []):
-            for x in range(number_of_scenes):
-                for y in range(4):
-                    self.meta_tab[x][y] = meta[x][y]
+        print self.head_tab[0]
 
+        if(meta != []):
+            print "ifr"
+            for x in range(self.head_tab[0]):
+                for y in range(4):
+                    print str(x) + " x"
+                    print str(y) + " y"
+                    self.meta_tab[x][y] = meta[x][y]
+        print "ostatnia szansa"
+        print names
+        if(names != []):
+                for y in range(self.head_tab[1]):
+                    self.names_tab[y] = names[y]
         print self.head_tab
         print "META"
         print self.meta_tab
         print self.body_tab
+        print "Names"
+        print self.names_tab
 
 
 
@@ -245,9 +263,13 @@ class generateScene():
         '''This react to body_tab and set status of all chkbtn's'''
         self.changeChkbtnActive(self.startScene)
         # self.x_Box.show()
-    '''Metoda do przekonwertowania ilości urządzeń do tablicy kontenerów
+        '''Metoda do przekonwertowania ilości urządzeń do tablicy kontenerów
         Method to convert a number of devices to container array
-    '''
+        '''
+
+        '''Print head_tab just for create function'''
+        print "UWAGA LECI GŁOWA"
+        print self.meta_tab
 
     def changeSceneOnBottom(self, actualScene, oldScene):
         # self.obj["label"].set_text("lel")
@@ -261,14 +283,22 @@ class generateScene():
     '''Metoda do generowania pojedyńczego kontenera
         Method to generate singleContainer
     '''
+    def saveToNamesTab(self,widget,entry,who):
+        print entry
+        self.names_tab[who] = entry.get_text()
+        #print self.names_tab[who] + " " + str(who)
+        print self.names_tab
+
 
     def generateSingleContainer(self,x,y,dev):
 
         self.microContainers[x][y] = gtk.VBox(gtk.FALSE,self.devices+1)
         self.chkbx = {}
-        self.entry = gtk.Entry()
-        self.entry.set_text("LED " + str(x + 1) + "." + str(y + 1))
-        self.entry.show()
+        entry = gtk.Entry()
+        entry.set_text(self.names_tab[self.nevermind])
+        entry.connect("activate",self.saveToNamesTab,entry,self.nevermind)
+        self.nevermind+=1
+        entry.show()
         self.microContainers[x][y].show()
 
         for i in range(0,self.devices):
@@ -278,7 +308,7 @@ class generateScene():
             self.chkbtn_tab[dev][i] = self.chkbx[i]
             self.chkbx[i].show()
 
-        self.microContainers[x][y].pack_start(self.entry,False,False,0)
+        self.microContainers[x][y].pack_start(entry,False,False,0)
 
         for i in range(0,self.devices):
             self.microContainers[x][y].pack_start(self.chkbx[i],False,False,0)
@@ -381,18 +411,28 @@ class generateScene():
                         '''Read all content'''
                         head = pickle.load(self.File['read'])
                         meta = pickle.load(self.File['read'])
+                        names =pickle.load(self.File['read'])
                         body = pickle.load(self.File['read'])
                         '''Head = [number_of_scenes, colums_main,devices]'''
                         print head
+                        print "Leci name"
+                        print names
                         print body
                         '''Send it to fileParserOpen method which will interpret it'''
-                        g = generateScene(head[1],head[2],head[0],body,meta)
+                        g = generateScene(colums_main=head[1],
+                                          devices=head[2],
+                                          number_of_scenes=head[0],
+                                          body=body,
+                                          meta=meta,
+                                          names=names)
                         # self.napis = [[0 for x in range(self.checkInput(, ))] for y in
                         #               range()]
                         self.File['read'].close()
                     if option == 'save':
+                        #saving all tables to file
                         pickle.dump(self.head_tab,self.File['save'])
                         pickle.dump(self.meta_tab,self.File['save'])
+                        pickle.dump(self.names_tab,self.File['save'])
                         pickle.dump(self.body_tab,self.File['save'])
                         self.File['save'].close()
             if option == 'new':
@@ -483,26 +523,40 @@ class generateScene():
     Function to add scene. It will add 1 more x value to body_tab
     '''
     def addScene(self,data):
-        print self.body_tab
-        scenes = self.head_tab[0]
-        scenes += 1
-        self.head_tab[0] = scenes
-        print scenes
-        body_tab_new = [[[0 for l in range(self.head_tab[2])]for d in range(self.head_tab[1])]for s in range(scenes)]
-        for x in range(self.head_tab[0]-1):
-            for y in range(self.head_tab[1]):
-                for z in range(self.head_tab[2]):
-                    body_tab_new[x][y][z] = self.body_tab[x][y][z]
-        self.body_tab = body_tab_new
-        print self.body_tab
-        self.changeSceneOnBottom(self.startScene,self.head_tab[0])
+        if(self.head_tab[0]!=0):
+            print self.body_tab
+            scenes = self.head_tab[0]
+            scenes += 1
+            self.head_tab[0] = scenes
+            print scenes
+            #creating new tabs
+            body_tab_new = [[[0 for l in range(self.head_tab[2])]
+                            for d in range(self.head_tab[1])]
+                            for s in range(scenes)]
+            meta_tab_new = [[0 for i in range(4)]
+                            for l in range(self.head_tab[0])]
 
-        #self.head_tab = [number_of_scenes, colums_main,devices]
+            #coping value from body to new tab
+            for x in range(self.head_tab[0]-1):
+                for y in range(self.head_tab[1]):
+                    for z in range(self.head_tab[2]):
+                        body_tab_new[x][y][z] = self.body_tab[x][y][z]
+            #coping value from meta to new tab
+            for x in range(self.head_tab[0]-1):
+                for y in range(4):
+                    meta_tab_new[x][y] = self.meta_tab[x][y]
+            #Setting old tabs as new
+            self.body_tab = body_tab_new
+            self.meta_tab = meta_tab_new
+            print self.body_tab
+            self.changeSceneOnBottom(self.startScene,self.head_tab[0])
+
+            #self.head_tab = [number_of_scenes, colums_main,devices]
     '''
     Function to del scene. Will remove 1 x from body_tab
     '''
     def delScene(self,data):
-        if(self.head_tab[0]!=1):
+        if(self.head_tab[0]!=1 and self.head_tab[0]!=0):
             self.head_tab[0] -= 1
         #     print self.body_tab
         #     scenes = self.head_tab[0]
@@ -527,12 +581,16 @@ class generateScene():
         #                     body_tab_new[x+self.startScene-1][y][z] = self.body_tab[x+self.startScene][y][z]
         #     self.body_tab = body_tab_new
             self.body_tab.pop(self.startScene-1)
+            self.meta_tab.pop(self.startScene-1)
             print self.body_tab
             if(self.startScene>self.head_tab[0]):
                 self.startScene -=1
                 self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+                self.changeChkbtnActive(self.startScene)
             else:
                 self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+                self.changeChkbtnActive(self.startScene)
+
     '''
     Activate live mode. First check if serial is connected, if not program force select device
     '''

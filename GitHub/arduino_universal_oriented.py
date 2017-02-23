@@ -673,7 +673,9 @@ def createObjectInter():
 def start():
     import mainSerial
     #global dial, batteryWindow, blinkWindow
+    print "XD"
     dialProcess = Process(target=createObjectDial(),name="Dial").start()
+    print "XD"
     # dial = ConfigWindow.serialWindow()
     #mainSerial.serialComunnication().SerialActivate(dial, True)
     windowProcess = Process(target=createObjectWindowMain(),name="Window").start()
