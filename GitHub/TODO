@@ -21,7 +21,7 @@ TODO battery.py:
     [_] 2.Niech osobny watek nasłuchuje w tle na zmiany poziomów
 
 TODO generateScene.py:
-    1.Dodanie obsługi tablicy meta
+    1.Dodanie obsługi tablicy meta -+
     2.Dodanie LiveMode ✓
     3.Dodanie obsługi przycisku dla "Edytuj" - Zamieniony na add i del ✓
     4.Zmiana formatu pliku na .hsk -
@@ -31,6 +31,10 @@ TODO generateScene.py:
     7.Dodanie obsługi pętli ✓
     8.Dodanie wyboru urządzenia ✓
     8.edit - Zmienić nazwę WALSIENARYJ__init__() ✓
+    9.Dodanie tablicy names_tab ✓
+    10. Zapisywanie names_tab do pliku ✓
+    11. Naprawa przyjmowania tablicy meta podczas odczytu ✓
+    12. W skrajnie rzadkich przykadkach tablica nie pobiera żadnych danych z gtk.Enter ---
 
     Stare TODO - Pomyślałem żeby wstawić "
     # TODO: 1.Make changebutton responsible to call -> Throw it to the table

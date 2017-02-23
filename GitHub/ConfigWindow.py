@@ -12,7 +12,8 @@ class serialWindow:
         self.cb_serial = gtk.ComboBox()
         self.liststore = gtk.ListStore(str)
         self.cell = gtk.CellRendererText()
-        self.cb_serial.pack_start(self.cell)
+        # self.cb_serial.pack_start(self.cell)
+        #self.cb_serial.add(self.cell)
         #self.cb_serial.set_wrap_width(5)
         self.cb_serial.add_attribute(self.cell,'text',0)
         self.cb_serial_hbox = gtk.HBox(gtk.FALSE, 0)
@@ -69,7 +70,8 @@ class serialWindow:
         self.dialog.connect('delete-event', gtk.main_quit)
         self.dialog.connect('close', gtk.main_quit)
 
-        self.dialog.action_area.pack_end(self.cb_serial)
+        #self.dialog.action_area.pack_start(self.cb_serial)
+        #self.dialog.action_area.add(self.cb_serial)
 
         # x = 0
         # serial_ports = arduino_universal.serialPorts().get()
