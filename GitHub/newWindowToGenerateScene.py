@@ -11,6 +11,8 @@ class newWindowToGenerateScene:
                                  None,
                                  gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                                  (gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_APPLY,gtk.RESPONSE_ACCEPT))
+        #set possition to center
+        self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.vbox = gtk.VBox(True,2)
 
 

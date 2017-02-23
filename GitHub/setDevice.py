@@ -27,6 +27,7 @@ class serialWindow:
                                  None,
                                  gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                                  (gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_APPLY,gtk.RESPONSE_ACCEPT))
+        self.dialog.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.dialog.vbox.pack_start(self.cb_serial_frame)
 
         # self.dialog.connect('destroy', gtk.main_quit)
