@@ -78,6 +78,7 @@ class generateScene():
         '''Wind like Wind Of The Change'''
         """Ustawienie serialu by potem być w stanie sprawdzać go w live mode"""
         self.serial = serial
+        """To sendNames"""
         self.nevermind = 0
         """Ustawienie canILive dla każdego chkbox - W celu zniwelowania błędów"""
         self.canILive = False
@@ -283,18 +284,21 @@ class generateScene():
         Method to generate singleContainer
     '''
     def saveToNamesTab(self,widget,entry,who):
+        print entry
         self.names_tab[who] = entry.get_text()
-        print entry.get_text() + " " + str(who)
+        #print self.names_tab[who] + " " + str(who)
         print self.names_tab
+
+
     def generateSingleContainer(self,x,y,dev):
 
         self.microContainers[x][y] = gtk.VBox(gtk.FALSE,self.devices+1)
         self.chkbx = {}
-        self.entry = gtk.Entry()
-        self.entry.set_text(self.names_tab[self.nevermind])
-        self.entry.connect("activate",self.saveToNamesTab,self.entry,self.nevermind)
+        entry = gtk.Entry()
+        entry.set_text(self.names_tab[self.nevermind])
+        entry.connect("activate",self.saveToNamesTab,entry,self.nevermind)
         self.nevermind+=1
-        self.entry.show()
+        entry.show()
         self.microContainers[x][y].show()
 
         for i in range(0,self.devices):
@@ -304,7 +308,7 @@ class generateScene():
             self.chkbtn_tab[dev][i] = self.chkbx[i]
             self.chkbx[i].show()
 
-        self.microContainers[x][y].pack_start(self.entry,False,False,0)
+        self.microContainers[x][y].pack_start(entry,False,False,0)
 
         for i in range(0,self.devices):
             self.microContainers[x][y].pack_start(self.chkbx[i],False,False,0)
