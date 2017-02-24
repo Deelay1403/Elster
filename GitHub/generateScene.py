@@ -237,12 +237,15 @@ class generateScene():
                         self.napis[x][y] = gtk.Button("Test")
                         self.napis[x][y].show()
                 '''Do loop which add elements to array od objects. This objects will show as singleConstainers'''
+                '''t array for Thread with containers'''
+                t = [[0 for x in range(self.head_tab[1] / 5)] for y in range(self.horizontal)]
                 for x in range(0,self.checkInput(colums_main,self.horizontal)):
                     print str(x) + " " + str(colums_main)
                     '''When devices is more than 5, program will render this in 2+ line'''
                     if(colums_main>5):
                         for y in range(0, self.horizontal):
-                            self.generateSingleContainer(y, x,self.activeDevice)
+                            #t[x][y] = Thread(target=self.generateSingleContainer(y, x,self.activeDevice)).start()
+                            t = Thread(target=self.generateSingleContainer(y, x, self.activeDevice)).start()
                             self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
                             self.activeDevice +=1
                             colums_main-=1
@@ -250,7 +253,9 @@ class generateScene():
                         '''When devices is less than 5, program will render 1 line'''
                     elif(colums_main <= 5):
                         for y in range(0, colums_main):
-                            self.generateSingleContainer(y, x,self.activeDevice)
+                         #  t[x][y] = Thread(target=self.generateSingleContainer(y, x, self.activeDevice)
+                         #              ).start()
+                            t = Thread(target=self.generateSingleContainer(y, x, self.activeDevice)).start()
                             self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
                             self.activeDevice+=1
                             print self.activeDevice
@@ -312,9 +317,12 @@ class generateScene():
         Method to generate singleContainer
     '''
     def saveToNamesTab(self,widget,entry,who):
-        print entry
+
         self.names_tab[who] = entry.get_text()
         #print self.names_tab[who] + " " + str(who)
+        print "--------------------------------------------ENTER-----------------------------------------"
+        print entry
+        print who
         print self.names_tab
 
 
@@ -323,6 +331,10 @@ class generateScene():
         self.microContainers[x][y] = gtk.VBox(gtk.FALSE,self.devices+1)
         self.chkbx = {}
         entry = gtk.Entry()
+        print "------------------------------ENTER CREATE---------------------------------------"
+        print entry
+        print dev
+        print "------------------------------END CREATE------------------------------------------r"
         entry.set_text(self.names_tab[self.nevermind])
         entry.connect("activate",self.saveToNamesTab,entry,self.nevermind)
         self.nevermind+=1
@@ -337,7 +349,6 @@ class generateScene():
             self.chkbx[i].show()
 
         self.microContainers[x][y].pack_start(entry,False,False,0)
-
         for i in range(0,self.devices):
             self.microContainers[x][y].pack_start(self.chkbx[i],False,False,0)
     '''Pasek menu
