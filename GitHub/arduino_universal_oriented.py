@@ -704,13 +704,13 @@ def start():
 
     # t3 = Thread(name="key", target=keyrequest())
     # t3.start()
-if __name__ == "__main__":
-    # t = Thread(name="log", target=log("lel"))
-    # t.setDaemon(True)
-    # t2 = Thread(name="main", target=start)
-    # # t.start()
-    # t2.start()
-    t2 = Process(target=start).start()
+# if __name__ == "__main__":
+#     # t = Thread(name="log", target=log("lel"))
+#     # t.setDaemon(True)
+#     # t2 = Thread(name="main", target=start)
+#     # # t.start()
+#     # t2.start()
+#     t2 = Process(target=start).start()
 def __init__():
     # t = Thread(name="log", target=log("lel"))
     # t.setDaemon(True)
