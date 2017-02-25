@@ -6,6 +6,7 @@ TODO wszystkie:
     1.Uzupełnić komentarze
     2.Zbadać jakie biblioteki są potrzebne do uruchomienia i sprawdzić czy można kompilować Python -> C++
     3.Zastosować Multiprocessing zamiast Threading ✓
+    4.Dodać scroll_window gdzie się da
 TODO arduino_universal_oriented.py:
     1.Dodać obsługę klawiatury
     2.Uzupełnienie menu o liste "Widok" zawierającą: ✓
