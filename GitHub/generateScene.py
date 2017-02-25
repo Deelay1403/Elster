@@ -243,24 +243,26 @@ class generateScene():
                         self.napis[x][y].show()
                 '''Do loop which add elements to array od objects. This objects will show as singleConstainers'''
                 '''t array for Thread with containers'''
-                t = [[0 for x in range(self.head_tab[1] / 5)] for y in range(self.horizontal)]
+                #t = [[0 for x in range(self.head_tab[1] / 5)] for y in range(self.horizontal)]
                 for x in range(0,self.checkInput(colums_main,self.horizontal)):
                     print str(x) + " " + str(colums_main)
                     '''When devices is more than 5, program will render this in 2+ line'''
                     if(colums_main>5):
                         for y in range(0, self.horizontal):
                             #t[x][y] = Thread(target=self.generateSingleContainer(y, x,self.activeDevice)).start()
-                            t = Thread(target=self.generateSingleContainer(y, x, self.activeDevice)).start()
+                            #t = Thread(target=self.generateSingleContainer(y, x, self.activeDevice)).start()
+                            self.generateSingleContainer(y, x, self.activeDevice)
                             self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
                             self.activeDevice +=1
                             colums_main-=1
 
                         '''When devices is less than 5, program will render 1 line'''
-                    elif(colums_main <= 5):
+                    if(colums_main <= 5):
                         for y in range(0, colums_main):
                          #  t[x][y] = Thread(target=self.generateSingleContainer(y, x, self.activeDevice)
                          #              ).start()
-                            t = Thread(target=self.generateSingleContainer(y, x, self.activeDevice)).start()
+                            #t = Thread(target=self.generateSingleContainer(y, x, self.activeDevice)).start()
+                            self.generateSingleContainer(y, x, self.activeDevice)
                             self.table.attach(self.microContainers[y][x], y, y + 1, x, x + 1)
                             self.activeDevice+=1
                             print self.activeDevice
