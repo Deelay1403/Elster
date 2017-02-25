@@ -15,7 +15,7 @@ import pickle
 import newWindowToGenerateScene
 from threading import Thread
 import serial
-import time
+#import time
 import setDevice
 """
 Typical file:
@@ -165,9 +165,8 @@ class generateScene():
 
 
         #self.changeSceneOnBottom(1,number_of_scenes)
-
-        self.horizontal = 5
-
+        '''This sets max number of devices in one row'''
+        self.horizontal = 10
         '''Set table of containers'''
 
         self.microContainers = [[0 for x in range(self.checkInput(colums_main, self.horizontal))] for y in
@@ -196,7 +195,13 @@ class generateScene():
         #     print "can't load icon"
         #self.window.set_icon_from_file("./yfc.ico")
         #gtk.window_set_default_icon_from_file("./img/batt0.png")
-        self.window.set_icon_from_file("./yfc.ico")
+        try:
+            self.window.set_icon_from_file("./GitHub/yfc.ico")
+        except:
+            try:
+                self.window.set_icon_from_file("./yfc.ico")
+            except:
+                print "Icon error"
         print self.window.get_icon()
         self.window.set_gravity(gtk.gdk.GRAVITY_CENTER)
         self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)

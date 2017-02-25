@@ -35,6 +35,8 @@ TODO generateScene.py:
     10. Zapisywanie names_tab do pliku ✓
     11. Naprawa przyjmowania tablicy meta podczas odczytu ✓
     12. W skrajnie rzadkich przykadkach tablica nie pobiera żadnych danych z gtk.Enter ---
+    13. Dodatnie time w celu automatycznego przechodzenia - opcjonalne
+    14. Dodatnie możliwości zapętlenia sceny - opcjonalne
 
     Stare TODO - Pomyślałem żeby wstawić "
     # TODO: 1.Make changebutton responsible to call -> Throw it to the table

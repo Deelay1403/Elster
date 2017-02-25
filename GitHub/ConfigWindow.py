@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import pygtk
+
+pygtk.require('2.0')
 import gtk
-import arduino_universal_oriented
+#import arduino_universal_oriented
 import time
 from mainSerial import serialComunnication
-arduino_universal = arduino_universal_oriented
-class serialWindow:
+#arduino_universal = arduino_universal_oriented
+class serialWindow():
 
     def __init__(self):
-
         self.cb_serial = gtk.ComboBox()
         self.liststore = gtk.ListStore(str)
         self.cell = gtk.CellRendererText()
