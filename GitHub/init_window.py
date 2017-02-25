@@ -7,6 +7,7 @@ from multiprocessing import Process
 class initWindow:
     def __init__(self):
         self.window = gtk.Window()
+        self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.window.set_title("Start")
         self.vbox = gtk.VBox(2, True)
         self.generateSceneBt = gtk.Button("Włącz Generator Scen")
