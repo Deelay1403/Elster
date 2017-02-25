@@ -22,12 +22,14 @@ class serialComunnication():
         for port in ports:
             try:
                 # Trying if ports are open
-                s = serial.Serial(port, timeout=0.5)
+                s = serial.Serial(port, 9600, timeout=0.5)
                 print port
-                time.sleep(1)
+                print s
+                time.sleep(2)
                 s.write("99,8") #PING
                 print "zapisano"
                 line = s.read_until(';')
+                print "LECI LINE"
                 print line
                 print "odczytano"
                 line = line.strip("\r\n")

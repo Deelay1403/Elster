@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import pygtk
-
-pygtk.require('2.0')
 import gtk
 #import arduino_universal_oriented
 import time
@@ -14,9 +11,9 @@ class serialWindow():
         self.cb_serial = gtk.ComboBox()
         self.liststore = gtk.ListStore(str)
         self.cell = gtk.CellRendererText()
-        # self.cb_serial.pack_start(self.cell)
+        self.cb_serial.pack_start(self.cell)
         #self.cb_serial.add(self.cell)
-        #self.cb_serial.set_wrap_width(5)
+        self.cb_serial.set_wrap_width(5)
         self.cb_serial.add_attribute(self.cell,'text',0)
         self.cb_serial_hbox = gtk.HBox(gtk.FALSE, 0)
         self.cb_serial_hbox.add(self.cb_serial)
@@ -86,6 +83,7 @@ class serialWindow():
         x = 0
         self.serial = serialComunnication()
         self.serial_ports = self.serial.GetAvailablePorts()
+        print self.serial_ports
         for pack in self.serial_ports:
             self.liststore.append([self.serial_ports[x]])
             x += 1

@@ -359,9 +359,9 @@ class Mainwindow:
         self.container.set_border_width(10)
 
         self.vcontainer = gtk.VBox(gtk.FALSE,2)
-        # self.window.set_default_size((self.size_of_window * ConfigWindow.zmienna) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
-        #                              (self.size_of_window * ConfigWindow.iloscbt) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt)
-        self.window.set_default_size(640,320)
+        self.window.set_default_size((self.size_of_window * ConfigWindow.zmienna) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
+                                      (self.size_of_window * ConfigWindow.iloscbt) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt)
+        #self.window.set_default_size(640,320)
         self.scrolled_window = gtk.ScrolledWindow()
         self.scrolled_window.set_policy(gtk.POLICY_ALWAYS,gtk.POLICY_ALWAYS)
         self.scrolled_window.show()
@@ -369,11 +369,13 @@ class Mainwindow:
         self.window.add(self.vcontainer)
         # self.scrolled_window.add(self.menuTool())
         # self.scrolled_window.add(self.container)
-        self.scrolled_window.add(self.container)
-        self.scrolled_window.set_size_request(640,320)
+        #self.scrolled_window.add(self.container)
+        #self.scrolled_window.set_size_request(640,320)
         # self.vcontainer.add(self.scrolled_window)
         self.vcontainer.pack_start(self.menuTool(),False,False,0)
-        self.vcontainer.pack_start(self.scrolled_window,True,True,0)
+        self.vcontainer.pack_start(self.container, False, False, 0)
+       #
+        #  self.vcontainer.pack_start(self.scrolled_window,True,True,0)
 
 
         # self.cb_list = gtk.ListStore(str)
@@ -402,7 +404,7 @@ class Mainwindow:
         '''Uzupełnianie głównego kontenera'''
         for num in range(1, ConfigWindow.zmienna + 1):
             self.vBox[num] = gtk.VBox(gtk.FALSE, ConfigWindow.zmienna)
-            self.vBox[num].set_size_request(1000,300)
+            #self.vBox[num].set_size_request(1000,300)
 
             self.container.add(self.vBox[num])
             self.vBox[num].show()
