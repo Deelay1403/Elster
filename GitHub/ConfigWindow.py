@@ -132,7 +132,7 @@ class serialWindow():
                 x += 1
             return
         #self.liststore.move_before(0) #proba indeksowania od zera? ;_;
-        sleep(3)
+        sleep(0.5)
         if self.serial.SerialSend("99,4") == "ERR01":
             self.serial.SerialClose()
             self.autoset(Widget)
@@ -166,7 +166,7 @@ class serialWindow():
                 except IndexError:
                     break
                 x += 1
-
+            self.aktywneId.sort()
             print "Aktywne ID"
             print self.aktywneId
             print len(self.aktywneId)
@@ -178,6 +178,7 @@ class serialWindow():
             print self.getActiveId()
             print "ile"
             print self.getActiveId(["ile"])
+
 
     def getActiveId(self, func="list", autoset="!autoset"):
         if func == "init":
