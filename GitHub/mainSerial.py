@@ -81,7 +81,7 @@ class serialComunnication():
                 print self.portsOpen[whichIndex]
                 print "KURWA"
                 if not self.portOpen:
-                    self.ser = serial.Serial(self.portsOpen[whichIndex], 9600, timeout=1)
+                    self.ser = serial.Serial(self.portsOpen[whichIndex], 9600, timeout=5)
                     self.portOpen = True
                 else:
                     print "port byl otwarty"

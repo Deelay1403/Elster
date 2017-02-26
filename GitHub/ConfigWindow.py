@@ -37,7 +37,7 @@ class serialWindow():
         self.count_sp_Address = gtk.SpinButton(self.coun_adjustment_adr,0,0)
 
         self.count_bt_auto = gtk.Button("Auto set")
-        # W oczekiwaniu na Oskara
+        # W oczekiwaniu na Oskara - xDDD
         self.count_bt_auto.connect('clicked',self.autoset)
 
 
@@ -106,8 +106,13 @@ class serialWindow():
             print index
             if(index != None):
                 self.serial.SerialActivate(index, False)
+            self.getActiveId("init")
+            self.getActiveId()
+            # self.getActiveId("ile")
 
     def autoset(self,Widget):
+        self.getActiveId("init", "autoset")
+        from time import sleep
         print "INDEX"
         index = self.cb_serial.get_active()
         print index
@@ -127,17 +132,19 @@ class serialWindow():
                 x += 1
             return
         #self.liststore.move_before(0) #proba indeksowania od zera? ;_;
+        sleep(3)
         if self.serial.SerialSend("99,4") == "ERR01":
             self.serial.SerialClose()
             self.autoset(Widget)
             return
-        time.sleep(2)
+        debug = self.serial.ReadUntil(';')
+        print debug
         if self.serial.SerialSend("99,5") == "ERR01":
             self.serial.SerialClose()
             self.autoset(Widget)
             return
         komenda = ''
-        x = -1;
+        x = 0;
         line = self.serial.ReadUntil(';')
         if line == "ERR02":
             self.serial.SerialClose()
@@ -145,20 +152,73 @@ class serialWindow():
             return
         line = line.strip("\r\n")
         print line
-        if line.startswith('ACT_'):  # szuka odpowiedzniej komendy
-            raw = line.strip('ACT_;\n')  # "oczyszcza" ja
+        self.aktywneId = []
+        if line.startswith('ACT:'):  # szuka odpowiedzniej komendy
+            raw = line.strip('ACT:;\n')  # "oczyszcza" ja
             print 'komenda ' + raw
-            while 1:
-                ++x
+            while raw != "":
+                print "petla"
+                print x
                 try:
-                    print raw.split(':')[x]
+                    print raw.split(',')[x]
+                    #self.aktywneId[x] = raw.split(',')[x] #TODO dowiedziec sie czemu ta szmata nie dziala
+                    self.aktywneId.append(int(raw.split(',')[x]))
                 except IndexError:
                     break
+                x += 1
 
-        #TODO: spisac i przekazac aktywne adresy do typu danych dict nastepnie do klasy battery
-        self.count_sp_Address.set_value(2)
-        self.count_sp_Devices.set_value(x)
+            print "Aktywne ID"
+            print self.aktywneId
+            print len(self.aktywneId)
 
+            self.count_sp_Devices.set_value(len(self.aktywneId))  #urzadzenia
+            self.count_sp_Address.set_value(2)  # ledy
+
+            print "XDDDDD"
+            print self.getActiveId()
+            print "ile"
+            print self.getActiveId(["ile"])
+
+    def getActiveId(self, func="list", autoset="!autoset"):
+        if func == "init":
+            self.oldStateOfAdressField = self.count_sp_Devices.get_value_as_int()
+            try:
+                if not self.autosetWasActive:
+                    self.aktywneId = ["nosz kurfa"]
+            except AttributeError:
+                if autoset == "autoset":
+                    print "AUTOSET!"
+                    self.autosetWasActive = True
+                else:
+                    print "NIE AUTOSET!!"
+                    self.autosetWasActive = False
+            return
+
+        global activeID, activeID_len
+        # if self.oldStateOfAdressField != len(self.aktywneId) or self.autosetWasActive:
+        if self.autosetWasActive:
+            zwracam = self.aktywneId
+            type = "list"
+        else:
+            print "POBIERAM Z POLA"
+            zwracam = self.count_sp_Devices.get_value_as_int()
+            type = "numb"
+        print "OLD STATES"
+        print self.oldStateOfAdressField
+        #print len(self.aktywneId)
+        #print self.aktywneId
+
+        if func == "ile":
+            if type is "list":
+                activeID_len = len(zwracam)
+                return len(zwracam)
+            else:
+                activeID_len = zwracam
+                return zwracam
+        else:
+            activeID = [type, zwracam]
+            print activeID
+            return [type, zwracam]
 
     def changed_cb(self, combobox):
         global index
@@ -168,6 +228,7 @@ class serialWindow():
         #     arduino_universal.set_serial(index)
         return
         pass
+
     def getIndex(self = None):
         return index
         pass

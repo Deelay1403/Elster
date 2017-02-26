@@ -24,7 +24,7 @@ class interactiveSerial:
                     print "STOP!"
                     break
             except Exception:
-                daneOdebrane = "pusto"
+                daneOdebrane = ["brak", "danych"]
 
             if (daneOdebrane[0] == 'SEND'):
                 try:
@@ -36,8 +36,9 @@ class interactiveSerial:
 
             try:
                 print "ODBIERAM"
-                #lineOfData = self.serPort.read_until(endLineChar)
-                lineOfData = "BAT_4_517"
+                lineOfData = self.serPort.read_until(endLineChar)
+                #lineOfData = "BAT_4_517"
+                print "DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNEEE!"
                 print lineOfData
                 lineOfData = lineOfData.strip("\r\n")
                 print lineOfData
@@ -93,9 +94,9 @@ class interactiveSerial:
                 return "ERR02"
             pass
 
-            print "co odbieram " + daneOdebrane[0] + " " + daneOdebrane[1]
-            sleep(1)
+            print "co odbieram: " + daneOdebrane[0] + " " + daneOdebrane[1]
             break
+            sleep(1)
 
     def updateBattery(self, ID, LVL):
         self.objects['battery'].update(ID, LVL)
