@@ -711,9 +711,11 @@ def start():
 
     aktywneID = ConfigWindow.activeID
     print aktywneID
+    print window.sb_adjustment
     if aktywneID[0] == "list":
         for num in range(0, len(aktywneID)):
-            batteryWindow.add(aktywneID[1][num], aktywneID[1][num])
+            batteryWindow.add(aktywneID[1][num], aktywneID[1][num]-1)
+            window.sb_adjustment[num+1].set_value(aktywneID[1][num]-1)
     else:
         for num in range(1, (aktywneID[1] + 1)):
             batteryWindow.add(num, num)
