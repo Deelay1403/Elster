@@ -267,16 +267,15 @@ class generateScene():
                             self.activeDevice+=1
                             print self.activeDevice
                 self.table.show()
-                '''Method to generate any table if values are bad or don't exist'''
-                containerToFill = gtk.Table(3,3,True)
-                containerToFill.show()
-                self.main_window_col.pack_start
                 '''Add gtk.table to main container'''
                 self.main_window_col.pack_start(self.table, True, True, 0)
             except(IndexError):
                 print "IndexError"
         else:
-            (containerToFill,True,True,0)
+            '''Method to generate any table if values are bad or don't exist'''
+            containerToFill = gtk.Table(3, 3, True)
+            containerToFill.show()
+            self.main_window_col.pack_start(containerToFill,True,True,0)
 
         # for x in range(0,colums_main):
         #     for y in range(0, self.checkInput(colums_main,horizontalValue)):
