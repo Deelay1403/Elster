@@ -157,8 +157,6 @@ class serialWindow():
             raw = line.strip('ACT:;\n')  # "oczyszcza" ja
             print 'komenda ' + raw
             while raw != "":
-                print "petla"
-                print x
                 try:
                     print raw.split(',')[x]
                     #self.aktywneId[x] = raw.split(',')[x] #TODO dowiedziec sie czemu ta szmata nie dziala

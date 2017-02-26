@@ -17,7 +17,7 @@ class interactiveSerial:
         self.queue.put(['STOP_LISTENING', ''])
 
     def startListen(self, q, endLineChar = ';'):
-        while True:
+        while True and self.serPort != "NO_PORTS":
             try:
                 daneOdebrane = q.get_nowait()
                 if (daneOdebrane[0] == "STOP_LISTENING"):

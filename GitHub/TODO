@@ -61,6 +61,7 @@ TODO init_window.py:
 TODO ConfigWindow.py:
     1.Przybudować response
     2. Arduino mówca - 99,4 wykonać czyszcznie buforu 99,5
+    3. activeID zmienić z global na obsługę jako klasy (przekazywać obiekt zamiast globalnej zmiennej)
 TODO setDevice:
     1.Zmienić nazwę zmiennej hidedvaluetofuckthesystem na coś innego
 
