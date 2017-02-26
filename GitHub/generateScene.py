@@ -166,7 +166,7 @@ class generateScene():
 
         #self.changeSceneOnBottom(1,number_of_scenes)
         '''This sets max number of devices in one row'''
-        self.horizontal = 10
+        self.horizontal = 5
         '''Set table of containers'''
 
         self.microContainers = [[0 for x in range(self.checkInput(colums_main, self.horizontal))] for y in
@@ -257,7 +257,7 @@ class generateScene():
                             colums_main-=1
 
                         '''When devices is less than 5, program will render 1 line'''
-                    if(colums_main <= 5):
+                    elif(colums_main <= 5):
                         for y in range(0, colums_main):
                          #  t[x][y] = Thread(target=self.generateSingleContainer(y, x, self.activeDevice)
                          #              ).start()
@@ -267,15 +267,16 @@ class generateScene():
                             self.activeDevice+=1
                             print self.activeDevice
                 self.table.show()
+                '''Method to generate any table if values are bad or don't exist'''
+                containerToFill = gtk.Table(3,3,True)
+                containerToFill.show()
+                self.main_window_col.pack_start
                 '''Add gtk.table to main container'''
                 self.main_window_col.pack_start(self.table, True, True, 0)
             except(IndexError):
                 print "IndexError"
         else:
-            '''Method to generate any table if values are bad or don't exist'''
-            containerToFill = gtk.Table(3,3,True)
-            containerToFill.show()
-            self.main_window_col.pack_start(containerToFill,True,True,0)
+            (containerToFill,True,True,0)
 
         # for x in range(0,colums_main):
         #     for y in range(0, self.checkInput(colums_main,horizontalValue)):

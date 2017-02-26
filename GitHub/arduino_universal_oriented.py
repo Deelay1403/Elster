@@ -680,36 +680,50 @@ def createObjectBaterry():
     global batteryWindow
     batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6)
 
-def createObjectInter():
+def createObjectInter(port):
     import interactiveSerial as inSer
     global inter
-    inter = inSer.interactiveSerial('kurwa')
+    inter = inSer.interactiveSerial(port)
     inter.addObject('battery', batteryWindow)
 def start():
     import mainSerial
     #global dial, batteryWindow, blinkWindow
     print "XD"
-    dialProcess = Process(target=createObjectDial(),name="Dial").start()
+    dialProcess = Process(target=createObjectDial(),name="Dial")
+    dialProcess.start()
     print "XD"
     # dial = ConfigWindow.serialWindow()
     #mainSerial.serialComunnication().SerialActivate(dial, True)
-    windowProcess = Process(target=createObjectWindowMain(),name="Window").start()
     # window = Mainwindow()
     # ser = dial.serial.GetOpenPort()
-    Battery = Process(target=createObjectBaterry()).start()
-    interProcess = Process(target=createObjectInter()).start()
+    windowProcess = Process(target=createObjectWindowMain(),name="Window")
+    windowProcess.start()
+
     # batteryWindow = battery.batteryWindow(ser, 5, True, 1024, 6)
-    #blinkWindow = Process(target=createObjectBlink()).start()
+    # blinkWindow = Process(target=createObjectBlink()).start()
     # blinkWindow = blinkInTime(ConfigWindow.zmienna)
-    for num in range(1, (ConfigWindow.zmienna + 1)):
-        batteryWindow.add(num, num)
+
+    Battery = Process(target=createObjectBaterry())
+    Battery.start()
+
+    interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
+    interProcess.start()
+
+    aktywneID = ConfigWindow.activeID
+    print aktywneID
+    if aktywneID[0] == "list":
+        for num in range(0, len(aktywneID)):
+            batteryWindow.add(aktywneID[1][num], aktywneID[1][num])
+    else:
+        for num in range(1, (aktywneID[1] + 1)):
+            batteryWindow.add(num, num)
 
     inter.start()
     #inter.updateBattery(5, 500)
     #inter.getObject('battery').update(3, 512)
     # mały pokaz nowych funkcji
     '''zmiana nazwy baterii'''
-    batteryWindow.changeName(1, "DZIAŁA!")
+    #batteryWindow.changeName(1, "DZIAŁA!")
     '''aktualizacja stanu baterii'''
     #batteryWindow.update(1, 640)
 
@@ -729,5 +743,5 @@ def __init__():
     # t2.start()
     t2 = Process(target=start).start()
 #TODO wraz ze zmiana adresu urzadzenia zmiana adresu baterii
-#TODO sprawdanie bledow w tle
+#TODO sprawdzanie bledow w tle
 #TODO pokomentowc troche :>

@@ -37,7 +37,7 @@ class serialWindow():
         self.count_sp_Address = gtk.SpinButton(self.coun_adjustment_adr,0,0)
 
         self.count_bt_auto = gtk.Button("Auto set")
-        # W oczekiwaniu na Oskara
+        # W oczekiwaniu na Oskara - xDDD
         self.count_bt_auto.connect('clicked',self.autoset)
 
 
@@ -106,10 +106,12 @@ class serialWindow():
             print index
             if(index != None):
                 self.serial.SerialActivate(index, False)
+            self.getActiveId("init")
+            self.getActiveId()
+            # self.getActiveId("ile")
 
     def autoset(self,Widget):
-        self.oldStateOfAdressField = self.count_sp_Address.get_value_as_int()
-        self.count_sp_Address.get_value_as_int()
+        self.getActiveId("init", "autoset")
         from time import sleep
         print "INDEX"
         index = self.cb_serial.get_active()
@@ -160,7 +162,7 @@ class serialWindow():
                 try:
                     print raw.split(',')[x]
                     #self.aktywneId[x] = raw.split(',')[x] #TODO dowiedziec sie czemu ta szmata nie dziala
-                    self.aktywneId.append(raw.split(',')[x])
+                    self.aktywneId.append(int(raw.split(',')[x]))
                 except IndexError:
                     break
                 x += 1
@@ -175,25 +177,47 @@ class serialWindow():
             print "XDDDDD"
             print self.getActiveId()
             print "ile"
-            print self.getActiveId("ile")
+            print self.getActiveId(["ile"])
 
-    def getActiveId(self, func="list"):
-        if self.oldStateOfAdressField != len(self.aktywneId):
-            zwracam = self.count_sp_Address.get_value_as_int()
-        else:
+    def getActiveId(self, func="list", autoset="!autoset"):
+        if func == "init":
+            self.oldStateOfAdressField = self.count_sp_Devices.get_value_as_int()
+            try:
+                if not self.autosetWasActive:
+                    self.aktywneId = ["nosz kurfa"]
+            except AttributeError:
+                if autoset == "autoset":
+                    print "AUTOSET!"
+                    self.autosetWasActive = True
+                else:
+                    print "NIE AUTOSET!!"
+                    self.autosetWasActive = False
+            return
+
+        global activeID, activeID_len
+        # if self.oldStateOfAdressField != len(self.aktywneId) or self.autosetWasActive:
+        if self.autosetWasActive:
             zwracam = self.aktywneId
-
-        if zwracam is list:
             type = "list"
         else:
+            print "POBIERAM Z POLA"
+            zwracam = self.count_sp_Devices.get_value_as_int()
             type = "numb"
+        print "OLD STATES"
+        print self.oldStateOfAdressField
+        #print len(self.aktywneId)
+        #print self.aktywneId
 
         if func == "ile":
             if type is "list":
+                activeID_len = len(zwracam)
                 return len(zwracam)
             else:
+                activeID_len = zwracam
                 return zwracam
         else:
+            activeID = [type, zwracam]
+            print activeID
             return [type, zwracam]
 
     def changed_cb(self, combobox):
