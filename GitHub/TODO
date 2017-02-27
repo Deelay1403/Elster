@@ -39,6 +39,7 @@ TODO generateScene.py:
     12. W skrajnie rzadkich przykadkach tablica nie pobiera żadnych danych z gtk.Enter ---
     13. Dodatnie time w celu automatycznego przechodzenia - opcjonalne
     14. Dodatnie możliwości zapętlenia sceny - opcjonalne
+    15. Przyciski lewy i prawy mają przerzucać na następną scenę
 
     Stare TODO - Pomyślałem żeby wstawić "
     # TODO: 1.Make changebutton responsible to call -> Throw it to the table

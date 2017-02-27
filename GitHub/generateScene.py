@@ -134,7 +134,7 @@ class generateScene():
         '''
         self.meta_tab = [[0 for i in range(4)]for l in range(self.head_tab[0])]
         self.body_tab = [[[0 for l in range(self.head_tab[2])] for d in range(self.head_tab[1])] for s in range(self.head_tab[0])]
-        self.names_tab = [" " for j in range(self.head_tab[1])]
+        self.names_tab = [(("Aktor ")+str(j+1)) for j in range(self.head_tab[1])]
         '''automatically fill body_tab with body (when body != [])'''
         if(body != []):
             for x in range(self.head_tab[0]):
@@ -218,6 +218,9 @@ class generateScene():
         #
         self.main_window_col.pack_start(self.menuTool(), False, False, 0)
 
+        self.scrolledCol = gtk.ScrolledWindow()
+        self.scrolledCol.set_border_width(10)
+        self.scrolledCol.set_policy(gtk.POLICY_ALWAYS, gtk.POLICY_ALWAYS)
         '''If enter values equals 0, then program won't generate singleContainers'''
 
         if colums_main != 0 or devices != 0:
@@ -268,7 +271,12 @@ class generateScene():
                             print self.activeDevice
                 self.table.show()
                 '''Add gtk.table to main container'''
-                self.main_window_col.pack_start(self.table, True, True, 0)
+                self.scrolledCol.add_with_viewport(self.table)
+                #self.scrolledCol.set_resize_mode(True)
+                self.scrolledCol.set_visible(True)
+                #self.main_window_col.pack_start(self.scrolledCol, True, True, 0)
+                self.main_window_col.add(self.scrolledCol)
+                #self.main_window_col.pack_start(self.table, True, True, 0)
             except(IndexError):
                 print "IndexError"
         else:
@@ -694,7 +702,9 @@ class generateScene():
         if(self.startScene==0):
             return 0
         if(self.startScene==self.head_tab[0]):
+            self.startScene = 1
             self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+            self.changeChkbtnActive(self.startScene)
             return 0
         self.startScene +=1
         '''change label on bottom'''
@@ -706,7 +716,9 @@ class generateScene():
         if (self.startScene == 0):
             return 0
         if (self.startScene == 1):
+            self.startScene = self.head_tab[0]
             self.changeSceneOnBottom(self.startScene, self.head_tab[0])
+            self.changeChkbtnActive(self.startScene)
             return 0
         self.startScene -= 1
         '''change label on bottom'''
