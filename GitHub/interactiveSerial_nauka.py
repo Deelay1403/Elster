@@ -13,7 +13,7 @@ class interactiveSerial:
             try:
                 daneOdebrane = q.get_nowait()
                 if daneOdebrane[0] == "POP":
-                    break
+                    print ":P"
             except Exception:
                 daneOdebrane = "pusto"
 
@@ -23,7 +23,10 @@ class interactiveSerial:
             else:
                 print "!OK"
 
-            sleep(0.2)
+            print ";_;"
+
+            print "ARRRDUINO"
+            sleep(1)
 
 
     def changeState(self, state):

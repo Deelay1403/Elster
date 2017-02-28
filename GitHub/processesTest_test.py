@@ -12,3 +12,6 @@ if __name__ == '__main__':
     popcorn.changeState(False)
     sleep(3)
     popcorn.changeState(True)
+    while True:
+        print "XDDDDDDDDDDDDDDD"
+        sleep(0.5)

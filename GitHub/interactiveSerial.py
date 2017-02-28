@@ -99,7 +99,6 @@ class interactiveSerial:
             print "co odbieram: " + daneOdebrane[0] + " " + daneOdebrane[1]
             sleep(0.4)
 
-
     def updateBattery(self, ID, LVL):
         self.objects['battery'].update(ID, LVL)
 
