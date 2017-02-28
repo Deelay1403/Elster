@@ -26,6 +26,7 @@ class interactiveSerial:
             except Exception:
                 daneOdebrane = ["brak", "danych"]
 
+
             if (daneOdebrane[0] == 'SEND'):
                 try:
                     #self.serPort.write(daneOdebrane[1])
@@ -38,6 +39,7 @@ class interactiveSerial:
                 print "ODBIERAM"
                 lineOfData = self.serPort.read_until(endLineChar)
                 #lineOfData = "BAT_4_517"
+                #lineOfData = ""
                 print "DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNEEE!"
                 print lineOfData
                 lineOfData = lineOfData.strip("\r\n")
@@ -95,8 +97,8 @@ class interactiveSerial:
             pass
 
             print "co odbieram: " + daneOdebrane[0] + " " + daneOdebrane[1]
-            break
-            sleep(1)
+            sleep(0.4)
+
 
     def updateBattery(self, ID, LVL):
         self.objects['battery'].update(ID, LVL)
@@ -147,7 +149,7 @@ class interactiveSerial:
 
 
 if __name__ == "__main__":
-    popcorn = interactiveSerial('tty/=/1')
+    popcorn = interactiveSerial('/dev/tty1')
     popcorn.start()
 
     popcorn.addObject('bateria','tak')

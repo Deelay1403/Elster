@@ -220,7 +220,7 @@ class generateScene():
 
         self.scrolledCol = gtk.ScrolledWindow()
         self.scrolledCol.set_border_width(10)
-        self.scrolledCol.set_policy(gtk.POLICY_ALWAYS, gtk.POLICY_ALWAYS)
+        self.scrolledCol.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         '''If enter values equals 0, then program won't generate singleContainers'''
 
         if colums_main != 0 or devices != 0:

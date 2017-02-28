@@ -31,7 +31,17 @@ class batteryWindow:
 
         self.glownyVKontener = gtk.VBox(gtk.FALSE, 10)
         self.glownyVKontener.show()
-        self.window.add(self.glownyVKontener)
+
+        self.scrolledCol = gtk.ScrolledWindow()
+        self.scrolledCol.set_border_width(10)
+        self.scrolledCol.set_resize_mode(True)
+        self.scrolledCol.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolledCol.add_with_viewport(self.glownyVKontener)
+        self.scrolledCol.set_visible(True)
+
+        self.window.add(self.scrolledCol)
+        #self.window.add(self.glownyVKontener)
+
         self.podkontenerH = {}
         self.battery = {}
         self.battery_icon = {}

@@ -226,17 +226,20 @@ class Mainwindow:
         self.container.set_border_width(10)
 
         self.vcontainer = gtk.VBox(gtk.FALSE,2)
-        self.window.set_default_size((self.size_of_window * ConfigWindow.zmienna) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
+        self.window.set_default_size((self.size_of_window * ConfigWindow.zmienna) + 70 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
                                       (self.size_of_window * ConfigWindow.iloscbt) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt)
 
-        self.scrolled_window = gtk.ScrolledWindow()
-        self.scrolled_window.set_policy(gtk.POLICY_ALWAYS,gtk.POLICY_ALWAYS)
-        self.scrolled_window.show()
+        self.scrolledCol = gtk.ScrolledWindow()
+        self.scrolledCol.set_border_width(10)
+        #self.scrolledCol.set_resize_mode(True)
+        self.scrolledCol.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolledCol.set_size_request((self.size_of_window * ConfigWindow.zmienna) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
+                                      (self.size_of_window * ConfigWindow.iloscbt) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt)
 
         self.window.add(self.vcontainer)
 
         self.vcontainer.pack_start(self.menuTool(),False,False,0)
-        self.vcontainer.pack_start(self.container, False, False, 0)
+        #self.vcontainer.pack_start(self.container, False, False, 0)
 
         '''Początek tworzenia tablic odpowiedzialnych za przechowywanie obiektów graficznych'''
         self.vBox = {}
@@ -312,6 +315,10 @@ class Mainwindow:
         self.container.show()
         self.vcontainer.show()
         self.window.show()
+
+        self.scrolledCol.set_visible(True)
+        self.scrolledCol.add_with_viewport(self.container)
+        self.vcontainer.pack_start(self.scrolledCol, True, True, 0)
 
     def menuTool(self):
         self.menu = gtk.Menu()
@@ -391,6 +398,7 @@ def createObjectInter(port):
     global inter
     inter = inSer.interactiveSerial(port)
     inter.addObject('battery', batteryWindow)
+    inter.start()
 def start():
 
     dialProcess = Process(target=createObjectDial(),name="Dial")
@@ -416,7 +424,7 @@ def start():
         for num in range(1, (aktywneID[1] + 1)):
             batteryWindow.add(num, num)
 
-    inter.start()
+    # inter.start()
     # mały pokaz nowych funkcji
     '''zmiana nazwy baterii'''
     '''aktualizacja stanu baterii'''
