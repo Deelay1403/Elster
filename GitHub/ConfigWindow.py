@@ -132,7 +132,6 @@ class serialWindow():
                 x += 1
             return
         #self.liststore.move_before(0) #proba indeksowania od zera? ;_;
-        sleep(1.5)
         if self.serial.SerialSend("99,4") == "ERR01":
             self.serial.SerialClose()
             self.autoset(Widget)

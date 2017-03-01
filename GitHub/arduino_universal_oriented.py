@@ -391,7 +391,7 @@ def createObjectBlink():
     blink = blinkInTime(ConfigWindow.zmienna)
 def createObjectBaterry():
     global batteryWindow
-    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6)
+    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, True)
 
 def createObjectInter(port):
     import interactiveSerial as inSer
@@ -417,7 +417,7 @@ def start():
     print aktywneID
     print window.sb_adjustment
     if aktywneID[0] == "list":
-        for num in range(0, len(aktywneID)):
+        for num in range(0, len(aktywneID[1])):
             batteryWindow.add(aktywneID[1][num], aktywneID[1][num]-1)
             window.sb_adjustment[num+1].set_value(aktywneID[1][num]-1)
     else:

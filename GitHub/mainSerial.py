@@ -83,6 +83,8 @@ class serialComunnication():
                 if not self.portOpen:
                     self.ser = serial.Serial(self.portsOpen[whichIndex], 9600, timeout=5)
                     self.portOpen = True
+                    from time import sleep
+                    sleep(2) #czas po ktorym arduino sie ogarnia, mozna temu zapobiec wylaczajac bootloader
                 else:
                     print "port byl otwarty"
                 print "MAM TO"
