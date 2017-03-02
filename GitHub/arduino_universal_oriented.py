@@ -172,8 +172,36 @@ class Mainwindow:
         gtk.main_quit()
 
     '''Reakcja na kliknięcie - stara'''
-    def click(self, Widget, *Data):
-        # print Data[0]
+    def reactToKeyBoard(self,Widget,event):
+        print self.bt_key_table
+        keys = ('1234567890-qwertyuiop[]asdfghjkl;\''+
+                'zxcvbnm,./!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?')
+        keyname = gtk.gdk.keyval_name(event.keyval)
+        for i in range(1,ConfigWindow.zmienna2+1):
+            # dodatek = 11
+            # if (i == 1):
+            #     dodatek = 0
+            for j in range(1,ConfigWindow.iloscbt+1):
+                # if(self.bt_key_table[i][j] == keyname):
+                if(keys[i-1+j-1] == keyname):
+                    self.click_with_keyboard(self.bt_table[i][j],i,j)
+        # for i in range(1,(ConfigWindow.zmienna2)+1):
+        #     print self.bt_key_table[i]
+        #     if(keyname == self.bt_key_table[i]):
+        #         print self.bt_table
+        #         self.click_with_keyboard(self.bt_table[i][1],i,1)
+    def click_with_keyboard(self,Widget,*Data):
+        Widget.set_active(not Widget.get_active())
+        state = Widget.get_active()
+        print str(Data[0] + 1) + ',' + str(int(state)) + ',' + str(Data[1]) + ',' + str(0)
+        lightLED(Data[0] + 1, int(state), Data[1], 0)
+
+    def setKeyboardButtor(self,columnButton, rowButton, key):
+        print key
+        print "DATA 2"
+        if (key != None):
+            self.bt_key_table[columnButton][rowButton] = key
+    def click(self, Widget ,*Data):
         state = Widget.get_active()
         print str(Data[0] + 1) + ',' + str(int(state)) + ',' + str(Data[1]) + ',' + str(0)
         lightLED(Data[0] + 1, int(state), Data[1], 0)
@@ -216,11 +244,27 @@ class Mainwindow:
     def printfuckingBT(self):
         print self.bt_table_id
     '''Konstruktor klasy'''
+    # def keyBoardTable(self):
+    #     self.bt_key_table1 = {1: '1', 2: '2', 3: '3', 4: '4', 5: '5',
+    #                           6: '6', 7: '7', 8: '8', 9: '9', 10: '0',
+    #                           11: '-', 12: '='}
+    #     self.bt_key_table2 = {1: 'q', 2: 'w', 3: 'e', 4: 'r', 5: 't',
+    #                           6: 'y', 7: 'u', 8: 'i', 9: 'o', 10: 'p',
+    #                           11:'[',12:']'}
+    #     self.bt_key_table3 = {1: 'a', 2: 's', 3: 'd', 4: 'f', 5: 'g',
+    #                           6: 'h', 7: 'j', 8: 'k', 9: 'l', 10: ';',
+    #                           11:'\''}
+    #     self.bt_key_table4 = {1: 'z', 2: 'x', 3: 'c', 4: 'v', 5: 'b',
+    #                           6: 'n', 7: 'm', 8: ',', 9: '.', 10: '/'}
+    #
     def __init__(self):
         '''Konstruktor klasy MainWindow'''
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("elSter - console")
         self.window.connect("destroy", self.on_window1_destroy)
+
+        self.window.connect('key_press_event', self.reactToKeyBoard)
+
         self.window.set_border_width(0)
         self.container = gtk.HBox(gtk.FALSE, ConfigWindow.zmienna+1)
         self.container.set_border_width(10)
@@ -251,8 +295,9 @@ class Mainwindow:
         self.frame = {}
         self.hbox_for_frame = {}
         self.bt_address = {}
-        self.bt_table_id = [[1 for x in range(ConfigWindow.iloscbt + 1)] for y in range(ConfigWindow.zmienna + 1)]
-        self.bt_table = [[1 for bt_x in range(ConfigWindow.iloscbt + 1)] for bt_y in range(ConfigWindow.zmienna + 1)]
+        self.bt_key_table = [[None for x in range(ConfigWindow.iloscbt + 1)] for y in range(ConfigWindow.zmienna + 1)]
+        self.bt_table_id = [[None for x in range(ConfigWindow.iloscbt + 1)] for y in range(ConfigWindow.zmienna + 1)]
+        self.bt_table = [[None for bt_x in range(ConfigWindow.iloscbt + 1)] for bt_y in range(ConfigWindow.zmienna + 1)]
         '''Uzupełnianie głównego kontenera'''
         for num in range(1, ConfigWindow.zmienna + 1):
             self.vBox[num] = gtk.VBox(gtk.FALSE, ConfigWindow.zmienna)
@@ -277,6 +322,11 @@ class Mainwindow:
                 # self.btBox[bt].connect('clicked',self.click,i,bt)
                 self.btBox[bt].show()
                 self.bt_id[bt] = self.btBox[bt].connect('clicked', self.click, i, bt)
+
+                '''Setting button on keyboard'''
+                self.setKeyboardButtor(i,bt,'1234567890-=qwertyuiop[]asdfghjkl;\''+
+                                            'zxcvbnm,./!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?')
+
                 self.bt_id[0] = 0
                 try:
                     self.bt_table[i][bt] = self.btBox[bt]
@@ -392,13 +442,15 @@ def createObjectBlink():
 def createObjectBaterry():
     global batteryWindow
     batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, True)
-
 def createObjectInter(port):
     import interactiveSerial as inSer
     global inter
     inter = inSer.interactiveSerial(port)
     inter.addObject('battery', batteryWindow)
     inter.start()
+def createKeyboard():
+    print "lel"
+
 def start():
 
     dialProcess = Process(target=createObjectDial(),name="Dial")
@@ -412,6 +464,9 @@ def start():
 
     interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
     interProcess.start()
+
+    keyBoard = Process(target=createKeyboard())
+    keyBoard.start()
 
     aktywneID = ConfigWindow.activeID
     print aktywneID

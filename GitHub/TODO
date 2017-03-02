@@ -9,6 +9,9 @@ TODO wszystkie:
     4.Dodać scroll_window gdzie się da
     5.Obsługa klawiatury!!!!!
     6.Zaktualizować pycharm ✓
+    7.Ulepszyć działanie klawiatury w console
+    8.Dodać obsługę szybkich przycisków w GenerateScene
+    9.Dodać chkbox w console do zmiany przycisku
 TODO arduino_universal_oriented.py:
     1.Dodać obsługę klawiatury
     2.Uzupełnienie menu o liste "Widok" zawierającą: ✓

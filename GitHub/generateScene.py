@@ -395,11 +395,29 @@ class generateScene():
     def menuTool(self):
         self.fileMenusub = gtk.Menu()
 
+        agr = gtk.AccelGroup()
+
         self.fileMenuitem = {}
-        self.fileMenuitem[0] = gtk.MenuItem("Nowy")
-        self.fileMenuitem[1] = gtk.MenuItem("Otworz")
-        self.fileMenuitem[2] = gtk.MenuItem("Zapisz")
-        self.fileMenuitem[3] = gtk.MenuItem("Zamknij")
+        # self.fileMenuitem[0] = gtk.MenuItem("Nowy")
+        self.fileMenuitem[0] = gtk.ImageMenuItem(gtk.STOCK_NEW, agr)
+        key, mod = gtk.accelerator_parse("<Control>N")
+        self.fileMenuitem[0].add_accelerator("activate", agr, key,
+                                             mod, gtk.ACCEL_VISIBLE)
+        # self.fileMenuitem[1] = gtk.MenuItem("Otworz")
+        self.fileMenuitem[1] = gtk.ImageMenuItem(gtk.STOCK_OPEN, agr)
+        key, mod = gtk.accelerator_parse("<Control>O")
+        self.fileMenuitem[1].add_accelerator("activate", agr, key,
+                              mod, gtk.ACCEL_VISIBLE)
+        # self.fileMenuitem[2] = gtk.MenuItem("Zapisz")
+        self.fileMenuitem[2] =gtk.ImageMenuItem(gtk.STOCK_SAVE, agr)
+        key, mod = gtk.accelerator_parse("<Control>S")
+        self.fileMenuitem[2].add_accelerator("activate", agr, key,
+                              mod, gtk.ACCEL_VISIBLE)
+        # self.fileMenuitem[3] = gtk.MenuItem("Zamknij")
+        self.fileMenuitem[3] = gtk.ImageMenuItem(gtk.STOCK_CLOSE, agr)
+        key, mod = gtk.accelerator_parse("<Control>E")
+        self.fileMenuitem[3].add_accelerator("activate", agr, key,
+                                             mod, gtk.ACCEL_VISIBLE)
 
         self.deviceMenusub = gtk.Menu()
         self.deviceMenuItem = {}
