@@ -8,6 +8,9 @@ if __name__ == '__main__':
     global popcorn
     popcorn = inSer.interactiveSerial("ok")
     popcorn.start()
-    popcorn.changeState(True)
+    popcorn.send(":P")
     sleep(3)
-    popcorn.changeState(False)
+    popcorn.send("XD")
+    while   True:
+        print "POPCORN"
+        sleep(3)

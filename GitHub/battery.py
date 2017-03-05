@@ -176,6 +176,8 @@ class batteryWindow:
         pass
 
     def update(self, ID, level, maxLevel=None, maxBar=None):
+        print ""
+        print "UPDATE BATTERY!"
         ID = int(ID)
         if maxLevel == None:
             maxLevel = self.maxLevel
@@ -198,11 +200,9 @@ class batteryWindow:
 
                 self.battery_icon[self.addresses[ID]].set_from_file(obraz)
                 print "zmienilem obraz"
-                self.glownyVKontener.queue_draw()
-                self.window.queue_draw()
                 return
             ileBelek = ileBelek + 1
-            print ""
+            print "if"
         pass
 
     def obliczProcent(self, level, maxLevel):
@@ -214,16 +214,26 @@ class batteryWindow:
         pass
 
     def show(self):
-        # self.pokaz()
         self.window.show()
         gtk.main()
         pass
 
-
-if __name__ == "__main__":
+def batteryObject():
+    global batteryWindow
     batteryWindow = batteryWindow('COM1', 3, True, 1024, 6)
     batteryWindow.add(5, "pioruny")
     batteryWindow.update(5, 555)
     batteryWindow.changeName(5, "Aktor 1")
     batteryWindow.show()
+
+if __name__ == "__main__":
+    from multiprocessing import Process
+
+    batteryWindow = Process(target=batteryObject, name="bateria").start() #nie dziala na macu
+    
+    batteryObject()
+    while True:
+        print "xD"
+        from time import sleep
+        sleep(2)
 

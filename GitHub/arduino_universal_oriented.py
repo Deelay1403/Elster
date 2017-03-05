@@ -433,6 +433,10 @@ time.sleep(2)
 def createObjectDial():
     global dial
     dial = ConfigWindow.serialWindow()
+    from time import sleep
+    # while True:
+    #     print "KKKK"
+    #     sleep(1)
 def createObjectWindowMain():
     global window
     window = Mainwindow()
@@ -441,7 +445,7 @@ def createObjectBlink():
     blink = blinkInTime(ConfigWindow.zmienna)
 def createObjectBaterry():
     global batteryWindow
-    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, True)
+    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
 def createObjectInter(port):
     import interactiveSerial as inSer
     global inter
@@ -453,19 +457,26 @@ def createKeyboard():
 
 def start():
 
-    dialProcess = Process(target=createObjectDial(),name="Dial")
-    dialProcess.start()
+    # dialProcess = Process(target=createObjectDial(),name="Dial")
+    # dialProcess.start()
+    t = Process(target=createObjectDial(), name="Dial")
+    t.start()
+    t.join()
+    time.sleep(10)
 
-    windowProcess = Process(target=createObjectWindowMain(),name="Window")
+    windowProcess = Process(target=createObjectWindowMain(), name="Window")
     windowProcess.start()
+    windowProcess.join()
+    time.sleep(10)
 
-    Battery = Process(target=createObjectBaterry())
+    Battery = Process(target=createObjectBaterry(), name="Battery")
     Battery.start()
 
-    interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
-    interProcess.start()
+    # interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
+    # interProcess.start()
+    createObjectInter(dial.serial.GetOpenPort())
 
-    keyBoard = Process(target=createKeyboard())
+    keyBoard = Process(target=createKeyboard(), name="Keyboard")
     keyBoard.start()
 
     aktywneID = ConfigWindow.activeID
@@ -486,7 +497,7 @@ def start():
 
     batteryWindow.show()
 
-    Process(target=gtk.main()).start()
+    Process(target=gtk.main(), name="GTK main").start()
 if __name__ == "__main__":
     t2 = Process(target=start).start()
 def __init__():

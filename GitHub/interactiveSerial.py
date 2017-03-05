@@ -16,8 +16,9 @@ class interactiveSerial:
     def stopListen(self):
         self.queue.put(['STOP_LISTENING', ''])
 
-    def startListen(self, q, endLineChar = ';'):
-        while True and self.serPort != "NO_PORTS":
+    def startListen(self, endLineChar = ';'):
+        q = self.queue
+        while True:
             try:
                 daneOdebrane = q.get_nowait()
                 if (daneOdebrane[0] == "STOP_LISTENING"):
@@ -37,9 +38,9 @@ class interactiveSerial:
 
             try:
                 print "ODBIERAM"
-                lineOfData = self.serPort.read_until(endLineChar)
-                #lineOfData = "BAT_4_517"
-                #lineOfData = ""
+                #lineOfData = self.serPort.read_until(endLineChar)
+                lineOfData = "BAT_4_517"
+                # lineOfData = ""
                 print "DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNEEE!"
                 print lineOfData
                 lineOfData = lineOfData.strip("\r\n")
@@ -57,13 +58,11 @@ class interactiveSerial:
                         print "ID:" + infoBattery[0]
                         print "VAL:" + infoBattery[1]
                         # self.objects['battery'].update(4,699)
-                        #testuje
-
-
+                        # testuje
 
                         self.event.clear()
                         for i in range(1,6):
-                            t = Thread(name="log", target=self.updateBattery(i,self.y)).start()
+                            t = Thread(name="log", target=batteryObject(i,self.y)).start()
                             self.y = self.y + 100
                         self.event.set()
 
@@ -97,7 +96,7 @@ class interactiveSerial:
             pass
 
             print "co odbieram: " + daneOdebrane[0] + " " + daneOdebrane[1]
-            sleep(0.4)
+            sleep(2)
 
     def updateBattery(self, ID, LVL):
         self.objects['battery'].update(ID, LVL)
@@ -120,11 +119,11 @@ class interactiveSerial:
             if (self.objects[name]):
                 return self.objects[name]
             else:
-                return "ERIS01"
                 print "brak obiektu dla " + name
+                return "ERIS01"
         except KeyError:
-            return "ERIS02"
             print "brak obiektu dla " + name
+            return "ERIS02"
     def jebacTo(self, ID, LVL):
         self.updateBattery(ID, LVL)
 
@@ -140,20 +139,32 @@ class interactiveSerial:
         self.pool = multiprocessing.Pool(1, self.setup, (self.event,))
         self.result = self.pool.map_async(self.startListen(self.queue), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         self.event.set()
-        #p = Thread(target=self.startListen(self.queue),name="kek").start()
+
+        # p = Process(target=self.startListen)
+        # p.start()
+
         # t = Thread(name="log", target=self.updateBattery(4,300)).start()
         #p = Process(target=self.jebacTo, args=(5,500,)).start()
         #self.jebacTo(4,100)
-        print "OKK!"
+        print "OKKK!"
 
+def createObjectBaterry():
+    from battery import batteryWindow
+    global batteryWindow
+    batteryWindow = batteryWindow("xD", 5, True, 1024, 6, False)
 
 if __name__ == "__main__":
+
+    baterry = Process(target=createObjectBaterry)
+    batteryWindow.add(5, "pioruny")
+    batteryWindow.show()
+
     popcorn = interactiveSerial('/dev/tty1')
     popcorn.start()
 
-    popcorn.addObject('bateria','tak')
+    popcorn.addObject('battery', batteryWindow)
 
-    popcorn.getObject('bateria')
+    #popcorn.getObject('battery')
 
     sleep(5)
     popcorn.send("OK!")
