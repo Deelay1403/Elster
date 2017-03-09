@@ -206,6 +206,9 @@ class generateScene():
         self.window.set_gravity(gtk.gdk.GRAVITY_CENTER)
         self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
 
+        '''Add keyboard event'''
+        self.window.connect('key_press_event', self.reactToKeyBoard)
+
         print self.window.get_gravity()
         self.window.connect("destroy",gtk.main_quit)
         self.main_window_col = gtk.VBox(gtk.FALSE,3)
@@ -392,15 +395,28 @@ class generateScene():
                 else:
                     print self.chkbtn_tab
                     self.chkbtn_tab[i][j].set_active(False)
+
+    def key_file_switch(self,x):
+        return{
+            "<Control>N": self.fileMenuitem[0],
+            "<Control>O": self.fileMenuitem[1],
+            "<Control>S": self.fileMenuitem[2],
+            "<Control>E": self.fileMenuitem[3],
+        }.get(x,x)
+    def reactToKeyBoard(self,Widget,event):
+        keyname = gtk.gdk.keyval_name(event.keyval)
+        print keyname
     def menuTool(self):
         self.fileMenusub = gtk.Menu()
 
         agr = gtk.AccelGroup()
-
         self.fileMenuitem = {}
         # self.fileMenuitem[0] = gtk.MenuItem("Nowy")
         self.fileMenuitem[0] = gtk.ImageMenuItem(gtk.STOCK_NEW, agr)
         key, mod = gtk.accelerator_parse("<Control>N")
+
+        agr.connect_group(key,mod,gtk.ACCEL_VISIBLE, self.fileInterpret)
+
         self.fileMenuitem[0].add_accelerator("activate", agr, key,
                                              mod, gtk.ACCEL_VISIBLE)
         # self.fileMenuitem[1] = gtk.MenuItem("Otworz")
