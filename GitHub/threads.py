@@ -12,8 +12,8 @@ def foreground():
         print "KKKKK"
         sleep(2)
 
-b = Process(name='background', target=background())
-f = Process(name='foreground', target=foreground())
+b = Process(name='background', target=background)
+f = Process(name='foreground', target=foreground)
 
 b.start()
 f.start()
@@ -21,5 +21,3 @@ f.start()
 while  True:
     print "JAK!?"
     sleep(3)
-
-print "ale to sie nie wyprintuje!" #xD nawet pycharm się wkurwia

@@ -21,11 +21,10 @@ pass
 from threading import Thread
 import gtk
 
-
 import ConfigWindow
 import generateScene
 import battery #dodal oskar
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 
 x = 1
 
@@ -64,6 +63,125 @@ alphabet = {}
 for i in range(47, 91):
     alphabet[i - 47] = chr(i)
 
+time.sleep(2)
+
+
+'''Funcja uruchamiana przez wątek. Obsługuje ona wszystko'''
+
+
+'''Główna metoda klasy uruchamiająca wątek'''
+
+# objects_Table = {}
+#
+# def setObject(object,name):
+#     objects_Table[name] = object
+# def getObject(name):
+#     return objects_Table[name]
+
+def createObjectDial(q):
+    global dial
+    dial = ConfigWindow.serialWindow()
+    #q.put(dial)
+    from time import sleep
+    # while True:
+    #     print "KKKK"
+    #     sleep(1)
+def createObjectWindowMain(q):
+    global window
+    window = Mainwindow()
+    #q.put(window)
+def createObjectBlink(q):
+    global blink
+    blink = blinkInTime(ConfigWindow.zmienna)
+
+def createObjectBaterry(q):
+    global batteryWindow
+    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
+    #q.put(batteryWindow)
+def createObjectInter(port,q):
+    import interactiveSerial as inSer
+    global inter
+    inter = inSer.interactiveSerial(port)
+    inter.addObject('battery', batteryWindow)
+    inter.fuckLoop()
+    inter.start()
+
+def createKeyboard():
+    print "lel"
+
+def start():
+    global dial, window, inter, batteryWindow
+    global iloscBt,zmienna,zmienna2
+
+
+    queue_of_cry = [Queue() for i in range(0,4)]
+    # dialProcess = Process(target=createObjectDial(),name="Dial")
+    # dialProcess.start()
+    t = Thread(target=createObjectDial(None), name="Dial", args=(queue_of_cry[0],))
+    t.start()
+    t.join()
+    #dial = queue_of_cry[0].get()
+    #
+    # iloscBt = queue_of_cry[0].iloscBT
+    # zmienna = ConfigWindow.zmienna
+    # zmienna2 = ConfigWindow.zmienna2
+    print "XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+    #print getObject("dial").getSelf() #   :c
+    print "------------------------------------DIAL--------------------"
+    windowProcess = Thread(target=createObjectWindowMain(None), name="Window", args=(queue_of_cry[1],))
+    windowProcess.daemon = False
+    windowProcess.start()
+    windowProcess.join()
+#    window = queue_of_cry[1].get()
+
+    #windowProcess._target.dial.serial.GetOpenPort()
+    Battery = Thread(target=createObjectBaterry, name="Battery", args=(queue_of_cry[2],))
+    # batteryWindow = queue_of_cry[2].get()
+    Battery.daemon = False
+    Battery.start()
+    Battery.join()
+
+
+    # interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
+    # interProcess.start()
+    interThread = Process(target=createObjectInter,name="inter",args=(dial.serial.GetOpenPort(),queue_of_cry[3]))
+    interThread.daemon = False
+    interThread.start()
+    # interThread.join()
+
+    keyBoard = Thread(target=createKeyboard(), name="Keyboard")
+    keyBoard.start()
+
+    aktywneID = ConfigWindow.activeID
+    print aktywneID
+    print window.sb_adjustment
+    if aktywneID[0] == "list":
+        for num in range(0, len(aktywneID[1])):
+            batteryWindow.add(aktywneID[1][num], aktywneID[1][num]-1)
+            window.sb_adjustment[num+1].set_value(aktywneID[1][num]-1)
+    else:
+        for num in range(1, (aktywneID[1] + 1)):
+            batteryWindow.add(num, num)
+
+    # inter.start()
+    # mały pokaz nowych funkcji
+    '''zmiana nazwy baterii'''
+    '''aktualizacja stanu baterii'''
+
+    batteryWindow.show()
+
+    """Trying set object table"""
+
+    Process(target=gtk.main, name="GTK main").start()
+
+
+if __name__ == "__main__":
+    t2 = Process(target=start).start()
+def __init__():
+    t2 = Process(target=start).start()
+#TODO wraz ze zmiana adresu urzadzenia zmiana adresu baterii
+#TODO sprawdzanie bledow w tle
+#TODO pokomentowc troche :>
 
 def getWho():
     return Who
@@ -422,86 +540,3 @@ class Mainwindow:
     def generateSceneWindow(self,args):
         g = generateScene.generateScene()
 
-time.sleep(2)
-
-
-'''Funcja uruchamiana przez wątek. Obsługuje ona wszystko'''
-
-
-'''Główna metoda klasy uruchamiająca wątek'''
-
-def createObjectDial():
-    global dial
-    dial = ConfigWindow.serialWindow()
-    from time import sleep
-    # while True:
-    #     print "KKKK"
-    #     sleep(1)
-def createObjectWindowMain():
-    global window
-    window = Mainwindow()
-def createObjectBlink():
-    global blink
-    blink = blinkInTime(ConfigWindow.zmienna)
-def createObjectBaterry():
-    global batteryWindow
-    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
-def createObjectInter(port):
-    import interactiveSerial as inSer
-    global inter
-    inter = inSer.interactiveSerial(port)
-    inter.addObject('battery', batteryWindow)
-    inter.start()
-def createKeyboard():
-    print "lel"
-
-def start():
-
-    # dialProcess = Process(target=createObjectDial(),name="Dial")
-    # dialProcess.start()
-    t = Process(target=createObjectDial(), name="Dial")
-    t.start()
-    t.join()
-    time.sleep(10)
-
-    windowProcess = Process(target=createObjectWindowMain(), name="Window")
-    windowProcess.start()
-    windowProcess.join()
-    time.sleep(10)
-
-    Battery = Process(target=createObjectBaterry(), name="Battery")
-    Battery.start()
-
-    # interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
-    # interProcess.start()
-    createObjectInter(dial.serial.GetOpenPort())
-
-    keyBoard = Process(target=createKeyboard(), name="Keyboard")
-    keyBoard.start()
-
-    aktywneID = ConfigWindow.activeID
-    print aktywneID
-    print window.sb_adjustment
-    if aktywneID[0] == "list":
-        for num in range(0, len(aktywneID[1])):
-            batteryWindow.add(aktywneID[1][num], aktywneID[1][num]-1)
-            window.sb_adjustment[num+1].set_value(aktywneID[1][num]-1)
-    else:
-        for num in range(1, (aktywneID[1] + 1)):
-            batteryWindow.add(num, num)
-
-    # inter.start()
-    # mały pokaz nowych funkcji
-    '''zmiana nazwy baterii'''
-    '''aktualizacja stanu baterii'''
-
-    batteryWindow.show()
-
-    Process(target=gtk.main(), name="GTK main").start()
-if __name__ == "__main__":
-    t2 = Process(target=start).start()
-def __init__():
-    t2 = Process(target=start).start()
-#TODO wraz ze zmiana adresu urzadzenia zmiana adresu baterii
-#TODO sprawdzanie bledow w tle
-#TODO pokomentowc troche :>

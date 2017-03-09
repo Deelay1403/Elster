@@ -13,6 +13,10 @@ class interactiveSerial:
         self.objects = {}
         print "inicjacja zakonczona"
 
+    def fuckLoop(self):
+        while True:
+            sleep(2)
+            print "kek - process"
     def stopListen(self):
         self.queue.put(['STOP_LISTENING', ''])
 
@@ -131,17 +135,17 @@ class interactiveSerial:
         global unpaused
         unpaused = event
     def start(self, endLineChar = ';'):
-        self.dziala = 0
-        self.x = 1
-        self.y = 150
-        print "START!"
-        self.event = multiprocessing.Event()
-        self.pool = multiprocessing.Pool(1, self.setup, (self.event,))
-        self.result = self.pool.map_async(self.startListen(self.queue), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-        self.event.set()
+        # self.dziala = 0
+        # self.x = 1
+        # self.y = 150
+        # print "START!"
+        # self.event = multiprocessing.Event()
+        # self.pool = multiprocessing.Pool(1, self.setup, (self.event,))
+        # self.result = self.pool.map_async(self.startListen(self.queue), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        # self.event.set()
 
-        # p = Process(target=self.startListen)
-        # p.start()
+        p = Process(target=self.startListen)
+        p.start()
 
         # t = Thread(name="log", target=self.updateBattery(4,300)).start()
         #p = Process(target=self.jebacTo, args=(5,500,)).start()
@@ -154,6 +158,7 @@ def createObjectBaterry():
     batteryWindow = batteryWindow("xD", 5, True, 1024, 6, False)
 
 if __name__ == "__main__":
+
 
     baterry = Process(target=createObjectBaterry)
     batteryWindow.add(5, "pioruny")

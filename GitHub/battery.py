@@ -231,7 +231,7 @@ if __name__ == "__main__":
 
     batteryWindow = Process(target=batteryObject, name="bateria").start() #nie dziala na macu
     
-    batteryObject()
+    # batteryObject()
     while True:
         print "xD"
         from time import sleep
