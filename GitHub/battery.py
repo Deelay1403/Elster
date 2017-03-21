@@ -176,6 +176,7 @@ class batteryWindow:
         pass
 
     def update(self, ID, level, maxLevel=None, maxBar=None):
+        # type: (object, object, object, object) -> object
         print ""
         print "UPDATE BATTERY!"
         ID = int(ID)

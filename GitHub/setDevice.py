@@ -9,7 +9,7 @@ class serialWindow:
     def __init__(self):
         print "Aby uruchomić okno wywołaj WALSIENARYJ__init__"
     def WALSIENARYJ__init__(self):
-        self.hidedvaluetofuckthesystem = 0
+        self.chk_Activate = 0
         self.cb_serial = gtk.ComboBox()
         self.liststore = gtk.ListStore(str)
         self.cell = gtk.CellRendererText()
@@ -57,11 +57,10 @@ class serialWindow:
         #     gtk.main_quit()
         if response == gtk.RESPONSE_ACCEPT:
             # return serialWindow
-            print "Akceptowales :D"
-            self.hidedvaluetofuckthesystem = 1
+            self.chk_Activate = 1
     def getCombobox(self):
         return self.cb_serial
     def response(self,Widget,Data):
         if(Data == gtk.RESPONSE_ACCEPT):
-            print "Akceptowales :D"
-            self.hidedvaluetofuckthesystem = 1
+
+            self.chk_Activate = 1

@@ -1,7 +1,6 @@
 from multiprocessing import Process, Queue
 from time import sleep
 import serial
-import gtk
 from threading import Thread
 import multiprocessing
 
@@ -14,9 +13,13 @@ class interactiveSerial:
         print "inicjacja zakonczona"
 
     def fuckLoop(self):
+        x = 0
         while True:
             sleep(2)
+            if(x>=1):
+                self.updateBattery(1, 100)
             print "kek - process"
+            x+=1
     def stopListen(self):
         self.queue.put(['STOP_LISTENING', ''])
 

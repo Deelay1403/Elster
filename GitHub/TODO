@@ -4,9 +4,9 @@ Ptaszek do kopiowania i zaznaczania - ✓ ☑
 
 TODO wszystkie:
     1.Uzupełnić komentarze
-    2.Zbadać jakie biblioteki są potrzebne do uruchomienia i sprawdzić czy można kompilować Python -> C++
+    2.Zbadać jakie biblioteki są potrzebne do uruchomienia i sprawdzić czy można kompilować Python -> C++ ✓
     3.Zastosować Multiprocessing zamiast Threading ✓
-    4.Dodać scroll_window gdzie się da
+    4.Dodać scroll_window gdzie się da ✓
     5.Obsługa klawiatury!!!!!
     6.Zaktualizować pycharm ✓
     7.Ulepszyć działanie klawiatury w console
@@ -64,10 +64,10 @@ TODO init_window.py:
     1.Może zmienić lekko wygląd
 
 TODO ConfigWindow.py:
-    1.Przybudować response
+    1. Przybudować response
     2. Arduino mówca - 99,4 wykonać czyszcznie buforu 99,5
     3. activeID zmienić z global na obsługę jako klasy (przekazywać obiekt zamiast globalnej zmiennej)
 TODO setDevice:
-    1.Zmienić nazwę zmiennej hidedvaluetofuckthesystem na coś innego
+    1.Zmienić nazwę zmiennej hidedvaluetofuckthesystem na coś innego ✓
 
 

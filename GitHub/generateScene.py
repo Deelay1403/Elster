@@ -15,7 +15,6 @@ import pickle
 import newWindowToGenerateScene
 from threading import Thread
 import serial
-#import time
 import setDevice
 """
 Typical file:
@@ -65,7 +64,14 @@ class generateScene():
     PL:Konstruktor klasy generateScene():
     ENG:generateScene() class constructor
     """
-    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None,names=[]):
+    def __init__(self, colums_main = 0,
+                 devices = 0,
+                 number_of_scenes = 0,
+                 body = [],
+                 meta = [],
+                 serial = None,
+                 names=[]):
+
         t3 = Thread(name="main",target=self.wind(colums_main=colums_main,
                                                  devices=devices,
                                                  number_of_scenes=number_of_scenes,
@@ -77,7 +83,14 @@ class generateScene():
         t3.start()
         t3.join()
 
-    def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None,names=[]):
+    def wind(self, colums_main = 0,
+             devices = 0,
+             number_of_scenes = 0,
+             body = [],
+             meta = [],
+             serial = None,
+             names=[]):
+
         '''Wind like Wind Of The Change'''
         """Ustawienie serialu by potem być w stanie sprawdzać go w live mode"""
         self.serial = serial
@@ -133,7 +146,12 @@ class generateScene():
 
         '''
         self.meta_tab = [[0 for i in range(4)]for l in range(self.head_tab[0])]
-        self.body_tab = [[[0 for l in range(self.head_tab[2])] for d in range(self.head_tab[1])] for s in range(self.head_tab[0])]
+
+        self.body_tab = [[[0 \
+                        for l in range(self.head_tab[2])] \
+                        for d in range(self.head_tab[1])] \
+                        for s in range(self.head_tab[0])]
+
         self.names_tab = [(("Aktor ")+str(j+1)) for j in range(self.head_tab[1])]
         '''automatically fill body_tab with body (when body != [])'''
         if(body != []):
@@ -141,26 +159,27 @@ class generateScene():
                 for y in range(self.head_tab[1]):
                     for z in range(self.head_tab[2]):
                         self.body_tab[x][y][z] = body[x][y][z]
+
         print self.head_tab[0]
 
         if(meta != []):
-            print "ifr"
             for x in range(self.head_tab[0]):
                 for y in range(4):
                     print str(x) + " x"
                     print str(y) + " y"
                     self.meta_tab[x][y] = meta[x][y]
+
         print "ostatnia szansa"
         print names
         if(names != []):
                 for y in range(self.head_tab[1]):
                     self.names_tab[y] = names[y]
-        print self.head_tab
-        print "META"
-        print self.meta_tab
-        print self.body_tab
-        print "Names"
-        print self.names_tab
+        # print self.head_tab
+        # print "META"
+        # print self.meta_tab
+        # print self.body_tab
+        # print "Names"
+        # print self.names_tab
 
 
 
@@ -484,7 +503,7 @@ class generateScene():
         self.serial = setDevice.serialWindow()
         self.serial.WALSIENARYJ__init__()
         print serial
-        if(self.serial.hidedvaluetofuckthesystem == 1):
+        if(self.serial.chk_Activate == 1):
             self.serial.serial.SerialActivate(self.serial.getCombobox().get_active(),False)
 
     def fileInterpret(self,widget,option):
@@ -567,7 +586,8 @@ class generateScene():
 #
 # text.close()"""
     def fileOpen_Choose_Save(self,widget,option):
-        '''Main method which open file in two other way. One is read-write other is append. It also set up action for dialog buttons'''
+        '''Main method which open file in two other way. One is read-write other is append.
+         It also set up action for dialog buttons'''
         chooser = self.switch_choose(option)
         response = chooser.run()
         self.file = {}
