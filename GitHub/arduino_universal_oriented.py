@@ -55,7 +55,7 @@ logo = """
 
 """
 
-print(logo)
+#print(logo)
 global alphabet
 global Who
 Who = 0
@@ -78,7 +78,7 @@ time.sleep(2)
 # def getObject(name):
 #     return objects_Table[name]
 
-def createObjectDial(q):
+def createObjectDial():
     global dial
     dial = ConfigWindow.serialWindow()
     #q.put(dial)
@@ -86,7 +86,7 @@ def createObjectDial(q):
     # while True:
     #     print "KKKK"
     #     sleep(1)
-def createObjectWindowMain(q):
+def createObjectWindowMain():
     global window
     window = Mainwindow()
     #q.put(window)
@@ -97,12 +97,13 @@ def createObjectBlink(q):
 def createObjectBaterry(q):
     global batteryWindow
     batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
-    #q.put(batteryWindow)
+    q.put_nowait(batteryWindow)
+
 def createObjectInter(port,q):
     import interactiveSerial as inSer
     global inter
     inter = inSer.interactiveSerial(port)
-    inter.addObject('battery', batteryWindow)
+    inter.addObject('battery', q)
     inter.fuckLoop()
     inter.start()
 
@@ -114,10 +115,12 @@ def start():
     global iloscBt,zmienna,zmienna2
 
 
-    queue_of_cry = [Queue() for i in range(0,4)]
+    # queue_of_cry = [Queue() for i in range(0,4)]
     # dialProcess = Process(target=createObjectDial(),name="Dial")
     # dialProcess.start()
-    t = Thread(target=createObjectDial(None), name="Dial", args=(queue_of_cry[0],))
+    t = Thread(target=createObjectDial(),
+               name="Dial",
+               args=())
     t.start()
     t.join()
     #dial = queue_of_cry[0].get()
@@ -125,32 +128,38 @@ def start():
     # iloscBt = queue_of_cry[0].iloscBT
     # zmienna = ConfigWindow.zmienna
     # zmienna2 = ConfigWindow.zmienna2
-    print "XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
     #print getObject("dial").getSelf() #   :c
     print "------------------------------------DIAL--------------------"
-    windowProcess = Thread(target=createObjectWindowMain(None), name="Window", args=(queue_of_cry[1],))
+    windowProcess = Thread(target=createObjectWindowMain(),
+                           name="Window",
+                           args=())
     windowProcess.daemon = False
     windowProcess.start()
     windowProcess.join()
 #    window = queue_of_cry[1].get()
-
+    que = Queue()
     #windowProcess._target.dial.serial.GetOpenPort()
-    Battery = Thread(target=createObjectBaterry, name="Battery", args=(queue_of_cry[2],))
-    # batteryWindow = queue_of_cry[2].get()
+    Battery = Thread(target=createObjectBaterry(que),
+                     name="Battery",
+                     args=(que,))
+
     Battery.daemon = False
     Battery.start()
-    Battery.join()
+    # Battery.join()
 
+    q = que.get()
+    from time import sleep
+    sleep(2)
 
     # interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
     # interProcess.start()
-    interThread = Process(target=createObjectInter,name="inter",args=(dial.serial.GetOpenPort(),queue_of_cry[3]))
+    interThread = Thread(target=createObjectInter,
+                         name="inter",
+                         args=(dial.serial.GetOpenPort(),q))
+
     interThread.daemon = False
     interThread.start()
     # interThread.join()
-
-    keyBoard = Thread(target=createKeyboard(), name="Keyboard")
-    keyBoard.start()
 
     aktywneID = ConfigWindow.activeID
     print aktywneID
@@ -213,7 +222,6 @@ def forLedBlackOutAll(state, option):
 
 # forLedBlackOutAll(0, 0)
 # activebuttons = True
-
 
 # Example of callFunctionLightLed();
 # def on_togglebutton1_3_toggled(self, widget):callFunctionLightLed(self, self.toggle1_3,self.check1_2, 2, 1, 2, 0)
@@ -388,15 +396,19 @@ class Mainwindow:
         self.container.set_border_width(10)
 
         self.vcontainer = gtk.VBox(gtk.FALSE,2)
-        self.window.set_default_size((self.size_of_window * ConfigWindow.zmienna) + 70 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
-                                      (self.size_of_window * ConfigWindow.iloscbt) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt)
+        self.window.set_default_size((self.size_of_window * ConfigWindow.zmienna) + 70 \
+                                     * ConfigWindow.zmienna * ConfigWindow.iloscbt,
+                                      (self.size_of_window * ConfigWindow.iloscbt) + 10 \
+                                     * ConfigWindow.zmienna * ConfigWindow.iloscbt)
 
         self.scrolledCol = gtk.ScrolledWindow()
         self.scrolledCol.set_border_width(10)
         #self.scrolledCol.set_resize_mode(True)
         self.scrolledCol.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.scrolledCol.set_size_request((self.size_of_window * ConfigWindow.zmienna) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
-                                      (self.size_of_window * ConfigWindow.iloscbt) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt)
+        self.scrolledCol.set_size_request((self.size_of_window * ConfigWindow.zmienna) + 10 \
+                                          * ConfigWindow.zmienna * ConfigWindow.iloscbt,
+                                            (self.size_of_window * ConfigWindow.iloscbt) + 10 \
+                                          * ConfigWindow.zmienna * ConfigWindow.iloscbt)
 
         self.window.add(self.vcontainer)
 
@@ -413,9 +425,15 @@ class Mainwindow:
         self.frame = {}
         self.hbox_for_frame = {}
         self.bt_address = {}
-        self.bt_key_table = [[None for x in range(ConfigWindow.iloscbt + 1)] for y in range(ConfigWindow.zmienna + 1)]
-        self.bt_table_id = [[None for x in range(ConfigWindow.iloscbt + 1)] for y in range(ConfigWindow.zmienna + 1)]
-        self.bt_table = [[None for bt_x in range(ConfigWindow.iloscbt + 1)] for bt_y in range(ConfigWindow.zmienna + 1)]
+        self.bt_key_table = [[None\
+                              for x in range(ConfigWindow.iloscbt + 1)]\
+                              for y in range(ConfigWindow.zmienna + 1)]
+        self.bt_table_id = [[None\
+                             for x in range(ConfigWindow.iloscbt + 1)]\
+                             for y in range(ConfigWindow.zmienna + 1)]
+        self.bt_table = [[None\
+                          for bt_x in range(ConfigWindow.iloscbt + 1)]\
+                          for bt_y in range(ConfigWindow.zmienna + 1)]
         '''Uzupełnianie głównego kontenera'''
         for num in range(1, ConfigWindow.zmienna + 1):
             self.vBox[num] = gtk.VBox(gtk.FALSE, ConfigWindow.zmienna)
