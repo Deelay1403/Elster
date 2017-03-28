@@ -104,7 +104,7 @@ def createObjectInter(port,q):
     global inter
     inter = inSer.interactiveSerial(port)
     inter.addObject('battery', q)
-    inter.fuckLoop()
+    #inter.fuckLoop()
     inter.start()
 
 def createKeyboard():
@@ -172,13 +172,17 @@ def start():
         for num in range(1, (aktywneID[1] + 1)):
             batteryWindow.add(num, num)
 
+    batteryWindow.changeName(1, "Aktor 1")
+
     # inter.start()
     # mały pokaz nowych funkcji
     '''zmiana nazwy baterii'''
     '''aktualizacja stanu baterii'''
-
+    print "ZMIENINON ffffffffffffffffffffffffffffffffffffffffffI"
     batteryWindow.show()
-
+    batteryWindow.update(1, 111)
+    #batteryWindow.changeName(2, "Aktor 1")
+    print "ZMIENINONIhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
     """Trying set object table"""
 
     Process(target=gtk.main, name="GTK main").start()

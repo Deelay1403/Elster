@@ -17,7 +17,8 @@ class interactiveSerial:
         while True:
             sleep(2)
             if(x>=1):
-                self.updateBattery(1, 100)
+                #self.updateBattery(1, 100)
+                print "aha"
             print "kek - process"
             x+=1
     def stopListen(self):
@@ -46,8 +47,8 @@ class interactiveSerial:
             try:
                 print "ODBIERAM"
                 #lineOfData = self.serPort.read_until(endLineChar)
-                lineOfData = "BAT_4_517"
-                # lineOfData = ""
+                #lineOfData = "BAT_1_517"
+                lineOfData = ""
                 print "DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNEEE!"
                 print lineOfData
                 lineOfData = lineOfData.strip("\r\n")
@@ -64,22 +65,21 @@ class interactiveSerial:
                         print "TRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRUUUUUUUUUUEEEEEEEEEEEE"
                         print "ID:" + infoBattery[0]
                         print "VAL:" + infoBattery[1]
-                        # self.objects['battery'].update(4,699)
-                        # testuje
+                        self.objects['battery'].update(0,330)
 
-                        self.event.clear()
-                        for i in range(1,6):
-                            t = Thread(name="log", target=batteryObject(i,self.y)).start()
-                            self.y = self.y + 100
-                        self.event.set()
+                        # self.event.clear()
+                        # for i in range(1,6):
+                        #     t = Thread(name="log", target=batteryObject(i,self.y)).start()
+                        #     self.y = self.y + 100
+                        # self.event.set()
 
-                        self.event.clear()
-                        self.updateBattery(6,600)
-                        self.event.set()
-                        if(self.dziala == 1):
-                            self.event.clear()
-                            self.updateBattery(1,700)
-                            self.event.set()
+                        # self.event.clear()
+                        # self.updateBattery(6,600)
+                        # self.event.set()
+                        # if(self.dziala == 1):
+                        #     self.event.clear()
+                        #     self.updateBattery(1,700)
+                        #     self.event.set()
                         # p = Process(target=self.updateBattery(3,100), name="Window").start()
                         # if self.x==6:
                         #     break

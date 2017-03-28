@@ -176,6 +176,7 @@ class batteryWindow:
         pass
 
     def update(self, ID, level, maxLevel=None, maxBar=None):
+        gtk.threads_enter()
         # type: (object, object, object, object) -> object
         print ""
         print "UPDATE BATTERY!"
@@ -205,6 +206,7 @@ class batteryWindow:
             ileBelek = ileBelek + 1
             print "if"
         pass
+        gtk.threads_leave()
 
     def obliczProcent(self, level, maxLevel):
         return round(((100 * float(level)) / maxLevel), 1)
@@ -216,25 +218,27 @@ class batteryWindow:
 
     def show(self):
         self.window.show()
+        #GObject.threads_init()
+        gtk.threads_init()
         gtk.main()
         pass
 
-def batteryObject():
-    global batteryWindow
-    batteryWindow = batteryWindow('COM1', 3, True, 1024, 6)
-    batteryWindow.add(5, "pioruny")
-    batteryWindow.update(5, 555)
-    batteryWindow.changeName(5, "Aktor 1")
-    batteryWindow.show()
+# def batteryObject():
+#     global batteryWindow
+#     batteryWindow = batteryWindow('COM1', 3, True, 1024, 6)
+#     batteryWindow.add(5, "pioruny")
+#     batteryWindow.update(5, 555)
+#     batteryWindow.changeName(5, "Aktor 1")
+#     batteryWindow.show()
 
-if __name__ == "__main__":
-    from multiprocessing import Process
+# if __name__ == "__main__":
+#     from multiprocessing import Process
 
-    batteryWindow = Process(target=batteryObject, name="bateria").start() #nie dziala na macu
+#     batteryWindow = Process(target=batteryObject, name="bateria").start() #nie dziala na macu
     
-    # batteryObject()
-    while True:
-        print "xD"
-        from time import sleep
-        sleep(2)
+#     # batteryObject()
+#     while True:
+#         print "xD"
+#         from time import sleep
+#         sleep(2)
 
