@@ -1,4 +1,6 @@
 import pygtk
+from threading import Thread
+from multiprocessing import Process
 
 pygtk.require('2.0')
 import gtk
@@ -216,12 +218,31 @@ class batteryWindow:
         self.battery_ID_label[self.addresses[ID]].set_text("Bateria " + str(name))
         pass
 
+
+
     def show(self):
-        self.window.show()
         #GObject.threads_init()
-        gtk.threads_init()
+        #gtk.threads_init()
+        print "MAAAAAAAAAAAAAAAAAAIN!"
+        #gtk.gdk.threads_init()
+        #gtk.threads_enter()
+        self.window.show()
         gtk.main()
+        #gtk.threads_leave()
+        #self.run_gui_thread()
+        # gui_thread = Process(target=self.run_gui_thread, args=[self]).start()
+        print "MAAAAAAAAAAAAAAAAAAIN!MAAAAAAAAAAAAAAAAAAIN!"
+        #gtk.main()
         pass
+
+    def run_gui_thread(self, kupa):
+        print "RUN GUI"
+        from time import sleep
+        while True:
+            sleep(1)
+            print "fffds"
+            self.gtk.main()
+
 
 # def batteryObject():
 #     global batteryWindow
