@@ -21,11 +21,10 @@ pass
 from threading import Thread
 import gtk
 
-
 import ConfigWindow
 import generateScene
 import battery #dodal oskar
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 
 x = 1
 
@@ -56,7 +55,7 @@ logo = """
 
 """
 
-print(logo)
+#print(logo)
 global alphabet
 global Who
 Who = 0
@@ -64,6 +63,138 @@ alphabet = {}
 for i in range(47, 91):
     alphabet[i - 47] = chr(i)
 
+time.sleep(2)
+
+
+'''Funcja uruchamiana przez wątek. Obsługuje ona wszystko'''
+
+
+'''Główna metoda klasy uruchamiająca wątek'''
+
+# objects_Table = {}
+#
+# def setObject(object,name):
+#     objects_Table[name] = object
+# def getObject(name):
+#     return objects_Table[name]
+
+def createObjectDial():
+    global dial
+    dial = ConfigWindow.serialWindow()
+    #q.put(dial)
+    from time import sleep
+    # while True:
+    #     print "KKKK"
+    #     sleep(1)
+def createObjectWindowMain():
+    global window
+    window = Mainwindow()
+    #q.put(window)
+def createObjectBlink(q):
+    global blink
+    blink = blinkInTime(ConfigWindow.zmienna)
+
+def createObjectBaterry(q):
+    global batteryWindow
+    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
+    q.put_nowait(batteryWindow)
+
+def createObjectInter(port,q):
+    import interactiveSerial as inSer
+    global inter
+    inter = inSer.interactiveSerial(port)
+    inter.addObject('battery', q)
+    #inter.fuckLoop()
+    inter.start()
+
+def createKeyboard():
+    print "lel"
+
+def start():
+    global dial, window, inter, batteryWindow
+    global iloscBt,zmienna,zmienna2
+
+
+    # queue_of_cry = [Queue() for i in range(0,4)]
+    # dialProcess = Process(target=createObjectDial(),name="Dial")
+    # dialProcess.start()
+    t = Thread(target=createObjectDial(),
+               name="Dial",
+               args=())
+    t.start()
+    t.join()
+    #dial = queue_of_cry[0].get()
+    #
+    # iloscBt = queue_of_cry[0].iloscBT
+    # zmienna = ConfigWindow.zmienna
+    # zmienna2 = ConfigWindow.zmienna2
+    #print getObject("dial").getSelf() #   :c
+    print "------------------------------------DIAL--------------------"
+    windowProcess = Thread(target=createObjectWindowMain(),
+                           name="Window",
+                           args=())
+    windowProcess.daemon = False
+    windowProcess.start()
+    windowProcess.join()
+#    window = queue_of_cry[1].get()
+    que = Queue()
+    #windowProcess._target.dial.serial.GetOpenPort()
+    Battery = Thread(target=createObjectBaterry(que),
+                     name="Battery",
+                     args=(que,))
+
+    Battery.daemon = False
+    Battery.start()
+    # Battery.join()
+
+    q = que.get()
+    from time import sleep
+    sleep(2)
+
+    # interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
+    # interProcess.start()
+    interThread = Thread(target=createObjectInter,
+                         name="inter",
+                         args=(dial.serial.GetOpenPort(),q))
+
+    interThread.daemon = False
+    interThread.start()
+    # interThread.join()
+
+    aktywneID = ConfigWindow.activeID
+    print aktywneID
+    print window.sb_adjustment
+    if aktywneID[0] == "list":
+        for num in range(0, len(aktywneID[1])):
+            batteryWindow.add(aktywneID[1][num], aktywneID[1][num]-1)
+            window.sb_adjustment[num+1].set_value(aktywneID[1][num]-1)
+    else:
+        for num in range(1, (aktywneID[1] + 1)):
+            batteryWindow.add(num, num)
+
+    batteryWindow.changeName(1, "Aktor 1")
+
+    # inter.start()
+    # mały pokaz nowych funkcji
+    '''zmiana nazwy baterii'''
+    '''aktualizacja stanu baterii'''
+    print "ZMIENINON ffffffffffffffffffffffffffffffffffffffffffI"
+    batteryWindow.show()
+    batteryWindow.update(1, 111)
+    #batteryWindow.changeName(2, "Aktor 1")
+    print "ZMIENINONIhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+    """Trying set object table"""
+
+    Process(target=gtk.main, name="GTK main").start()
+
+
+if __name__ == "__main__":
+    t2 = Process(target=start).start()
+def __init__():
+    t2 = Process(target=start).start()
+#TODO wraz ze zmiana adresu urzadzenia zmiana adresu baterii
+#TODO sprawdzanie bledow w tle
+#TODO pokomentowc troche :>
 
 def getWho():
     return Who
@@ -95,7 +226,6 @@ def forLedBlackOutAll(state, option):
 
 # forLedBlackOutAll(0, 0)
 # activebuttons = True
-
 
 # Example of callFunctionLightLed();
 # def on_togglebutton1_3_toggled(self, widget):callFunctionLightLed(self, self.toggle1_3,self.check1_2, 2, 1, 2, 0)
@@ -172,8 +302,36 @@ class Mainwindow:
         gtk.main_quit()
 
     '''Reakcja na kliknięcie - stara'''
-    def click(self, Widget, *Data):
-        # print Data[0]
+    def reactToKeyBoard(self,Widget,event):
+        print self.bt_key_table
+        keys = ('1234567890-qwertyuiop[]asdfghjkl;\''+
+                'zxcvbnm,./!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?')
+        keyname = gtk.gdk.keyval_name(event.keyval)
+        for i in range(1,ConfigWindow.zmienna2+1):
+            # dodatek = 11
+            # if (i == 1):
+            #     dodatek = 0
+            for j in range(1,ConfigWindow.iloscbt+1):
+                # if(self.bt_key_table[i][j] == keyname):
+                if(keys[i-1+j-1] == keyname):
+                    self.click_with_keyboard(self.bt_table[i][j],i,j)
+        # for i in range(1,(ConfigWindow.zmienna2)+1):
+        #     print self.bt_key_table[i]
+        #     if(keyname == self.bt_key_table[i]):
+        #         print self.bt_table
+        #         self.click_with_keyboard(self.bt_table[i][1],i,1)
+    def click_with_keyboard(self,Widget,*Data):
+        Widget.set_active(not Widget.get_active())
+        state = Widget.get_active()
+        print str(Data[0] + 1) + ',' + str(int(state)) + ',' + str(Data[1]) + ',' + str(0)
+        lightLED(Data[0] + 1, int(state), Data[1], 0)
+
+    def setKeyboardButtor(self,columnButton, rowButton, key):
+        print key
+        print "DATA 2"
+        if (key != None):
+            self.bt_key_table[columnButton][rowButton] = key
+    def click(self, Widget ,*Data):
         state = Widget.get_active()
         print str(Data[0] + 1) + ',' + str(int(state)) + ',' + str(Data[1]) + ',' + str(0)
         lightLED(Data[0] + 1, int(state), Data[1], 0)
@@ -216,25 +374,45 @@ class Mainwindow:
     def printfuckingBT(self):
         print self.bt_table_id
     '''Konstruktor klasy'''
+    # def keyBoardTable(self):
+    #     self.bt_key_table1 = {1: '1', 2: '2', 3: '3', 4: '4', 5: '5',
+    #                           6: '6', 7: '7', 8: '8', 9: '9', 10: '0',
+    #                           11: '-', 12: '='}
+    #     self.bt_key_table2 = {1: 'q', 2: 'w', 3: 'e', 4: 'r', 5: 't',
+    #                           6: 'y', 7: 'u', 8: 'i', 9: 'o', 10: 'p',
+    #                           11:'[',12:']'}
+    #     self.bt_key_table3 = {1: 'a', 2: 's', 3: 'd', 4: 'f', 5: 'g',
+    #                           6: 'h', 7: 'j', 8: 'k', 9: 'l', 10: ';',
+    #                           11:'\''}
+    #     self.bt_key_table4 = {1: 'z', 2: 'x', 3: 'c', 4: 'v', 5: 'b',
+    #                           6: 'n', 7: 'm', 8: ',', 9: '.', 10: '/'}
+    #
     def __init__(self):
         '''Konstruktor klasy MainWindow'''
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("elSter - console")
         self.window.connect("destroy", self.on_window1_destroy)
+
+        self.window.connect('key_press_event', self.reactToKeyBoard)
+
         self.window.set_border_width(0)
         self.container = gtk.HBox(gtk.FALSE, ConfigWindow.zmienna+1)
         self.container.set_border_width(10)
 
         self.vcontainer = gtk.VBox(gtk.FALSE,2)
-        self.window.set_default_size((self.size_of_window * ConfigWindow.zmienna) + 70 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
-                                      (self.size_of_window * ConfigWindow.iloscbt) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt)
+        self.window.set_default_size((self.size_of_window * ConfigWindow.zmienna) + 70 \
+                                     * ConfigWindow.zmienna * ConfigWindow.iloscbt,
+                                      (self.size_of_window * ConfigWindow.iloscbt) + 10 \
+                                     * ConfigWindow.zmienna * ConfigWindow.iloscbt)
 
         self.scrolledCol = gtk.ScrolledWindow()
         self.scrolledCol.set_border_width(10)
         #self.scrolledCol.set_resize_mode(True)
         self.scrolledCol.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.scrolledCol.set_size_request((self.size_of_window * ConfigWindow.zmienna) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt,
-                                      (self.size_of_window * ConfigWindow.iloscbt) + 10 * ConfigWindow.zmienna * ConfigWindow.iloscbt)
+        self.scrolledCol.set_size_request((self.size_of_window * ConfigWindow.zmienna) + 10 \
+                                          * ConfigWindow.zmienna * ConfigWindow.iloscbt,
+                                            (self.size_of_window * ConfigWindow.iloscbt) + 10 \
+                                          * ConfigWindow.zmienna * ConfigWindow.iloscbt)
 
         self.window.add(self.vcontainer)
 
@@ -251,8 +429,15 @@ class Mainwindow:
         self.frame = {}
         self.hbox_for_frame = {}
         self.bt_address = {}
-        self.bt_table_id = [[1 for x in range(ConfigWindow.iloscbt + 1)] for y in range(ConfigWindow.zmienna + 1)]
-        self.bt_table = [[1 for bt_x in range(ConfigWindow.iloscbt + 1)] for bt_y in range(ConfigWindow.zmienna + 1)]
+        self.bt_key_table = [[None\
+                              for x in range(ConfigWindow.iloscbt + 1)]\
+                              for y in range(ConfigWindow.zmienna + 1)]
+        self.bt_table_id = [[None\
+                             for x in range(ConfigWindow.iloscbt + 1)]\
+                             for y in range(ConfigWindow.zmienna + 1)]
+        self.bt_table = [[None\
+                          for bt_x in range(ConfigWindow.iloscbt + 1)]\
+                          for bt_y in range(ConfigWindow.zmienna + 1)]
         '''Uzupełnianie głównego kontenera'''
         for num in range(1, ConfigWindow.zmienna + 1):
             self.vBox[num] = gtk.VBox(gtk.FALSE, ConfigWindow.zmienna)
@@ -277,6 +462,11 @@ class Mainwindow:
                 # self.btBox[bt].connect('clicked',self.click,i,bt)
                 self.btBox[bt].show()
                 self.bt_id[bt] = self.btBox[bt].connect('clicked', self.click, i, bt)
+
+                '''Setting button on keyboard'''
+                self.setKeyboardButtor(i,bt,'1234567890-=qwertyuiop[]asdfghjkl;\''+
+                                            'zxcvbnm,./!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?')
+
                 self.bt_id[0] = 0
                 try:
                     self.bt_table[i][bt] = self.btBox[bt]
@@ -372,70 +562,3 @@ class Mainwindow:
     def generateSceneWindow(self,args):
         g = generateScene.generateScene()
 
-time.sleep(2)
-
-
-'''Funcja uruchamiana przez wątek. Obsługuje ona wszystko'''
-
-
-'''Główna metoda klasy uruchamiająca wątek'''
-
-def createObjectDial():
-    global dial
-    dial = ConfigWindow.serialWindow()
-def createObjectWindowMain():
-    global window
-    window = Mainwindow()
-def createObjectBlink():
-    global blink
-    blink = blinkInTime(ConfigWindow.zmienna)
-def createObjectBaterry():
-    global batteryWindow
-    batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6)
-
-def createObjectInter(port):
-    import interactiveSerial as inSer
-    global inter
-    inter = inSer.interactiveSerial(port)
-    inter.addObject('battery', batteryWindow)
-    inter.start()
-def start():
-
-    dialProcess = Process(target=createObjectDial(),name="Dial")
-    dialProcess.start()
-
-    windowProcess = Process(target=createObjectWindowMain(),name="Window")
-    windowProcess.start()
-
-    Battery = Process(target=createObjectBaterry())
-    Battery.start()
-
-    interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
-    interProcess.start()
-
-    aktywneID = ConfigWindow.activeID
-    print aktywneID
-    print window.sb_adjustment
-    if aktywneID[0] == "list":
-        for num in range(0, len(aktywneID)):
-            batteryWindow.add(aktywneID[1][num], aktywneID[1][num]-1)
-            window.sb_adjustment[num+1].set_value(aktywneID[1][num]-1)
-    else:
-        for num in range(1, (aktywneID[1] + 1)):
-            batteryWindow.add(num, num)
-
-    # inter.start()
-    # mały pokaz nowych funkcji
-    '''zmiana nazwy baterii'''
-    '''aktualizacja stanu baterii'''
-
-    batteryWindow.show()
-
-    Process(target=gtk.main()).start()
-if __name__ == "__main__":
-    t2 = Process(target=start).start()
-def __init__():
-    t2 = Process(target=start).start()
-#TODO wraz ze zmiana adresu urzadzenia zmiana adresu baterii
-#TODO sprawdzanie bledow w tle
-#TODO pokomentowc troche :>

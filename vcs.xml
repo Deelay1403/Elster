@@ -10,6 +10,10 @@
           <option name="url" value="git@github.com:Deelay1403/Elster.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="http://github.com" />
+          <option name="userName" value="deelay1403" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="/home/patryk/PycharmProjects" />

@@ -15,7 +15,6 @@ import pickle
 import newWindowToGenerateScene
 from threading import Thread
 import serial
-#import time
 import setDevice
 """
 Typical file:
@@ -65,7 +64,14 @@ class generateScene():
     PL:Konstruktor klasy generateScene():
     ENG:generateScene() class constructor
     """
-    def __init__(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None,names=[]):
+    def __init__(self, colums_main = 0,
+                 devices = 0,
+                 number_of_scenes = 0,
+                 body = [],
+                 meta = [],
+                 serial = None,
+                 names=[]):
+
         t3 = Thread(name="main",target=self.wind(colums_main=colums_main,
                                                  devices=devices,
                                                  number_of_scenes=number_of_scenes,
@@ -77,7 +83,14 @@ class generateScene():
         t3.start()
         t3.join()
 
-    def wind(self, colums_main = 0, devices = 0, number_of_scenes = 0,body = [],meta = [],serial = None,names=[]):
+    def wind(self, colums_main = 0,
+             devices = 0,
+             number_of_scenes = 0,
+             body = [],
+             meta = [],
+             serial = None,
+             names=[]):
+
         '''Wind like Wind Of The Change'''
         """Ustawienie serialu by potem być w stanie sprawdzać go w live mode"""
         self.serial = serial
@@ -133,7 +146,12 @@ class generateScene():
 
         '''
         self.meta_tab = [[0 for i in range(4)]for l in range(self.head_tab[0])]
-        self.body_tab = [[[0 for l in range(self.head_tab[2])] for d in range(self.head_tab[1])] for s in range(self.head_tab[0])]
+
+        self.body_tab = [[[0 \
+                        for l in range(self.head_tab[2])] \
+                        for d in range(self.head_tab[1])] \
+                        for s in range(self.head_tab[0])]
+
         self.names_tab = [(("Aktor ")+str(j+1)) for j in range(self.head_tab[1])]
         '''automatically fill body_tab with body (when body != [])'''
         if(body != []):
@@ -141,26 +159,27 @@ class generateScene():
                 for y in range(self.head_tab[1]):
                     for z in range(self.head_tab[2]):
                         self.body_tab[x][y][z] = body[x][y][z]
+
         print self.head_tab[0]
 
         if(meta != []):
-            print "ifr"
             for x in range(self.head_tab[0]):
                 for y in range(4):
                     print str(x) + " x"
                     print str(y) + " y"
                     self.meta_tab[x][y] = meta[x][y]
+
         print "ostatnia szansa"
         print names
         if(names != []):
                 for y in range(self.head_tab[1]):
                     self.names_tab[y] = names[y]
-        print self.head_tab
-        print "META"
-        print self.meta_tab
-        print self.body_tab
-        print "Names"
-        print self.names_tab
+        # print self.head_tab
+        # print "META"
+        # print self.meta_tab
+        # print self.body_tab
+        # print "Names"
+        # print self.names_tab
 
 
 
@@ -205,6 +224,9 @@ class generateScene():
         print self.window.get_icon()
         self.window.set_gravity(gtk.gdk.GRAVITY_CENTER)
         self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+
+        '''Add keyboard event'''
+        self.window.connect('key_press_event', self.reactToKeyBoard)
 
         print self.window.get_gravity()
         self.window.connect("destroy",gtk.main_quit)
@@ -392,14 +414,45 @@ class generateScene():
                 else:
                     print self.chkbtn_tab
                     self.chkbtn_tab[i][j].set_active(False)
+
+    def key_file_switch(self,x):
+        return{
+            "<Control>N": self.fileMenuitem[0],
+            "<Control>O": self.fileMenuitem[1],
+            "<Control>S": self.fileMenuitem[2],
+            "<Control>E": self.fileMenuitem[3],
+        }.get(x,x)
+    def reactToKeyBoard(self,Widget,event):
+        keyname = gtk.gdk.keyval_name(event.keyval)
+        print keyname
     def menuTool(self):
         self.fileMenusub = gtk.Menu()
 
+        agr = gtk.AccelGroup()
         self.fileMenuitem = {}
-        self.fileMenuitem[0] = gtk.MenuItem("Nowy")
-        self.fileMenuitem[1] = gtk.MenuItem("Otworz")
-        self.fileMenuitem[2] = gtk.MenuItem("Zapisz")
-        self.fileMenuitem[3] = gtk.MenuItem("Zamknij")
+        # self.fileMenuitem[0] = gtk.MenuItem("Nowy")
+        self.fileMenuitem[0] = gtk.ImageMenuItem(gtk.STOCK_NEW, agr)
+        key, mod = gtk.accelerator_parse("<Control>N")
+
+        agr.connect_group(key,mod,gtk.ACCEL_VISIBLE, self.fileInterpret)
+
+        self.fileMenuitem[0].add_accelerator("activate", agr, key,
+                                             mod, gtk.ACCEL_VISIBLE)
+        # self.fileMenuitem[1] = gtk.MenuItem("Otworz")
+        self.fileMenuitem[1] = gtk.ImageMenuItem(gtk.STOCK_OPEN, agr)
+        key, mod = gtk.accelerator_parse("<Control>O")
+        self.fileMenuitem[1].add_accelerator("activate", agr, key,
+                              mod, gtk.ACCEL_VISIBLE)
+        # self.fileMenuitem[2] = gtk.MenuItem("Zapisz")
+        self.fileMenuitem[2] =gtk.ImageMenuItem(gtk.STOCK_SAVE, agr)
+        key, mod = gtk.accelerator_parse("<Control>S")
+        self.fileMenuitem[2].add_accelerator("activate", agr, key,
+                              mod, gtk.ACCEL_VISIBLE)
+        # self.fileMenuitem[3] = gtk.MenuItem("Zamknij")
+        self.fileMenuitem[3] = gtk.ImageMenuItem(gtk.STOCK_CLOSE, agr)
+        key, mod = gtk.accelerator_parse("<Control>E")
+        self.fileMenuitem[3].add_accelerator("activate", agr, key,
+                                             mod, gtk.ACCEL_VISIBLE)
 
         self.deviceMenusub = gtk.Menu()
         self.deviceMenuItem = {}
@@ -450,7 +503,7 @@ class generateScene():
         self.serial = setDevice.serialWindow()
         self.serial.WALSIENARYJ__init__()
         print serial
-        if(self.serial.hidedvaluetofuckthesystem == 1):
+        if(self.serial.chk_Activate == 1):
             self.serial.serial.SerialActivate(self.serial.getCombobox().get_active(),False)
 
     def fileInterpret(self,widget,option):
@@ -533,7 +586,8 @@ class generateScene():
 #
 # text.close()"""
     def fileOpen_Choose_Save(self,widget,option):
-        '''Main method which open file in two other way. One is read-write other is append. It also set up action for dialog buttons'''
+        '''Main method which open file in two other way. One is read-write other is append.
+         It also set up action for dialog buttons'''
         chooser = self.switch_choose(option)
         response = chooser.run()
         self.file = {}

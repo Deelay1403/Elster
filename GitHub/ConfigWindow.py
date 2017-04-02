@@ -8,6 +8,7 @@ from mainSerial import serialComunnication
 class serialWindow():
 
     def __init__(self):
+        self.i = 1
         self.cb_serial = gtk.ComboBox()
         self.liststore = gtk.ListStore(str)
         self.cell = gtk.CellRendererText()
@@ -132,7 +133,6 @@ class serialWindow():
                 x += 1
             return
         #self.liststore.move_before(0) #proba indeksowania od zera? ;_;
-        sleep(1.5)
         if self.serial.SerialSend("99,4") == "ERR01":
             self.serial.SerialClose()
             self.autoset(Widget)
@@ -231,6 +231,10 @@ class serialWindow():
     def getIndex(self = None):
         return index
         pass
+
+    def getSelf(self):
+        print "ZWRACAM !!!!!!!!!!! "
+        return self
 
     #zmienna2 = zmienna = iloscbt = 3
     def response(self,Widget,Data):
