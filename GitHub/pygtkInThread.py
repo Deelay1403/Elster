@@ -25,7 +25,13 @@ class MyThread(threading.Thread):
          counter += 1
          gobject.idle_add(self.update_label, counter)
          self.pisz()
-         time.sleep(0.00001)
+         time.sleep(0.00000000001)
+
+ def start(self):
+     super(MyThread, self).start()
+     gtk.main()
+     print ";_;"
+     #TODO: rozszerzyc start() o gtk.main()
 
  def pisz(self):
      print "KUPA"
@@ -33,7 +39,9 @@ class MyThread(threading.Thread):
 t = MyThread()
 t.start()
 
-gtk.main()
+''' to oznacza ze battery bedzie zyc'''
+
+#gtk.main()
 t.quit = True
 
 # import threading
