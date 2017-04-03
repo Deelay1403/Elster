@@ -1,18 +1,19 @@
 import threading
+import multiprocessing
 import time
 import gobject
 import gtk
 
 gobject.threads_init()
 
-class MyThread(threading.Thread):
+class MyThread(multiprocessing.Process):
  def __init__(self):
      super(MyThread, self).__init__()
      w = gtk.Window()
      self.label = gtk.Label()
      self.quit = False
      w.add(self.label)
-     w.connect("destroy", lambda _: gtk.main_quit())
+     w.connect("destroy", lambda _: self.stop())
      w.show_all()
 
  def update_label(self, counter):
@@ -25,42 +26,52 @@ class MyThread(threading.Thread):
          counter += 1
          gobject.idle_add(self.update_label, counter)
          self.pisz()
-         time.sleep(0.00000000001)
+         time.sleep(0.00000000000001)
 
  def start(self):
      super(MyThread, self).start()
-     gtk.main()
+     #gtk.main()
      print ";_;"
      #TODO: rozszerzyc start() o gtk.main()
+
+ def stop(self):
+     self.quit = True
+     gtk.main_quit()
+     pass
 
  def pisz(self):
      print "KUPA"
 
-t = MyThread()
-t.start()
+ def pisz2(self):
+     print "KUPA!@@@@@"
 
-''' to oznacza ze battery bedzie zyc'''
+if __name__ == '__main__':
+    t = MyThread()
+    t.start()
 
-#gtk.main()
-t.quit = True
+    while True:
+        print "jsj@"
+        pass
+
+    t.pisz2()
 
 # import threading
 # import time
 # import gobject
 # import gtk
-#
+
 # gobject.threads_init()
-#
+
 # class MyThread(threading.Thread):
 #  def __init__(self, label):
 #      super(MyThread, self).__init__()
 #      self.label = label
 #      self.quit = False
-#
+
 #  def update_label(self, counter):
 #      self.label.set_text("Counter: %i" % counter)
 #      return False
-#
+
 #  def run(self):
 #      counter = 0
 #      while not self.quit:
@@ -68,10 +79,10 @@ t.quit = True
 #          gobject.idle_add(self.update_label, counter)
 #          self.pisz()
 #          time.sleep(0.00001)
-#
+
 #  def pisz(self):
 #      print "KUPA"
-#
+
 # w = gtk.Window()
 # l = gtk.Label()
 # w.add(l)
@@ -79,7 +90,7 @@ t.quit = True
 # w.connect("destroy", lambda _: gtk.main_quit())
 # t = MyThread(l)
 # t.start()
-#
+
 # gtk.main()
 # t.quit = True
 

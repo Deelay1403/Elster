@@ -103,7 +103,10 @@ def createObjectInter(port,q):
     import interactiveSerial as inSer
     global inter
     inter = inSer.interactiveSerial(port)
-    inter.addObject('battery', q)
+    print "BATTERY OBJ"
+    print batteryWindow
+    print "KONIEC BAT OBJ"
+    inter.addObject('battery', batteryWindow)
     #inter.fuckLoop()
     inter.start()
 
@@ -148,8 +151,8 @@ def start():
     # Battery.join()
 
     q = que.get()
-    from time import sleep
-    sleep(2)
+    # from time import sleep
+    # sleep(2)
 
     # interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
     # interProcess.start()
@@ -181,11 +184,14 @@ def start():
     print "ZMIENINON ffffffffffffffffffffffffffffffffffffffffffI"
     batteryWindow.show()
     batteryWindow.update(1, 111)
+    print "batteryWindow z arduino oriented"
+    print batteryWindow
     #batteryWindow.changeName(2, "Aktor 1")
     print "ZMIENINONIhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
     """Trying set object table"""
 
-    Process(target=gtk.main, name="GTK main").start()
+    #Process(target=gtk.main, name="GTK main").start() #nie dziala
+    gtk.main() #dziala
 
 
 if __name__ == "__main__":

@@ -47,8 +47,8 @@ class interactiveSerial:
             try:
                 print "ODBIERAM"
                 #lineOfData = self.serPort.read_until(endLineChar)
-                #lineOfData = "BAT_1_517"
-                lineOfData = ""
+                lineOfData = "BAT_1_517"
+                #lineOfData = ""
                 print "DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNEEE!"
                 print lineOfData
                 lineOfData = lineOfData.strip("\r\n")
@@ -65,7 +65,11 @@ class interactiveSerial:
                         print "TRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRUUUUUUUUUUEEEEEEEEEEEE"
                         print "ID:" + infoBattery[0]
                         print "VAL:" + infoBattery[1]
-                        self.objects['battery'].update(0,330)
+                        print "batteryWindow z interactive serial"
+                        print batteryObject
+                        print self.objects['battery']
+                        batteryObject.saySomething()
+                        batteryObject.update(1,330)
 
                         # self.event.clear()
                         # for i in range(1,6):

@@ -4,10 +4,10 @@ import gobject
 import gtk
 
 gobject.threads_init()
-
-class batteryWindow(threading.Thread):
+#threading.Thread
+class batteryWindow():
     def __init__(self, port, howManyInRow=3, buttonFunction=False, maxLevel=1024, maxBar=6, resizeFunction=False):
-        super(MyThread, self).__init__()
+        #super(batteryWindow, self).__init__()
         self.port = port
         self.buttonFunction = buttonFunction
         self.howManyInRow = howManyInRow
@@ -196,6 +196,8 @@ class batteryWindow(threading.Thread):
             if (procentLvl >= procentBelka) & (procentLvl <= self.obliczProcent(ileBelek + 1, maxBar)):
                 print "BELKI: " + str(procentLvl) + " " + str(ileBelek) + " ID: " + str(ID)
                 obraz = "./img/battW" + str(ileBelek) + ".png"
+                print "IDZIE DEBUG"
+                print self.addresses
                 self.battery_poziom_label[self.addresses[ID]].set_text(str(procentLvl) + "%")
                 print "zmienilem label"
                 print "ADRES: " + str(self.addresses[ID])
@@ -226,7 +228,7 @@ class batteryWindow(threading.Thread):
         # gtk.gdk.threads_init()
         # gtk.threads_enter()
         self.window.show()
-        gtk.main()
+        #gtk.main()
         # gtk.threads_leave()
         # self.run_gui_thread()
         # gui_thread = Process(target=self.run_gui_thread, args=[self]).start()
@@ -242,6 +244,11 @@ class batteryWindow(threading.Thread):
             print "fffds"
             self.gtk.main()
 
+    def saySomething(self):
+        print "YAY!!"
+        print "IDO ADRESY!"
+        print self.addresses
+        pass
 # def batteryObject():
 #     global batteryWindow
 #     batteryWindow = batteryWindow('COM1', 3, True, 1024, 6)
