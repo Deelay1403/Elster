@@ -1,13 +1,17 @@
-import threading
+import Queue
+from threading import Thread
+from multiprocessing import Process, Queue
 import time
 import gobject
 import gtk
 
-gobject.threads_init()
 #threading.Thread
 class batteryWindow():
     def __init__(self, port, howManyInRow=3, buttonFunction=False, maxLevel=1024, maxBar=6, resizeFunction=False):
         #super(batteryWindow, self).__init__()
+
+        #self.queue = Queue.Queue()
+
         self.port = port
         self.buttonFunction = buttonFunction
         self.howManyInRow = howManyInRow
@@ -179,8 +183,6 @@ class batteryWindow():
         pass
 
     def update(self, ID, level, maxLevel=None, maxBar=None):
-        gtk.threads_enter()
-        # type: (object, object, object, object) -> object
         print ""
         print "UPDATE BATTERY!"
         ID = int(ID)
@@ -211,7 +213,6 @@ class batteryWindow():
             ileBelek = ileBelek + 1
             print "if"
         pass
-        gtk.threads_leave()
 
     def obliczProcent(self, level, maxLevel):
         return round(((100 * float(level)) / maxLevel), 1)
@@ -222,21 +223,12 @@ class batteryWindow():
         pass
 
     def show(self):
-        # GObject.threads_init()
-        # gtk.threads_init()
-        print "MAAAAAAAAAAAAAAAAAAIN!"
-        # gtk.gdk.threads_init()
-        # gtk.threads_enter()
         self.window.show()
-        #gtk.main()
-        # gtk.threads_leave()
-        # self.run_gui_thread()
-        # gui_thread = Process(target=self.run_gui_thread, args=[self]).start()
-        print "MAAAAAAAAAAAAAAAAAAIN!MAAAAAAAAAAAAAAAAAAIN!"
-        # gtk.main()
+        #self.start()
         pass
 
-    def run_gui_thread(self, kupa):
+
+    def runProcess(self, queue):
         print "RUN GUI"
         from time import sleep
         while True:
@@ -249,6 +241,18 @@ class batteryWindow():
         print "IDO ADRESY!"
         print self.addresses
         pass
+
+if __name__ == "__main__":
+    batteryWindow = batteryWindow('COM1', 3, True, 1024, 6)
+    batteryWindow.add(1, "pioruny")
+    batteryWindow.add(2, "pioruny")
+    batteryWindow.add(5, "pioruny")
+    batteryWindow.update(5, 555)
+    batteryWindow.changeName(5, "Aktor 1")
+    batteryWindow.show()
+    gtk.main()
+
+#     from multiprocessing import Process
 # def batteryObject():
 #     global batteryWindow
 #     batteryWindow = batteryWindow('COM1', 3, True, 1024, 6)

@@ -37,6 +37,7 @@ class interactiveSerial:
 
 
             if (daneOdebrane[0] == 'SEND'):
+                print "INTERACTIVE SERIAL SEEEND"
                 try:
                     #self.serPort.write(daneOdebrane[1])
                     print "WYSLANO " + daneOdebrane[1]
@@ -47,8 +48,8 @@ class interactiveSerial:
             try:
                 print "ODBIERAM"
                 #lineOfData = self.serPort.read_until(endLineChar)
-                lineOfData = "BAT_1_517"
-                #lineOfData = ""
+                #lineOfData = "BAT_1_517"
+                lineOfData = ""
                 print "DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNEEE!"
                 print lineOfData
                 lineOfData = lineOfData.strip("\r\n")
@@ -114,11 +115,24 @@ class interactiveSerial:
 
     def send(self, whatSend):
         if not self.serPort == 'NO_PORTS':
-            self.queue.put(['SEND', whatSend])
+            print "INTERACTIVE SERIAL SEEEND"
+            try:
+                #self.serPort.write(whatSend)
+                print "WYSLANO " + whatSend
+            except serial.serialutil.SerialException:
+                print 'Blad zapisu'
+                return "ERR01"
         else:
             print('EMULATING')
             #TODO: SIMULATING SCENES
         pass
+        # if not self.serPort == 'NO_PORTS':
+        #     self.queue.put(['SEND', whatSend]) #TODO: upewnic sie czy takie rozwiazanie podczas wysylania nie przeszkodzi w odbieraniu
+        # else:
+        #     print('EMULATINGcddggfdfgdfgd')
+        #     self.queue.put(['SEND', whatSend])
+        #     #TODO: SIMULATING SCENES
+        # pass
 
     def addObject(self, name, object):
         self.objects[name] = object
