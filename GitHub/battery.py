@@ -249,18 +249,18 @@ class batteryWindow:
 
     def countdown(self, maxSec):
             #gobject.idle_add(self.update_label, maxSec)
-            while maxSec > 0:
-                try:
-                    daneOdebrane = self.queue.get_nowait()
-                    if (daneOdebrane[0] == "STOP_LISTENING"):
-                        print "STOP!"
-                        self.koniec()
-                        break
-                except Exception:
-                    daneOdebrane = ["brak", "danych"]
-                print maxSec
-                time.sleep(0.01)
-                maxSec -= 1
+            # while maxSec > 0:
+            #     try:
+            #         daneOdebrane = self.queue.get_nowait()
+            #         if (daneOdebrane[0] == "STOP_LISTENING"):
+            #             print "STOP!"
+            #             self.koniec()
+            #             break
+            #     except Exception:
+            #         daneOdebrane = ["brak", "danych"]
+            #     print maxSec
+            #     time.sleep(0.01)
+            #     maxSec -= 1
                 #gobject.idle_add(self.update_label, maxSec)
 
             if maxSec == 0:
