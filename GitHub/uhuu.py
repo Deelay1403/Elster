@@ -45,7 +45,7 @@ def countdown(maxSec):
     while maxSec > 0 and not stop:
     	print stop
         print maxSec
-        time.sleep(0.0001)
+        time.sleep(0.01)
         maxSec -= 1
         gobject.idle_add(update_label, maxSec)
 
