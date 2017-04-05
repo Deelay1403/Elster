@@ -1,16 +1,17 @@
-import Queue
-from threading import Thread
-from multiprocessing import Process, Queue
+import threading
 import time
-import gobject
-import gtk
+import Queue
+import gobject, gtk
 
-#threading.Thread
-class batteryWindow():
+class batteryWindow:
     def __init__(self, port, howManyInRow=3, buttonFunction=False, maxLevel=1024, maxBar=6, resizeFunction=False):
-        #super(batteryWindow, self).__init__()
 
-        #self.queue = Queue.Queue()
+        self.gui_ready = threading.Event()
+        self.queue = Queue.Queue()
+
+        import gobject
+        gobject.threads_init()
+        import gtk
 
         self.port = port
         self.buttonFunction = buttonFunction
@@ -33,7 +34,7 @@ class batteryWindow():
         self.window.set_border_width(10)
 
         self.window.connect("delete_event", self.delete_event)
-        self.window.connect("destroy", self.destroy)
+        self.window.connect("destroy", self.koniec)
 
         self.glownyVKontener = gtk.VBox(gtk.FALSE, 10)
         self.glownyVKontener.show()
@@ -65,6 +66,10 @@ class batteryWindow():
         self.show()
 
     def add(self, ID, name):
+        gobject.idle_add(self.add2, ID, name)
+        pass
+
+    def add2(self, ID, name):
         if self.port == "NO_PORTS":
             print "I:------------ batterry.py BRAK PORTOW NA STATKII!"
 
@@ -146,29 +151,6 @@ class batteryWindow():
         print "destroy signal occurred"
         gtk.main_quit()
 
-    def info(self, ID):
-        # a horizontal box to hold the battery_buttons
-
-
-        # create several images with data from files and load images into
-        # battery_buttons
-        if ID == 0:
-            self.ID_OLD = 6
-        else:
-            self.ID_OLD = 6
-
-        self.ID_OLD = ID
-        self.image = gtk.Image()
-        self.update(1, ID)
-        self.image.show()
-        # a battery_button to contain the image widget
-        self.button = gtk.button()
-        self.button.add(self.image)
-        self.button.show()
-        self.hbox.pack_start(self.button)
-        self.button.connect("clicked", self.updateFromBttn, ID, 190)
-        pass
-
     def updateOLD(self, widget, ID):
         if self.level[self.addresses[ID]] == 0:
             self.level[self.addresses[ID]] = 6
@@ -183,6 +165,10 @@ class batteryWindow():
         pass
 
     def update(self, ID, level, maxLevel=None, maxBar=None):
+        gobject.idle_add(self.update2, ID, level, maxLevel, maxBar)
+        pass
+
+    def update2(self, ID, level, maxLevel=None, maxBar=None):
         print ""
         print "UPDATE BATTERY!"
         ID = int(ID)
@@ -224,7 +210,7 @@ class batteryWindow():
 
     def show(self):
         self.window.show()
-        #self.start()
+        self.start()
         pass
 
 
@@ -236,21 +222,107 @@ class batteryWindow():
             print "fffds"
             self.gtk.main()
 
-    def saySomething(self):
-        print "YAY!!"
-        print "IDO ADRESY!"
-        print self.addresses
+    def run_gui_thread(self):
+        self.window.show()
+        #self.w.connect("destroy", lambda _: self.koniec())
+        self.gui_ready.set()
+        gtk.main()
+
+    def startThread(self):
+        gui_thread = threading.Thread(target=self.run_gui_thread)
+        gui_thread.start()
+
+        # wait for the GUI thread to initialize GTK
+        self.gui_ready.wait()
+
+        # it is now safe to import GTK-related stuff
+        import gobject, gtk
+        worker = threading.Thread(target=self.countdown, args=(7040,))
+        print 'starting work...'
+        worker.start()
         pass
+
+    def stopThread(self):
+        self.queue.put(['STOP_LISTENING', ''])
+        pass
+
+
+    def countdown(self, maxSec):
+            #gobject.idle_add(self.update_label, maxSec)
+            while maxSec > 0:
+                try:
+                    daneOdebrane = self.queue.get_nowait()
+                    if (daneOdebrane[0] == "STOP_LISTENING"):
+                        print "STOP!"
+                        self.koniec()
+                        break
+                except Exception:
+                    daneOdebrane = ["brak", "danych"]
+                print maxSec
+                time.sleep(0.01)
+                maxSec -= 1
+                #gobject.idle_add(self.update_label, maxSec)
+
+            if maxSec == 0:
+                self.koniec()
+
+    def koniec(self, ID="none"):
+        print "KOOOOOONIEC!"
+        gobject.idle_add(gtk.main_quit)
+        self.stopThread()
+
+
 
 if __name__ == "__main__":
     batteryWindow = batteryWindow('COM1', 3, True, 1024, 6)
     batteryWindow.add(1, "pioruny")
+    batteryWindow.startThread()
+    time.sleep(2)
     batteryWindow.add(2, "pioruny")
+    time.sleep(0.5)
+    batteryWindow.add(3, "pioruny")
+    time.sleep(0.5)
+    batteryWindow.add(4, "pioruny")
+    time.sleep(0.5)
     batteryWindow.add(5, "pioruny")
-    batteryWindow.update(5, 555)
-    batteryWindow.changeName(5, "Aktor 1")
-    batteryWindow.show()
-    gtk.main()
+    time.sleep(0.5)
+    batteryWindow.add(6, "pioruny")
+    time.sleep(2)
+    batteryWindow.changeName(1, "TO")
+    time.sleep(0.5)
+    batteryWindow.changeName(2, "NA")
+    time.sleep(0.5)
+    batteryWindow.changeName(3, "PRA")
+    time.sleep(0.5)
+    batteryWindow.changeName(4, "WDE")
+    time.sleep(0.5)
+    batteryWindow.changeName(5, "DZIALA")
+    time.sleep(0.5)
+    batteryWindow.changeName(6, "!!!!")
+    x = 1024
+    y = True
+    z = 1024
+    while y:
+        batteryWindow.update(2, x)
+        time.sleep(0.1)
+        if x > 0:
+            x -=10
+        if x < 512:
+            batteryWindow.update(5, z)
+            #time.sleep(0.1)
+            z -=20
+            if z < 0:
+                y = False
+
+    batteryWindow.add(7, "OSKAR")
+    time.sleep(2)
+    batteryWindow.update(1, 768)
+    batteryWindow.update(3, 768)
+    batteryWindow.update(4, 768)
+    batteryWindow.update(6, 768)
+    #batteryWindow.stopThread()
+
+
 
 #     from multiprocessing import Process
 # def batteryObject():
