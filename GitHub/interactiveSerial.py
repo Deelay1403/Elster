@@ -165,7 +165,7 @@ class interactiveSerial:
         # self.result = self.pool.map_async(self.startListen(self.queue), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         # self.event.set()
 
-        p = Process(target=self.startListen)
+        p = Process(target=self.startListen, name="interactiveSerial")
         p.start()
 
         # t = Thread(name="log", target=self.updateBattery(4,300)).start()

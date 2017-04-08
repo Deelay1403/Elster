@@ -3,7 +3,22 @@
 '''
 Author: Patryk Szczodrowski\n
 Date of last update: 24.12.16\n
-Values: int devices = 0, int LED's = 0 , int scenes = 0, three dimenstional array = [], two dimenstional array = []
+Values: int devices = 0,
+        int LED's = 0,
+        int scenes = 0,
+        three dimenstional array = [],
+        two dimenstional array = [],
+        object serial = None,
+        two dimenstional array = []
+
+                colums_main = 0,
+                devices = 0,
+                number_of_scenes = 0,
+                body = [],
+                meta = [],
+                serial = None,
+                names=[]
+
 (Default values, named differend in constructor)
 Class created to generate/open file of scenes designed to work with elSter Light System
 In easy way, this class can open way to simple work with light

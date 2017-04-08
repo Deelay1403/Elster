@@ -270,56 +270,65 @@ class batteryWindow:
         print "KOOOOOONIEC!"
         gobject.idle_add(gtk.main_quit)
         self.stopThread()
+    def __call__(self, a, b, c, d, e):
+        print a
+        print b
+        print c
+        print d
+        print e
 
 
 
 if __name__ == "__main__":
-    batteryWindow = batteryWindow('COM1', 3, True, 1024, 6)
-    batteryWindow.add(1, "pioruny")
-    batteryWindow.startThread()
+    batteryWindow1 = batteryWindow('COM1', 3, True, 1024, 6)
+    batteryWindow1.add(1, "pioruny")
+    batteryWindow1.startThread()
+    batteryWindow2 = batteryWindow('COM1', 3, True, 1024, 6)
+    batteryWindow2.add(1, "pioruny")
+    batteryWindow2.startThread()
     time.sleep(2)
-    batteryWindow.add(2, "pioruny")
+    batteryWindow1.add(2, "pioruny")
     time.sleep(0.5)
-    batteryWindow.add(3, "pioruny")
+    batteryWindow1.add(3, "pioruny")
     time.sleep(0.5)
-    batteryWindow.add(4, "pioruny")
+    batteryWindow1.add(4, "pioruny")
     time.sleep(0.5)
-    batteryWindow.add(5, "pioruny")
+    batteryWindow1.add(5, "pioruny")
     time.sleep(0.5)
-    batteryWindow.add(6, "pioruny")
+    batteryWindow1.add(6, "pioruny")
     time.sleep(2)
-    batteryWindow.changeName(1, "TO")
+    batteryWindow1.changeName(1, "TO")
     time.sleep(0.5)
-    batteryWindow.changeName(2, "NA")
+    batteryWindow1.changeName(2, "NA")
     time.sleep(0.5)
-    batteryWindow.changeName(3, "PRA")
+    batteryWindow1.changeName(3, "PRA")
     time.sleep(0.5)
-    batteryWindow.changeName(4, "WDE")
+    batteryWindow1.changeName(4, "WDE")
     time.sleep(0.5)
-    batteryWindow.changeName(5, "DZIALA")
+    batteryWindow1.changeName(5, "DZIALA")
     time.sleep(0.5)
-    batteryWindow.changeName(6, "!!!!")
+    batteryWindow1.changeName(6, "!!!!")
     x = 1024
     y = True
     z = 1024
     while y:
-        batteryWindow.update(2, x)
+        batteryWindow1.update(2, x)
         time.sleep(0.1)
         if x > 0:
             x -=10
         if x < 512:
-            batteryWindow.update(5, z)
+            batteryWindow1.update(5, z)
             #time.sleep(0.1)
             z -=20
             if z < 0:
                 y = False
 
-    batteryWindow.add(7, "OSKAR")
+    batteryWindow1.add(7, "OSKAR")
     time.sleep(2)
-    batteryWindow.update(1, 768)
-    batteryWindow.update(3, 768)
-    batteryWindow.update(4, 768)
-    batteryWindow.update(6, 768)
+    batteryWindow1.update(1, 768)
+    batteryWindow1.update(3, 768)
+    batteryWindow1.update(4, 768)
+    batteryWindow1.update(6, 768)
     #batteryWindow.stopThread()
 
 
