@@ -94,12 +94,11 @@ def createObjectBlink(q):
     global blink
     blink = blinkInTime(ConfigWindow.zmienna)
 
-def createObjectBaterry(q):
+def createObjectBaterry():
     global batteryWindow
     batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
-    q.put_nowait(batteryWindow)
 
-def createObjectInter(port,q):
+def createObjectInter(port):
     import interactiveSerial as inSer
     global inter
     inter = inSer.interactiveSerial(port)
@@ -140,17 +139,18 @@ def start():
     windowProcess.start()
     windowProcess.join()
 #    window = queue_of_cry[1].get()
-    que = Queue()
     #windowProcess._target.dial.serial.GetOpenPort()
-    Battery = Thread(target=createObjectBaterry(que),
-                     name="Battery",
-                     args=(que,))
+
+    Battery = Thread(target=createObjectBaterry,
+                     name="Battery")
 
     Battery.daemon = False
     Battery.start()
     # Battery.join()
 
-    q = que.get()
+    # global batteryWindow
+    # batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
+
     # from time import sleep
     # sleep(2)
 
@@ -158,7 +158,7 @@ def start():
     # interProcess.start()
     interThread = Thread(target=createObjectInter,
                          name="inter",
-                         args=(dial.serial.GetOpenPort(),q))
+                         args=(dial.serial.GetOpenPort(),))
 
     interThread.daemon = False
     interThread.start()
@@ -208,10 +208,14 @@ def getWho():
 '''Metoda przeznaczona do wysyłania komend'''
 def lightLED(receiver, state, led, option):
     if not dial == 'NO_PORTS':
+        print "wysylam"
         str = `receiver` + "." + `state` + "." + `led` + "." + `option` + "."
-        dial.serial.SerialSend(str)
+        # dial.serial.SerialSend(str)
+        inter.send(str)
     else:
-        print('EMULATING')
+        print "wysylam"
+        inter.send("okok")
+        print('EMULATINGGGGGGG')
         #TODO: SIMULATING SCENES
 
 '''Gaszenie pojedyńczego urządzenia'''
