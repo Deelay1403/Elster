@@ -37,6 +37,7 @@ class interactiveSerial:
 
 
             if (daneOdebrane[0] == 'SEND'):
+                print "INTERACTIVE SERIAL SEEEND"
                 try:
                     #self.serPort.write(daneOdebrane[1])
                     print "WYSLANO " + daneOdebrane[1]
@@ -65,7 +66,11 @@ class interactiveSerial:
                         print "TRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRUUUUUUUUUUEEEEEEEEEEEE"
                         print "ID:" + infoBattery[0]
                         print "VAL:" + infoBattery[1]
-                        self.objects['battery'].update(0,330)
+                        print "batteryWindow z interactive serial"
+                        print batteryObject
+                        print self.objects['battery']
+                        batteryObject.saySomething()
+                        batteryObject.update(1,330)
 
                         # self.event.clear()
                         # for i in range(1,6):
@@ -110,11 +115,24 @@ class interactiveSerial:
 
     def send(self, whatSend):
         if not self.serPort == 'NO_PORTS':
-            self.queue.put(['SEND', whatSend])
+            print "INTERACTIVE SERIAL SEEEND"
+            try:
+                #self.serPort.write(whatSend)
+                print "WYSLANO " + whatSend
+            except serial.serialutil.SerialException:
+                print 'Blad zapisu'
+                return "ERR01"
         else:
             print('EMULATING')
             #TODO: SIMULATING SCENES
         pass
+        # if not self.serPort == 'NO_PORTS':
+        #     self.queue.put(['SEND', whatSend]) #TODO: upewnic sie czy takie rozwiazanie podczas wysylania nie przeszkodzi w odbieraniu
+        # else:
+        #     print('EMULATINGcddggfdfgdfgd')
+        #     self.queue.put(['SEND', whatSend])
+        #     #TODO: SIMULATING SCENES
+        # pass
 
     def addObject(self, name, object):
         self.objects[name] = object
@@ -147,7 +165,7 @@ class interactiveSerial:
         # self.result = self.pool.map_async(self.startListen(self.queue), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         # self.event.set()
 
-        p = Process(target=self.startListen)
+        p = Process(target=self.startListen, name="interactiveSerial")
         p.start()
 
         # t = Thread(name="log", target=self.updateBattery(4,300)).start()

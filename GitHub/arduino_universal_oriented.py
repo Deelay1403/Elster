@@ -94,16 +94,18 @@ def createObjectBlink(q):
     global blink
     blink = blinkInTime(ConfigWindow.zmienna)
 
-def createObjectBaterry(q):
+def createObjectBaterry():
     global batteryWindow
     batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
-    q.put_nowait(batteryWindow)
 
-def createObjectInter(port,q):
+def createObjectInter(port):
     import interactiveSerial as inSer
     global inter
     inter = inSer.interactiveSerial(port)
-    inter.addObject('battery', q)
+    print "BATTERY OBJ"
+    #print batteryWindow
+    print "KONIEC BAT OBJ"
+    #inter.addObject('battery', batteryWindow)
     #inter.fuckLoop()
     inter.start()
 
@@ -114,78 +116,46 @@ def start():
     global dial, window, inter, batteryWindow
     global iloscBt,zmienna,zmienna2
 
-
-    # queue_of_cry = [Queue() for i in range(0,4)]
-    # dialProcess = Process(target=createObjectDial(),name="Dial")
-    # dialProcess.start()
     t = Thread(target=createObjectDial(),
                name="Dial",
                args=())
     t.start()
     t.join()
-    #dial = queue_of_cry[0].get()
-    #
-    # iloscBt = queue_of_cry[0].iloscBT
-    # zmienna = ConfigWindow.zmienna
-    # zmienna2 = ConfigWindow.zmienna2
-    #print getObject("dial").getSelf() #   :c
-    print "------------------------------------DIAL--------------------"
-    windowProcess = Thread(target=createObjectWindowMain(),
-                           name="Window",
-                           args=())
-    windowProcess.daemon = False
-    windowProcess.start()
-    windowProcess.join()
-#    window = queue_of_cry[1].get()
-    que = Queue()
-    #windowProcess._target.dial.serial.GetOpenPort()
-    Battery = Thread(target=createObjectBaterry(que),
-                     name="Battery",
-                     args=(que,))
 
-    Battery.daemon = False
-    Battery.start()
-    # Battery.join()
+    # windowProcess = Thread(target=createObjectWindowMain(),
+    #                        name="Window",
+    #                        args=())
+    # windowProcess.daemon = False
+    # windowProcess.start()
+    # windowProcess.join()
 
-    q = que.get()
-    from time import sleep
-    sleep(2)
-
-    # interProcess = Process(target=createObjectInter(dial.serial.GetOpenPort()))
-    # interProcess.start()
     interThread = Thread(target=createObjectInter,
                          name="inter",
-                         args=(dial.serial.GetOpenPort(),q))
+                         args=(dial.serial.GetOpenPort(),))
 
     interThread.daemon = False
     interThread.start()
-    # interThread.join()
+    #interThread.join()
+
+
+    global batteryObj
+    batteryObj = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
 
     aktywneID = ConfigWindow.activeID
     print aktywneID
-    print window.sb_adjustment
+    #print window.sb_adjustment
     if aktywneID[0] == "list":
         for num in range(0, len(aktywneID[1])):
-            batteryWindow.add(aktywneID[1][num], aktywneID[1][num]-1)
+            batteryObj.add(aktywneID[1][num], aktywneID[1][num]-1)
             window.sb_adjustment[num+1].set_value(aktywneID[1][num]-1)
     else:
         for num in range(1, (aktywneID[1] + 1)):
-            batteryWindow.add(num, num)
+            batteryObj.add(num, num)
 
-    batteryWindow.changeName(1, "Aktor 1")
-
-    # inter.start()
-    # mały pokaz nowych funkcji
-    '''zmiana nazwy baterii'''
-    '''aktualizacja stanu baterii'''
-    print "ZMIENINON ffffffffffffffffffffffffffffffffffffffffffI"
-    batteryWindow.show()
-    batteryWindow.update(1, 111)
-    #batteryWindow.changeName(2, "Aktor 1")
-    print "ZMIENINONIhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
-    """Trying set object table"""
-
-    Process(target=gtk.main, name="GTK main").start()
+    #batteryObj.changeName(1, "Aktor 1") #nie dziala "KeyError: 1"
+    batteryObj.startThread()
+    #batteryObj.changeName(1, "Aktor 1") #zaczelo nie dzialac :c
+    gtk.main() #dziala
 
 
 if __name__ == "__main__":
@@ -202,10 +172,15 @@ def getWho():
 '''Metoda przeznaczona do wysyłania komend'''
 def lightLED(receiver, state, led, option):
     if not dial == 'NO_PORTS':
+        print "wysylam"
         str = `receiver` + "." + `state` + "." + `led` + "." + `option` + "."
-        dial.serial.SerialSend(str)
+        # dial.serial.SerialSend(str)
+        inter.send(str)
+        battery2.update(1,1024)
     else:
-        print('EMULATING')
+        print "wysylam"
+        inter.send("okok")
+        print('EMULATINGGGGGGG')
         #TODO: SIMULATING SCENES
 
 '''Gaszenie pojedyńczego urządzenia'''
