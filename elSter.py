@@ -10,4 +10,4 @@ import gtk
 
 if __name__ == "__main__":
     i = init_window.__init__()
-    gtk.main()
+    #gtk.main()
