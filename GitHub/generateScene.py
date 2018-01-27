@@ -533,7 +533,7 @@ class generateScene():
                         '''Read all content'''
                         head = pickle.load(self.File['read'])
                         meta = pickle.load(self.File['read'])
-                        names =pickle.load(self.File['read'])
+                        names= pickle.load(self.File['read'])
                         body = pickle.load(self.File['read'])
                         '''Head = [number_of_scenes, colums_main,devices]'''
                         print head
@@ -559,7 +559,7 @@ class generateScene():
                         self.File['save'].close()
             if option == 'new':
                 '''Still working..'''
-                t1=Thread(name="New",target=self.threadNew)
+                t1=Thread(name="New",target=self.threadNew())
                 t1.daemon = True
 
                 t1.start()
@@ -611,7 +611,7 @@ class generateScene():
                 name = chooser.get_filename()
                 self.file['read'] = self.fileOpen(name,"rw")
             if(option == 'save'):
-                name = chooser.get_filename()
+                name = chooser.get_filename()+".hsk"
                 self.file['save'] = self.fileOpen(name,"w")
             # if(option == 'new'):
             #     self.file = chooser.get_filename()
@@ -734,8 +734,8 @@ class generateScene():
         '''Generate 6 objects for the first page'''
         self.btnsWithoutEdit["label"] = self.btnsWithoutEdit[0] = gtk.Label("-/-")
         self.btnsWithoutEdit["liveMode"] = self.btnsWithoutEdit[1] = gtk.CheckButton("Live Mode")
-        self.btnsWithoutEdit["addScene"] = self.btnsWithoutEdit[2] = gtk.Button("Dodaj scene")
-        self.btnsWithoutEdit["delScene"] = self.btnsWithoutEdit[3] = gtk.Button("Usuń scene")
+        self.btnsWithoutEdit["addScene"] = self.btnsWithoutEdit[2] = gtk.Button("Dodaj scenę")
+        self.btnsWithoutEdit["delScene"] = self.btnsWithoutEdit[3] = gtk.Button("Usuń scenę")
         self.btnsWithoutEdit["leftbt"] = self.btnsWithoutEdit[4] = gtk.Button("<")
         self.btnsWithoutEdit["rightbt"] = self.btnsWithoutEdit[5] = gtk.Button(">")
 

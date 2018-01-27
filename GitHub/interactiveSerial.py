@@ -48,8 +48,8 @@ class interactiveSerial:
             try:
                 print "ODBIERAM"
                 #lineOfData = self.serPort.read_until(endLineChar)
-                #lineOfData = "BAT_1_517"
-                lineOfData = ""
+                lineOfData = "BAT_1_517"
+                #lineOfData = ""
                 print "DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNEEE!"
                 print lineOfData
                 lineOfData = lineOfData.strip("\r\n")
@@ -69,8 +69,15 @@ class interactiveSerial:
                         print "batteryWindow z interactive serial"
                         print batteryObject
                         print self.objects['battery']
-                        batteryObject.saySomething()
-                        batteryObject.update(1,330)
+                        print "UPDATE"
+                        #batteryObject.update(1,330)
+                        #self.objects['battery'].update(1,330)
+                        #batteryObject.saySomething()
+                        print "QUEUE: " + str(batteryObject.getQueue())
+                        print "update with queue"
+                        batteryObject.getQueue().put(['UPDATE', 1, 514, None, None])
+                        print "koniec update queue"
+                        print "KONIEC"
 
                         # self.event.clear()
                         # for i in range(1,6):
@@ -165,8 +172,11 @@ class interactiveSerial:
         # self.result = self.pool.map_async(self.startListen(self.queue), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         # self.event.set()
 
-        p = Process(target=self.startListen, name="interactiveSerial")
+        p = Thread(target=self.startListen, name="interactiveSerial")
         p.start()
+
+        # p = Process(target=self.startListen, name="interactiveSerial")
+        # p.start()
 
         # t = Thread(name="log", target=self.updateBattery(4,300)).start()
         #p = Process(target=self.jebacTo, args=(5,500,)).start()

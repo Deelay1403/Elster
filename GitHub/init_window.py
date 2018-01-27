@@ -11,7 +11,7 @@ class initWindow:
         self.window.set_title("Start")
         self.vbox = gtk.VBox(2, True)
         self.generateSceneBt = gtk.Button("Włącz Generator Scen")
-        self.arduinoUniversalOriented = gtk.Button("Włącz konsole")
+        self.arduinoUniversalOriented = gtk.Button("Włącz konsolę")
 
         self.generateSceneBt.connect("clicked", self.generateSceneDef)
         self.arduinoUniversalOriented.connect("clicked", self.arduinoUniversalOrientedDef)

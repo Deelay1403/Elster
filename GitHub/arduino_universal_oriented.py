@@ -18,7 +18,7 @@ sudo apt-get install python python-tk idle python-pmw python-imaging python-gtk2
 """
 
 pass
-from threading import Thread
+from threading import Thread, Event
 import gtk
 
 import ConfigWindow
@@ -89,6 +89,7 @@ def createObjectDial():
 def createObjectWindowMain():
     global window
     window = Mainwindow()
+    window.startThread()
     #q.put(window)
 def createObjectBlink(q):
     global blink
@@ -97,17 +98,6 @@ def createObjectBlink(q):
 def createObjectBaterry():
     global batteryWindow
     batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
-
-def createObjectInter(port):
-    import interactiveSerial as inSer
-    global inter
-    inter = inSer.interactiveSerial(port)
-    print "BATTERY OBJ"
-    #print batteryWindow
-    print "KONIEC BAT OBJ"
-    #inter.addObject('battery', batteryWindow)
-    #inter.fuckLoop()
-    inter.start()
 
 def createKeyboard():
     print "lel"
@@ -129,34 +119,39 @@ def start():
     # windowProcess.start()
     # windowProcess.join()
 
-    interThread = Thread(target=createObjectInter,
-                         name="inter",
-                         args=(dial.serial.GetOpenPort(),))
+    global window
+    window = Mainwindow()
+    window.startThread()
 
-    interThread.daemon = False
-    interThread.start()
-    #interThread.join()
+    '''Odczyt danych z portu szeregowego !!!'''
+    import interactiveSerial as inSer
+    global inter
+    inter = inSer.interactiveSerial(dial.serial.GetOpenPort())
+    inter.start()
 
+    # global batteryObj
+    # batteryObj = battery.batteryWindow(True, dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
 
-    global batteryObj
-    batteryObj = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
+    #print "BATTERY Z ARDUINOOOOOOOOOOOOOOO"
+    #print batteryObj
+    #inter.addObject('battery', batteryObj)
 
     aktywneID = ConfigWindow.activeID
     print aktywneID
     #print window.sb_adjustment
     if aktywneID[0] == "list":
         for num in range(0, len(aktywneID[1])):
-            batteryObj.add(aktywneID[1][num], aktywneID[1][num]-1)
+            # batteryObj.add(aktywneID[1][num], aktywneID[1][num]-1)
             window.sb_adjustment[num+1].set_value(aktywneID[1][num]-1)
     else:
         for num in range(1, (aktywneID[1] + 1)):
-            batteryObj.add(num, num)
+            print "add"
+            #batteryObj.add(num, num)
 
     #batteryObj.changeName(1, "Aktor 1") #nie dziala "KeyError: 1"
-    batteryObj.startThread()
+    # batteryObj.startThread()
     #batteryObj.changeName(1, "Aktor 1") #zaczelo nie dzialac :c
-    gtk.main() #dziala
-
+    gtk.main()
 
 if __name__ == "__main__":
     t2 = Process(target=start).start()
@@ -174,9 +169,9 @@ def lightLED(receiver, state, led, option):
     if not dial == 'NO_PORTS':
         print "wysylam"
         str = `receiver` + "." + `state` + "." + `led` + "." + `option` + "."
-        # dial.serial.SerialSend(str)
-        inter.send(str)
-        battery2.update(1,1024)
+        dial.serial.SerialSend(str)
+        #inter.send(str)
+        #batteryObj.update(1,1024)
     else:
         print "wysylam"
         inter.send("okok")
@@ -264,6 +259,8 @@ class changeAddress():
     def on_gtk_quit_activate(self, menuitem, data=None):
         print ("quit from menu")
         gtk.main_quit()
+
+
 '''Klasa głównego okna'''
 class Mainwindow:
     '''Klasa głównego okna odpowiedzialna za generowanie konsoli'''
@@ -323,18 +320,16 @@ class Mainwindow:
         state = Widget.get_active()
         for x in range(1, 3):
             state = Widget.get_active()
-
             lightLED((Data[0]+1), 0, x, 0)
+
     '''Zmiana adresu danej kolumy - adresu komunikacyjnego kolumny'''
     def addressValueChange(self, Widget, *Data):
         for bt in range(1, ConfigWindow.iloscbt + 1):
-
             print Data[2]
             print self.bt_table_id
             self.bt_table[Data[0]][bt].disconnect(self.bt_table_id[Data[0]][bt])
             self.bt_table_id[Data[0]][bt] = self.bt_table[Data[0]][bt].connect('clicked', self.click, self.sb_address[
                 Data[0]].get_value_as_int(), bt)
-
 
     def addressValueChange2(self, Widget, *Data):
         # for bt in range(1,iloscbt+1):
@@ -364,6 +359,12 @@ class Mainwindow:
     #
     def __init__(self):
         '''Konstruktor klasy MainWindow'''
+
+        self.gui_ready = Event()
+        import gobject
+        gobject.threads_init()
+        import gtk
+
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("elSter - console")
         self.window.connect("destroy", self.on_window1_destroy)
@@ -405,14 +406,14 @@ class Mainwindow:
         self.hbox_for_frame = {}
         self.bt_address = {}
         self.bt_key_table = [[None\
-                              for x in range(ConfigWindow.iloscbt + 1)]\
-                              for y in range(ConfigWindow.zmienna + 1)]
+                            for x in range(ConfigWindow.iloscbt + 1)]\
+                            for y in range(ConfigWindow.zmienna + 1)]
         self.bt_table_id = [[None\
-                             for x in range(ConfigWindow.iloscbt + 1)]\
-                             for y in range(ConfigWindow.zmienna + 1)]
+                            for x in range(ConfigWindow.iloscbt + 1)]\
+                            for y in range(ConfigWindow.zmienna + 1)]
         self.bt_table = [[None\
-                          for bt_x in range(ConfigWindow.iloscbt + 1)]\
-                          for bt_y in range(ConfigWindow.zmienna + 1)]
+                            for bt_x in range(ConfigWindow.iloscbt + 1)]\
+                            for bt_y in range(ConfigWindow.zmienna + 1)]
         '''Uzupełnianie głównego kontenera'''
         for num in range(1, ConfigWindow.zmienna + 1):
             self.vBox[num] = gtk.VBox(gtk.FALSE, ConfigWindow.zmienna)
@@ -430,7 +431,7 @@ class Mainwindow:
             self.btBlackout[i].connect("clicked", self.blackoutclock, i, self.bt_id)
             self.btBlackout[i].show()
             self.vBox[i].add(self.btBlackout[i])
-            print  self.bt_table
+            print self.bt_table
             print self.bt_table_id
             for bt in range(1, ConfigWindow.iloscbt + 1):
                 self.btBox[bt] = gtk.ToggleButton("LED" + str(bt))
@@ -455,7 +456,6 @@ class Mainwindow:
 
             print self.btBox
             self.frame[i] = gtk.Frame("Change address")
-            # self.bt_address[i] = gtk.Button("Change")
             self.lel = gtk.Frame()
             self.lel.set_border_width(5)
             self.bt_address[i] = gtk.Button("Change")
@@ -495,8 +495,8 @@ class Mainwindow:
         self.firstMenuitem[0] = gtk.MenuItem("Generator")
         self.firstMenuitem[1] = gtk.MenuItem("Zamknij")
 
-        self.viewMenuitem[0] = gtk.MenuItem("Bateria")
-        self.viewMenuitem[1] = gtk.MenuItem("Miganie")
+        # self.viewMenuitem[0] = gtk.MenuItem("Bateria")
+        # self.viewMenuitem[1] = gtk.MenuItem("Miganie")
 
         for i in range(0, len(self.firstMenuitem)):
             self.menu.append(self.firstMenuitem[i])
@@ -509,22 +509,22 @@ class Mainwindow:
         self.firstMenuitem[0].connect("activate", self.generateSceneWindow)
         self.firstMenuitem[1].connect("activate", gtk.main_quit)
 
-        self.viewMenuitem[0].connect("activate", self.viewWindow,"battery")
-        self.viewMenuitem[1].connect("activate", self.viewWindow,"blink")
+        # self.viewMenuitem[0].connect("activate", self.viewWindow,"battery")
+        # self.viewMenuitem[1].connect("activate", self.viewWindow,"blink")
 
         self.root = gtk.MenuItem("Narzędzia")
-        self.view = gtk.MenuItem("Widok")
+        #self.view = gtk.MenuItem("Widok")
 
         self.root.show()
         self.root.set_submenu(self.menu)
 
-        self.view.show()
-        self.view.set_submenu(self.viewMenu)
+        # self.view.show()
+        # self.view.set_submenu(self.viewMenu)
 
         self.menu_bar = gtk.MenuBar()
         self.menu_bar.show()
         self.menu_bar.append(self.root)
-        self.menu_bar.append(self.view)
+        #self.menu_bar.append(self.view)
 
         self.menu.show()
         self.viewMenu.show()
@@ -537,3 +537,16 @@ class Mainwindow:
     def generateSceneWindow(self,args):
         g = generateScene.generateScene()
 
+    def runThread(self):
+        self.gui_ready.set()
+        gtk.main()
+
+    def startThread(self):
+        gui_thread = Thread(target=self.runThread, name="MainWindow")
+        gui_thread.start()
+
+        # wait for the GUI thread to initialize GTK
+        self.gui_ready.wait()
+
+        # it is now safe to import GTK-related stuff
+        #import gobject, gtk

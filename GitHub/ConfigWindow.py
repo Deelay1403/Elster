@@ -19,9 +19,9 @@ class serialWindow():
         self.cb_serial_hbox = gtk.HBox(gtk.FALSE, 0)
         self.cb_serial_hbox.add(self.cb_serial)
         self.cb_serial_hbox.set_border_width(10)
-        self.cb_serial_frame = gtk.Frame("Select device")
+        self.cb_serial_frame = gtk.Frame("Wybierz urządzenie")
 
-        self.count_frame = gtk.Frame("Configuration")
+        self.count_frame = gtk.Frame("Konfiguracja")
         self.count_hbox = gtk.VBox(gtk.FALSE,2)
         self.count_hbox.set_border_width(10)
         self.count_frame.add(self.count_hbox)
@@ -30,14 +30,14 @@ class serialWindow():
         self.coun_adjustment_adr = gtk.Adjustment(1, 1, 100, 1)
         self.count_sp_Devices = gtk.SpinButton(self.coun_adjustment_dev,0,0)
 
-        self.count_sp_Devices_title = gtk.Label("Devices")
+        self.count_sp_Devices_title = gtk.Label("Urządzenia")
         self.count_sp_Devices_title.set_alignment(0,0.5)
-        self.count_sp_Address_title = gtk.Label("Led's")
+        self.count_sp_Address_title = gtk.Label("Led'y")
         self.count_sp_Address_title.set_alignment(0, 0.5)
 
         self.count_sp_Address = gtk.SpinButton(self.coun_adjustment_adr,0,0)
 
-        self.count_bt_auto = gtk.Button("Auto set")
+        self.count_bt_auto = gtk.Button("Autoustawienie")
         # W oczekiwaniu na Oskara - xDDD
         self.count_bt_auto.connect('clicked',self.autoset)
 
@@ -61,7 +61,7 @@ class serialWindow():
         self.cb_serial_frame.show()
         self.cb_serial_hbox.show()
         '''Create dialog'''
-        self.dialog = gtk.Dialog("Configuration",
+        self.dialog = gtk.Dialog("Konfiguracja",
                                  None,
                                  gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                                  (gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_APPLY,gtk.RESPONSE_ACCEPT))
@@ -97,7 +97,10 @@ class serialWindow():
         response = self.dialog.run()
         self.dialog.destroy()
 
-        if response == gtk.RESPONSE_CANCEL:
+        print "RESPONSSSSE"
+        print response
+        if response == "-6":
+            print "OKKKKKKK"
             gtk.main_quit()
         if response == gtk.STOCK_CLOSE:
             gtk.main_quit()
