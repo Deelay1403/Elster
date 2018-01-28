@@ -22,7 +22,7 @@ class serialComunnication():
         for port in ports:
             try:
                 # Trying if ports are open
-                s = serial.Serial(port, 9600, timeout=0.5)
+                s = serial.Serial(port, 115200, timeout=0.5)
                 print port
                 print s
                 time.sleep(2)
@@ -81,7 +81,7 @@ class serialComunnication():
                 print self.portsOpen[whichIndex]
                 print "KURWA"
                 if not self.portOpen:
-                    self.ser = serial.Serial(self.portsOpen[whichIndex], 9600, timeout=5)
+                    self.ser = serial.Serial(self.portsOpen[whichIndex], 115200, timeout=5)
                     self.portOpen = True
                     from time import sleep
                     sleep(2) #czas po ktorym arduino sie ogarnia, mozna temu zapobiec wylaczajac bootloader
