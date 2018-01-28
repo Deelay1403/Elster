@@ -1,3 +1,4 @@
+#Oskar  28.01.2018
 import threading
 import time
 import Queue
