@@ -73,7 +73,8 @@ class batteryWindow:
         return self.queue
 
     def add(self, ID, name):
-        gobject.idle_add(self.add2, ID, name)
+        #gobject.idle_add(self.add2, ID, name)
+        self.add2(ID, name)
         pass
 
     def add2(self, ID, name):
@@ -303,10 +304,10 @@ if __name__ == "__main__":
     batteryWindow1 = batteryWindow(True, 'COM1', 3, True, 1024, 6)
     batteryWindow1.add(1, "pioruny")
     batteryWindow1.startThread()
-    batteryWindow2 = batteryWindow(False, 'COM1', 3, True, 1024, 6)
-    batteryWindow2.add(1, "pioruny")
-    batteryWindow2.startThread()
-    time.sleep(2)
+    # batteryWindow2 = batteryWindow(False, 'COM1', 3, True, 1024, 6)
+    # batteryWindow2.add(1, "pioruny")
+    # batteryWindow2.startThread()
+    # time.sleep(2)
 
     # batteryWindow1.add(2, "pioruny")
     # time.sleep(0.5)
