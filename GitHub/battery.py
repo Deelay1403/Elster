@@ -226,7 +226,7 @@ class batteryWindow:
 
     def show(self):
         self.window.show()
-        self.start()
+        gtk.main()
         pass
 
 
@@ -308,7 +308,8 @@ if __name__ == "__main__":
     batteryWindow1.add(1, "pioruny 1")
     batteryWindow1.add(2, "pioruny 2")
     batteryWindow1.add(3, "pioruny 3")
-    batteryWindow1.startThread()
+    #batteryWindow1.startThread()
+    batteryWindow1.show()
     # batteryWindow2 = batteryWindow(False, 'COM1', 3, True, 1024, 6)
     # batteryWindow2.add(1, "pioruny")
     # batteryWindow2.startThread()
