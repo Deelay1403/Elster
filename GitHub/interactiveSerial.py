@@ -4,6 +4,7 @@ import serial
 from threading import Thread
 import multiprocessing
 
+'''Klasa majaca na celu dzialanie w tle i nasluchiwanie na dane z portu szeregowego'''
 class interactiveSerial:
     def __init__(self, port):
         print "ROZPOCZETO"
@@ -162,6 +163,8 @@ class interactiveSerial:
     def setup(event,d):
         global unpaused
         unpaused = event
+
+    '''Funkcja rozpoczynajaca watek w tle (moze zrobic proces), nasluchujaca na porcie szeregowym'''
     def start(self, endLineChar = ';'):
         # self.dziala = 0
         # self.x = 1

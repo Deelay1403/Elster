@@ -9,6 +9,7 @@ class initWindow:
         self.window = gtk.Window()
         self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.window.set_title("Start")
+        self.window.connect("destroy", self.closeWindow) #Oskar
         self.vbox = gtk.VBox(2, True)
         self.generateSceneBt = gtk.Button("Włącz Generator Scen")
         self.arduinoUniversalOriented = gtk.Button("Włącz konsolę")
@@ -25,6 +26,11 @@ class initWindow:
         self.vbox.show()
         self.generateSceneBt.show()
         self.arduinoUniversalOriented.show()
+
+    def closeWindow(self, arg):
+        print "Destroy signal (zamykam okno o to nizej chyba)"
+        print arg
+        gtk.main_quit() #PyCharm bardzo pomogl, powiedzial ze gtk.main_quit nie zadzialalo
 
     def generateSceneDef(self,args):
 
@@ -46,12 +52,13 @@ class initWindow:
 
     def createObjectArduino(self):
         import arduino_universal_oriented
-        self.a = arduino_universal_oriented.start()
+        self.a = arduino_universal_oriented.start() #self.a ?
 
 
 if __name__ == "__main__":
     i = initWindow()
     gtk.main()
+
 def __init__():
     i = initWindow()
     gtk.main()

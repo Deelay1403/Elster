@@ -104,16 +104,17 @@ class serialWindow():
             gtk.main_quit()
         if response == gtk.STOCK_CLOSE:
             gtk.main_quit()
-        #Warunek stworzony na szybko by usunąć problem z nieaktywnym portem bez naciśnięcia przycisku "AutoSet"
+        # Warunek stworzony na szybko by usunąć problem z nieaktywnym portem bez naciśnięcia przycisku "AutoSet"
         if response == gtk.RESPONSE_ACCEPT:
-            index = self.cb_serial.get_active()
+            index = self.cb_serial.get_active() # index - wartosc z listy z portami szeregowymi
             print index
             if(index != None):
-                self.serial.SerialActivate(index, False)
+                self.serial.SerialActivate(index, False) #otwiera wybrany port szeregowy - obiekt serial mozna dostac poprzez getter
             self.getActiveId("init")
             self.getActiveId()
             # self.getActiveId("ile")
 
+    '''Funkcja wysyla request do modulu glownego o wyszukanie slave'ow, po czym pobiera dane o ich ID'''
     def autoset(self,Widget):
         self.getActiveId("init", "autoset")
         from time import sleep
@@ -172,7 +173,7 @@ class serialWindow():
             print self.aktywneId
             print len(self.aktywneId)
 
-            self.count_sp_Devices.set_value(len(self.aktywneId))  #urzadzenia
+            self.count_sp_Devices.set_value(len(self.aktywneId))  # urzadzenia
             self.count_sp_Address.set_value(2)  # ledy
 
             print "XDDDDD"
@@ -180,7 +181,7 @@ class serialWindow():
             print "ile"
             print self.getActiveId(["ile"])
 
-
+    #TODO nie wiem co to robi
     def getActiveId(self, func="list", autoset="!autoset"):
         if func == "init":
             self.oldStateOfAdressField = self.count_sp_Devices.get_value_as_int()
@@ -246,4 +247,8 @@ class serialWindow():
         zmienna = self.count_sp_Devices.get_value_as_int()
         zmienna2 = self.count_sp_Devices.get_value_as_int()
         iloscbt = self.count_sp_Address.get_value_as_int()
+        print "ZMIENNE Z configWindow.response"
+        print zmienna
+        print zmienna2
+        print iloscbt
         pass

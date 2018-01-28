@@ -63,7 +63,8 @@ alphabet = {}
 for i in range(47, 91):
     alphabet[i - 47] = chr(i)
 
-time.sleep(2)
+#TODO zapytac sie czemy ma czekac - komentuje
+#time.sleep(2)
 
 
 '''Funcja uruchamiana przez wątek. Obsługuje ona wszystko'''
@@ -78,6 +79,7 @@ time.sleep(2)
 # def getObject(name):
 #     return objects_Table[name]
 
+#TODO czy tu pokazuje sie menu wyboru urzadzen?
 def createObjectDial():
     global dial
     dial = ConfigWindow.serialWindow()
@@ -86,15 +88,20 @@ def createObjectDial():
     # while True:
     #     print "KKKK"
     #     sleep(1)
+
+#TODO czy to jest okno konsoli?
 def createObjectWindowMain():
     global window
     window = Mainwindow()
     window.startThread()
     #q.put(window)
+
+#TODO CO to ma robic?
 def createObjectBlink(q):
     global blink
     blink = blinkInTime(ConfigWindow.zmienna)
 
+'''Tworzy obiekt battery'''
 def createObjectBaterry():
     global batteryWindow
     batteryWindow = battery.batteryWindow(dial.serial.GetOpenPort(), 5, True, 1024, 6, False)
@@ -103,9 +110,11 @@ def createKeyboard():
     print "lel"
 
 def start():
+    #TODO czemu dial tu jest globalne?
     global dial, window, inter, batteryWindow
     global iloscBt,zmienna,zmienna2
 
+    #TODO arduino_universal wystartowalo z init jako proces tu korzystamy z watku?
     t = Thread(target=createObjectDial(),
                name="Dial",
                args=())
@@ -126,7 +135,9 @@ def start():
     '''Odczyt danych z portu szeregowego !!!'''
     import interactiveSerial as inSer
     global inter
-    inter = inSer.interactiveSerial(dial.serial.GetOpenPort())
+
+    # dial otworzyl okno wyboru portu, po czym go otworzyl, obiekt portu szeregowego zwraca ponizszy getter
+    inter = inSer.interactiveSerial(dial.serial.GetOpenPort()) #jako argument obiekt portu szeregowego
     inter.start()
 
     # global batteryObj
@@ -136,8 +147,8 @@ def start():
     #print batteryObj
     #inter.addObject('battery', batteryObj)
 
-    aktywneID = ConfigWindow.activeID
-    print aktywneID
+    aktywneID = ConfigWindow.activeID #hmm zmienna activeID jest inicjowana jako globalna w funkcji ConfigWindow.getActiveId()
+    print "Aktywne ID z universal_oriented" + aktywneID
     #print window.sb_adjustment
     if aktywneID[0] == "list":
         for num in range(0, len(aktywneID[1])):
@@ -166,7 +177,7 @@ def getWho():
 
 '''Metoda przeznaczona do wysyłania komend'''
 def lightLED(receiver, state, led, option):
-    if not dial == 'NO_PORTS':
+    if not dial == 'NO_PORTS': #hmm dial to obiekt, czy zmienna?
         print "wysylam"
         str = `receiver` + "." + `state` + "." + `led` + "." + `option` + "."
         dial.serial.SerialSend(str)
